@@ -4,8 +4,8 @@ import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 
 /**
- * 	Type of behavior for the elevator that doesn't support communication between elevators.
- * 	Different behaviors on elevators of the same building is possible, therefore, 
+ * 	Type of behaviour for the elevator that doesn't support communication between elevators.
+ * 	Different behaviours on elevators of the same building is possible, therefore, 
  * if this elevator receives messages from others it ignores them
  */
 class NoCommunicationBehaviour extends SimpleBehaviour {

@@ -1,7 +1,6 @@
 package elevators;
 
 import jade.core.Agent;
-import jade.core.behaviours.*;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -33,7 +32,7 @@ public class Elevator extends Agent {
 			e.printStackTrace();
 		}
 		
-		//Create behavior
+		//Create behaviour
 			
 	}
 

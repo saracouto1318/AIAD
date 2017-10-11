@@ -5,10 +5,10 @@ import jade.core.behaviours.SimpleBehaviour;
 
 
 /**
- * 	Type of behavior for the elevators that uses communication between elevators to accomplish 
+ * 	Type of behaviour for the elevators that uses communication between elevators to accomplish 
  * a better solution for the problem that is elevator allocation.
- * 	This behavior improves on the NoCommunication behavior in the way that elevators might negotiate
- * which one has a better chance to serve a request.
+ * 	This behaviour improves on the NoCommunication behaviour in the way that elevators might negotiate
+ * which one has a better chance to serve a request. 
  */
 public class ElevatorBehaviour extends SimpleBehaviour {
 

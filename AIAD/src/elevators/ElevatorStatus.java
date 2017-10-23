@@ -1,7 +1,7 @@
 package elevators;
 
 public enum ElevatorStatus {
-	GOING_DOWN,
-	GOING_UP,
-	STOPPED
+	STOPPED,
+	TAKE_PASSENGERS,
+	RECEIVE_PASSENGERS
 }

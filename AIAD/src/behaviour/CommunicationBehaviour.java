@@ -8,7 +8,7 @@ public class CommunicationBehaviour extends Behaviour {
 	private int number_prints = 0;
 
 	/**
-	 * Prints a message and increments a counter
+	 * Reads all the messages received and handles them
 	 */
 	@Override
 	public void action() {
@@ -18,7 +18,7 @@ public class CommunicationBehaviour extends Behaviour {
 	}
 
 	/**
-	 * End the behaviour when it prints the maximum number
+	 * Returns false
 	 */
 	@Override
 	public boolean done() {

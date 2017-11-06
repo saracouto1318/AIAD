@@ -1,16 +1,21 @@
 package behaviour;
 
+import elevators.Elevator;
+
 public class SelfishBehaviour extends TakeActionBehaviour {
 	
-	@Override
-	public void action() {
-		// TODO Auto-generated method stub
-
+	public SelfishBehaviour(Elevator elevator) {
+		super(elevator);
 	}
+	
+	@Override
+	public void action() {}
 
+	/**
+	 * Returns false
+	 */
 	@Override
 	public boolean done() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

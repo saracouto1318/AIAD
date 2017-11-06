@@ -3,6 +3,8 @@ package elevators;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import behaviour.*;
+
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -28,8 +30,8 @@ public class Elevator extends Agent {
 	 */
 	private int cFloor;
 		
-	public Elevator(int capacity) {
-		ELEVATOR_CAPACITY = capacity;
+	public Elevator() {
+		ELEVATOR_CAPACITY = 200;
 		toAttend = new LinkedHashSet<>();
 		stopFloors = new LinkedHashSet<>();
 	}
@@ -70,7 +72,10 @@ public class Elevator extends Agent {
 		}
 		
 		//Create behaviour
-			
+		CommunicationBehaviour cb = new CommunicationBehaviour();
+		this.addBehaviour(cb);
+		NegociateBehaviour nb = new NegociateBehaviour(cb, this.getName());
+		this.addBehaviour(nb);
 	}
 
 	@Override

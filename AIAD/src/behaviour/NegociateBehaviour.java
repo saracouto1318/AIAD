@@ -4,16 +4,22 @@ import jade.core.behaviours.Behaviour;
 
 public class NegociateBehaviour extends TakeActionBehaviour {
 
+	private Behaviour hello_behaviour;
+	private String id;
+	
+	public NegociateBehaviour(Behaviour behaviour, String id) {
+		this.hello_behaviour = behaviour;
+		this.id = id;
+	}
+	
 	@Override
 	public void action() {
-		// TODO Auto-generated method stub
-
+		System.out.println("I'm \'" + id + "\'");
 	}
 
 	@Override
 	public boolean done() {
-		// TODO Auto-generated method stub
-		return false;
+		return hello_behaviour.done();
 	}
 
 }

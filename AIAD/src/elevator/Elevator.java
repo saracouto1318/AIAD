@@ -1,9 +1,6 @@
 package elevator;
 
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.Set;
 import java.util.TreeSet;
 
 import behaviour.*;
@@ -13,6 +10,7 @@ import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import request.Request;
 
 public class Elevator extends Agent {
 	/**
@@ -22,7 +20,7 @@ public class Elevator extends Agent {
 	/**
 	 * Number of the floors to where the elevator's passengers want to go
 	 */
-	protected Set<Integer> stopFloors;
+	protected TreeSet<Request> stopFloors;
 	/**
 	 * Elevator's current floor
 	 */
@@ -42,8 +40,8 @@ public class Elevator extends Agent {
 	public int getElevatorCapacity() {
 		return ELEVATOR_CAPACITY;
 	}
-		
-	public Set<Integer> getStopFloors() {
+
+	public TreeSet<Request> getStopFloors() {
 		return stopFloors;
 	}
 	
@@ -71,22 +69,6 @@ public class Elevator extends Agent {
 		this.direction = direction;
 	}
 	
-	
-	/**
-	 * Getter for the next floor on the set
-	 * @return the int representing the floor
-	 */
-	public Integer getNextFloor() {
-		Iterator<Integer> itr;
-		if(this.direction == ElevatorDirection.DOWN) {
-			LinkedList<Integer> list = new LinkedList<>(this.stopFloors);
-			itr = list.descendingIterator();
-		} else
-			itr = this.stopFloors.iterator();	
-		return itr.hasNext() ? itr.next() : null;
-	}
-
-	
 	/**
 	 * 	
 	 */
@@ -110,15 +92,24 @@ public class Elevator extends Agent {
 		}
 	}
 	
-	public boolean isCFloorAbove() {
-		LinkedList<Integer> list = new LinkedList<>(this.stopFloors);
-		return list.getLast() <= this.cFloor;
+	
+	public boolean hasRequests(int floor) {
+		for(Request r : this.stopFloors)
+			if(r.getFloor() == floor)
+				return true;
+		return false;
 	}
 	
-	public boolean isCFloorBelow() {
-		LinkedList<Integer> list = new LinkedList<>(this.stopFloors);
-		return list.getFirst() >= this.cFloor;
+	public boolean isAbove(int floor) {
+		LinkedList<Request> list = new LinkedList<>(this.stopFloors);
+		return list.getLast().getFloor() <= floor;
 	}
+	
+	public boolean isBelow(int floor) {
+		LinkedList<Request> list = new LinkedList<>(this.stopFloors);
+		return list.getFirst().getFloor() >= floor;
+	}
+	
 	
 	@Override
 	protected void setup() {

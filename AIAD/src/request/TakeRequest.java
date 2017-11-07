@@ -3,7 +3,6 @@ package request;
 import elevator.Elevator;
 
 public class TakeRequest extends Request {
-
 	private int weight;
 	
 	public TakeRequest(int floor, int weight) {
@@ -15,7 +14,17 @@ public class TakeRequest extends Request {
 	public void onFloor(Elevator elevator) {
 		//- Remove this request from the elevator set
 		//	this also removes the weight of this passenger
-		//removeRequest(elevator)
+		elevator.getStopFloors().remove(this);
 	}
-
+	
+	@Override
+	public boolean equals(Object obj) {
+		return false;
+	}
+	
+	@Override
+	public int compareTo(Object arg0) {
+		Request r = ((Request)arg0);
+		return floor + 1 - r.getFloor();
+	}
 }

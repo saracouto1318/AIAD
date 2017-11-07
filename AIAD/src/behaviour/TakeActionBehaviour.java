@@ -1,9 +1,13 @@
 package behaviour;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import elevator.Elevator;
 import elevator.ElevatorDirection;
 import elevator.ElevatorStatus;
 import jade.core.behaviours.Behaviour;
+import request.Request;
 
 public class TakeActionBehaviour extends Behaviour {
 	private Elevator elevator;
@@ -19,14 +23,12 @@ public class TakeActionBehaviour extends Behaviour {
 	public void action() {
 		if(this.elevator.getStatus() == ElevatorStatus.STOPPED) {
 			//Go from stopped to moving
-			this.elevator.getStopFloors().remove(this.elevator.getCFloor());
 			this.elevator.setStatus(ElevatorStatus.MOVING);
-			
-			//Check next move's direction
+			onFloor();
 			nextDirection();			
 		}
 		//Stop if this cFloor is a stopFloor
-		else if(this.elevator.getStopFloors().contains(this.elevator.getCFloor())) {
+		else if(this.elevator.hasRequests(this.elevator.getCFloor())) {
 			System.out.println("Elevator stopped to leave some passengers");
 			this.elevator.setStatus(ElevatorStatus.STOPPED);
 		}
@@ -35,6 +37,17 @@ public class TakeActionBehaviour extends Behaviour {
 			System.out.println("Ending program now");
 		
 		moveElevator();
+	}
+	
+	private void onFloor() {
+		Set<Request> requests = new TreeSet(this.elevator.getStopFloors());
+		for(Request r : requests) {
+			if(r.getFloor() == this.elevator.getCFloor())
+				r.onFloor(this.elevator);
+			//Since it's ordered
+			else if(r.getFloor() > this.elevator.getCFloor())
+				return;
+		}
 	}
 	
 	/**
@@ -56,9 +69,9 @@ public class TakeActionBehaviour extends Behaviour {
 		
 		//Check if moving in the current elevator direction will lead them to a stop
 		else if((this.elevator.getDirection() == ElevatorDirection.UP && 
-				this.elevator.isCFloorAbove()) ||
+				this.elevator.isAbove(this.elevator.getCFloor())) ||
 			(this.elevator.getDirection() == ElevatorDirection.DOWN && 
-				this.elevator.isCFloorBelow())) {
+				this.elevator.isBelow(this.elevator.getCFloor()))) {
 			//If it doesn't -> Change direction
 			this.elevator.changeDirection();
 			System.out.println("Changing direction");
@@ -72,5 +85,4 @@ public class TakeActionBehaviour extends Behaviour {
 	public boolean done() {
 		return this.elevator.getDirection() == ElevatorDirection.NO_DIRECTION;
 	}
-
 }

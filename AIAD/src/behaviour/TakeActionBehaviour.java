@@ -19,29 +19,58 @@ public class TakeActionBehaviour extends Behaviour {
 	public void action() {
 		if(this.elevator.getStatus() == ElevatorStatus.STOPPED) {
 			//Go from stopped to moving
-			Integer nFloor = this.elevator.removeStopFloor(this.elevator.getCFloor());
+			this.elevator.getStopFloors().remove(this.elevator.getCFloor());
 			this.elevator.setStatus(ElevatorStatus.MOVING);
 			
-			//Change direction if it has no next floor
-			if(nFloor == null)
-				this.elevator.changeDirection();
-			
+			//Check next move's direction
+			nextDirection();			
 		}
 		//Stop if this cFloor is a stopFloor
 		else if(this.elevator.getStopFloors().contains(this.elevator.getCFloor())) {
+			System.out.println("Elevator stopped to leave some passengers");
 			this.elevator.setStatus(ElevatorStatus.STOPPED);
-			return ;
 		}
 
+		if(this.elevator.getDirection() == ElevatorDirection.NO_DIRECTION)
+			System.out.println("Ending program now");
+		
+		moveElevator();
+	}
+	
+	/**
+	 * Moves the elevator in a given direction
+	 */
+	private void moveElevator() {
+		if(this.elevator.getStatus() != ElevatorStatus.MOVING)
+			return;
 		this.elevator.move();
+	}
+	
+	/**
+	 * Calculates the next move for the elevator
+	 */
+	private void nextDirection() {
+		//If stop floors is empty then there are no more requests
+		if(this.elevator.getStopFloors().isEmpty())
+			this.elevator.setDirection(ElevatorDirection.NO_DIRECTION);
+		
+		//Check if moving in the current elevator direction will lead them to a stop
+		else if((this.elevator.getDirection() == ElevatorDirection.UP && 
+				this.elevator.isCFloorAbove()) ||
+			(this.elevator.getDirection() == ElevatorDirection.DOWN && 
+				this.elevator.isCFloorBelow())) {
+			//If it doesn't -> Change direction
+			this.elevator.changeDirection();
+			System.out.println("Changing direction");
+		}
 	}
 
 	/**
-	 * Returns false
+	 * Returns true when there are no more requests on the set
 	 */
 	@Override
 	public boolean done() {
-		return false;
+		return this.elevator.getDirection() == ElevatorDirection.NO_DIRECTION;
 	}
 
 }

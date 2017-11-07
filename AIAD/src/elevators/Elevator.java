@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.TreeSet;
 
 import behaviour.*;
 
@@ -20,11 +21,6 @@ public class Elevator extends Agent {
 	private final int ELEVATOR_CAPACITY;
 	
 	private ElevatorStatus status;
-	
-	/**
-	 * Number of the floors that are waiting for an elevator to be available
-	 */
-	private Set<Integer> toAttend;
 	/**
 	 * Number of the floors to where the elevator's passengers want to go
 	 */
@@ -40,8 +36,23 @@ public class Elevator extends Agent {
 		
 	public Elevator() {
 		ELEVATOR_CAPACITY = 200;
-		toAttend = new LinkedHashSet<>();
-		stopFloors = new LinkedHashSet<>();
+		stopFloors = new TreeSet<>();
+		testFloors();
+	}
+	
+	private void testFloors() {
+		stopFloors.add(1);
+		stopFloors.add(3);
+		stopFloors.add(5);
+		stopFloors.add(10);
+		stopFloors.add(4);
+		stopFloors.add(19);
+		stopFloors.add(2);
+		stopFloors.add(-1);
+		stopFloors.add(-5);
+		cFloor = 2;
+		direction = ElevatorDirection.UP;
+		status = ElevatorStatus.MOVING;
 	}
 	
 	
@@ -49,11 +60,7 @@ public class Elevator extends Agent {
 	public int getElevatorCapacity() {
 		return ELEVATOR_CAPACITY;
 	}
-	
-	public Set<Integer> getToAttend() {
-		return toAttend;
-	}
-	
+		
 	public Set<Integer> getStopFloors() {
 		return stopFloors;
 	}
@@ -96,45 +103,39 @@ public class Elevator extends Agent {
 			itr = this.stopFloors.iterator();	
 		return itr.hasNext() ? itr.next() : null;
 	}
-	
-	/**
-	 * Removes a given floor from the set of stop floors
-	 * @param floor int representing the floor
-	 * @return The next floor on the set
-	 */
-	public Integer removeStopFloor(int floor) {
-		this.stopFloors.remove(floor);
-		return getNextFloor();
-	}
+
 	
 	/**
 	 * 	
 	 */
 	public void changeDirection() {
-		if(this.stopFloors.isEmpty()) {
-			this.stopFloors.addAll(this.toAttend);
-			this.toAttend.clear();
-		} else {
-			System.out.println("YA DUMB BITCH! GO WHERE YOU NEED TO GOOOOOOOO");
-		}
-		
 		if(this.stopFloors.isEmpty())
 			this.direction = ElevatorDirection.NO_DIRECTION;
 		else
-			this.direction = 
-				direction == ElevatorDirection.DOWN ? 
-					ElevatorDirection.UP : 
-					ElevatorDirection.DOWN;
+			this.direction = ElevatorDirection.changeDirection(this.direction);
 	}
 	
 	/**
 	 * 
 	 */
 	public void move() {
-		if(direction == ElevatorDirection.DOWN)
+		if(direction == ElevatorDirection.DOWN) {
 			cFloor--;
-		else if(direction == ElevatorDirection.UP)
+			System.out.println("Move down");
+		} else if(direction == ElevatorDirection.UP) {
 			cFloor++;
+			System.out.println("Move up");
+		}
+	}
+	
+	public boolean isCFloorAbove() {
+		LinkedList<Integer> list = new LinkedList<>(this.stopFloors);
+		return list.getLast() <= this.cFloor;
+	}
+	
+	public boolean isCFloorBelow() {
+		LinkedList<Integer> list = new LinkedList<>(this.stopFloors);
+		return list.getFirst() >= this.cFloor;
 	}
 	
 	@Override
@@ -153,9 +154,9 @@ public class Elevator extends Agent {
 		}
 		
 		//Create behaviour
-		CommunicationBehaviour cb = new CommunicationBehaviour();
-		this.addBehaviour(cb);
-		NegociateBehaviour nb = new NegociateBehaviour(this, cb, this.getName());
+		//CommunicationBehaviour cb = new CommunicationBehaviour();
+		//this.addBehaviour(cb);
+		TakeActionBehaviour nb = new TakeActionBehaviour (this);
 		this.addBehaviour(nb);
 	}
 

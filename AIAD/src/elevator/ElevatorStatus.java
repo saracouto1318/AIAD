@@ -1,4 +1,4 @@
-package elevators;
+package elevator;
 
 public enum ElevatorStatus {
 	STOPPED,

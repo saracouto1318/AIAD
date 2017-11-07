@@ -1,8 +1,8 @@
 package tests;
 
-import elevators.Elevator;
-import elevators.ElevatorDirection;
-import elevators.ElevatorStatus;
+import elevator.Elevator;
+import elevator.ElevatorDirection;
+import elevator.ElevatorStatus;
 
 public class ElevatorTestPassengers extends Elevator {
 	public ElevatorTestPassengers() {

@@ -1,8 +1,8 @@
 package behaviour;
 
-import elevators.Elevator;
-import elevators.ElevatorDirection;
-import elevators.ElevatorStatus;
+import elevator.Elevator;
+import elevator.ElevatorDirection;
+import elevator.ElevatorStatus;
 import jade.core.behaviours.Behaviour;
 
 public class TakeActionBehaviour extends Behaviour {

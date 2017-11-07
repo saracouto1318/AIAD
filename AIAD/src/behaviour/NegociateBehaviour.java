@@ -1,6 +1,6 @@
 package behaviour;
 
-import elevators.Elevator;
+import elevator.Elevator;
 import jade.core.behaviours.Behaviour;
 
 public class NegociateBehaviour extends TakeActionBehaviour {

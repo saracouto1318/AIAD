@@ -1,6 +1,6 @@
 package behaviour;
 
-import elevators.Elevator;
+import elevator.Elevator;
 
 public class SelfishBehaviour extends TakeActionBehaviour {
 	

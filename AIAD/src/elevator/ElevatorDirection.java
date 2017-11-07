@@ -1,4 +1,4 @@
-package elevators;
+package elevator;
 
 public enum ElevatorDirection {
 	DOWN, UP, NO_DIRECTION;

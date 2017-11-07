@@ -19,43 +19,25 @@ public class Elevator extends Agent {
 	 * Number of people the elevator can take at a time
 	 */
 	private final int ELEVATOR_CAPACITY;
-	
-	private ElevatorStatus status;
 	/**
 	 * Number of the floors to where the elevator's passengers want to go
 	 */
-	private Set<Integer> stopFloors;
+	protected Set<Integer> stopFloors;
 	/**
 	 * Elevator's current floor
 	 */
-	private int cFloor;
+	protected int cFloor;
 	/**
 	 * 
 	 */
-	private ElevatorDirection direction;
+	protected ElevatorDirection direction;
+
+	protected ElevatorStatus status;
 		
 	public Elevator() {
 		ELEVATOR_CAPACITY = 200;
 		stopFloors = new TreeSet<>();
-		testFloors();
-	}
-	
-	private void testFloors() {
-		stopFloors.add(1);
-		stopFloors.add(3);
-		stopFloors.add(5);
-		stopFloors.add(10);
-		stopFloors.add(4);
-		stopFloors.add(19);
-		stopFloors.add(2);
-		stopFloors.add(-1);
-		stopFloors.add(-5);
-		cFloor = 2;
-		direction = ElevatorDirection.UP;
-		status = ElevatorStatus.MOVING;
-	}
-	
-	
+	}	
 	
 	public int getElevatorCapacity() {
 		return ELEVATOR_CAPACITY;

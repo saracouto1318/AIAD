@@ -13,6 +13,9 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import request.Request;
 
 public class Elevator extends Agent {
+	public static final int MAX_FLOOR = 30;
+	public static final int MIN_FLOOR = -5;
+	
 	/**
 	 * Number of people the elevator can take at a time
 	 */
@@ -93,13 +96,6 @@ public class Elevator extends Agent {
 	}
 	
 	
-	public boolean hasRequests(int floor) {
-		for(Request r : this.stopFloors)
-			if(r.getFloor() == floor)
-				return true;
-		return false;
-	}
-	
 	public boolean isAbove(int floor) {
 		LinkedList<Request> list = new LinkedList<>(this.stopFloors);
 		return list.getLast().getFloor() <= floor;
@@ -108,6 +104,13 @@ public class Elevator extends Agent {
 	public boolean isBelow(int floor) {
 		LinkedList<Request> list = new LinkedList<>(this.stopFloors);
 		return list.getFirst().getFloor() >= floor;
+	}
+	
+	public boolean isLastDirection(int floor) {
+		return (direction == ElevatorDirection.UP && 
+					isAbove(cFloor)) ||
+				(direction == ElevatorDirection.DOWN && 
+					isBelow(cFloor));
 	}
 	
 	

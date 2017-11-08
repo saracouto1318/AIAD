@@ -18,6 +18,8 @@ public abstract class Request implements Comparable {
 	
 	public abstract void onFloor(Elevator elevator);
 	
+	public abstract boolean stop(Elevator elevator);
+	
 	@Override
 	public abstract int compareTo(Object arg0);
 }

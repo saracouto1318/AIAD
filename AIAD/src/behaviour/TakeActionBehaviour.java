@@ -28,7 +28,7 @@ public class TakeActionBehaviour extends Behaviour {
 			nextDirection();			
 		}
 		//Stop if this cFloor is a stopFloor
-		else if(this.elevator.hasRequests(this.elevator.getCFloor())) {
+		else if(shouldStop()) {
 			System.out.println("Elevator stopped to leave some passengers");
 			this.elevator.setStatus(ElevatorStatus.STOPPED);
 		}
@@ -39,8 +39,11 @@ public class TakeActionBehaviour extends Behaviour {
 		moveElevator();
 	}
 	
+	/**
+	 * Calls the onFloor for all requests of a given floor
+	 */
 	private void onFloor() {
-		Set<Request> requests = new TreeSet(this.elevator.getStopFloors());
+		Set<Request> requests = new TreeSet<Request>(this.elevator.getStopFloors());
 		for(Request r : requests) {
 			if(r.getFloor() == this.elevator.getCFloor())
 				r.onFloor(this.elevator);
@@ -48,6 +51,18 @@ public class TakeActionBehaviour extends Behaviour {
 			else if(r.getFloor() > this.elevator.getCFloor())
 				return;
 		}
+	}
+	
+	/**
+	 * Iterates through all requests determining if the elevator should, or not,
+	 * stop at the current floor
+	 * @return
+	 */
+	private boolean shouldStop() {
+		for(Request r : this.elevator.getStopFloors())
+			if(r.stop(elevator))
+				return true;
+		return true;
 	}
 	
 	/**
@@ -68,10 +83,7 @@ public class TakeActionBehaviour extends Behaviour {
 			this.elevator.setDirection(ElevatorDirection.NO_DIRECTION);
 		
 		//Check if moving in the current elevator direction will lead them to a stop
-		else if((this.elevator.getDirection() == ElevatorDirection.UP && 
-				this.elevator.isAbove(this.elevator.getCFloor())) ||
-			(this.elevator.getDirection() == ElevatorDirection.DOWN && 
-				this.elevator.isBelow(this.elevator.getCFloor()))) {
+		else if(this.elevator.isLastDirection(this.elevator.getCFloor())) {
 			//If it doesn't -> Change direction
 			this.elevator.changeDirection();
 			System.out.println("Changing direction");

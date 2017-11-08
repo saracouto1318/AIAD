@@ -21,6 +21,9 @@ public class ElevatorTestPassengers extends Elevator {
 		stopFloors.add(new TakeRequest(19,2));
 		stopFloors.add(new TakeRequest(1, 40));
 		stopFloors.add(new TakeRequest(2,10));
+		stopFloors.add(new ReceiveRequest(2, ElevatorDirection.DOWN));
+		stopFloors.add(new ReceiveRequest(6, ElevatorDirection.UP));
+		stopFloors.add(new ReceiveRequest(10, ElevatorDirection.DOWN));
 		cFloor = 2;
 		direction = ElevatorDirection.UP;
 		status = ElevatorStatus.MOVING;

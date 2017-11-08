@@ -95,16 +95,12 @@ public class ReceiveRequest extends Request {
 	@Override
 	public int compareTo(Object arg) {
 		Request r = (Request)arg;
-		if((r.getClass().isAssignableFrom(ReceiveRequest.class) 
-				&& direction == ((ReceiveRequest)r).getDirection()) 
-				|| floor != r.floor)
-			return floor > r.floor ? 1 : -1;
-
-		if(id != r.id)
-			return (floor > r.floor || 
-					(floor == r.floor && id > r.id)) ? 
-						1 : -1;
-		return 0;
+		if(r.getClass().isAssignableFrom(ReceiveRequest.class) 
+				&& direction == ((ReceiveRequest)r).getDirection())
+			return 0;
+		return (floor > r.floor || 
+				(floor == r.floor && id > r.id)) ? 
+					1 : -1;
 	}
 
 }

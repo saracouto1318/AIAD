@@ -3,6 +3,9 @@ package request;
 import elevator.Elevator;
 
 public abstract class Request implements Comparable {
+	private static int ID = 0;
+	
+	protected int id = ID++;
 	protected int floor;
 	
 	public Request(int floor) {
@@ -17,7 +20,7 @@ public abstract class Request implements Comparable {
 
 	@Override
 	public boolean equals(Object obj) {
-		return floor == ((Request)obj).getFloor();
+		return id == ((Request)obj).id;
 	}
 
 	@Override

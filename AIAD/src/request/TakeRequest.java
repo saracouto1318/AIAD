@@ -15,16 +15,17 @@ public class TakeRequest extends Request {
 		//- Remove this request from the elevator set
 		//	this also removes the weight of this passenger
 		elevator.getStopFloors().remove(this);
+		System.out.println("Removing take request on floor " + floor + " - elevator cFloor " + elevator.getCFloor());
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		return false;
+		return super.equals(obj) && ((TakeRequest)obj).weight == weight;
 	}
 	
 	@Override
 	public int compareTo(Object arg0) {
 		Request r = ((Request)arg0);
-		return floor + 1 - r.getFloor();
+		return id != r.id ? floor + 1 - r.getFloor() : 0;
 	}
 }

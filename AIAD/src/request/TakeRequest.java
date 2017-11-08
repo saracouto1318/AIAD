@@ -19,13 +19,10 @@ public class TakeRequest extends Request {
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
-		return super.equals(obj) && ((TakeRequest)obj).weight == weight;
-	}
-	
-	@Override
 	public int compareTo(Object arg0) {
 		Request r = ((Request)arg0);
-		return id != r.id ? floor + 1 - r.getFloor() : 0;
+		if(id != r.id)
+			return (floor > r.floor || (floor == r.floor && id > r.id)) ? 1 : -1;
+		return 0;
 	}
 }

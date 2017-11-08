@@ -36,9 +36,9 @@ public class ReceiveRequest extends Request {
 	@Override
 	public int compareTo(Object arg0) {
 		Request r = (Request)arg0;
-		if(r.getClass().isAssignableFrom(ReceiveRequest.class) && direction == ((ReceiveRequest)r).getDirection())
-			return floor - ((Request)arg0).getFloor();
-		return floor + 1 - r.getFloor();
+		if((r.getClass().isAssignableFrom(ReceiveRequest.class) && direction == ((ReceiveRequest)r).getDirection()) || floor != r.floor)
+			return floor > r.floor ? 1 : -1;
+		return 0;
 	}
 
 }

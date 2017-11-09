@@ -6,16 +6,27 @@ import elevator.Elevator;
 import elevator.ElevatorDirection;
 
 public class ReceiveRequest extends Request {
+	public static final int MAX_WEIGHT = 200;
+	public static final int MIN_WEIGHT = 10;
 	/**
 	 * Enum value that represents, in this case, the direction the passenger wants go
 	 */
 	private ElevatorDirection direction;
 	
+	private int minPeople;
 
 	public ReceiveRequest(int floor, ElevatorDirection direction) {
 		super(floor);
 		//Return exception if Direction is NO_DIRECTION
 		this.direction = direction;
+		this.minPeople = 1;
+	}
+	
+	public ReceiveRequest(int floor, ElevatorDirection direction, int minPeople) {
+		super(floor);
+		//Return exception if Direction is NO_DIRECTION
+		this.direction = direction;
+		this.minPeople = minPeople <= 0 ? 1 : minPeople;
 	}
 	
 	/**
@@ -44,10 +55,10 @@ public class ReceiveRequest extends Request {
 		//	how many passengers are waiting for it) 
 		//	TakeRequests (random floor) to the elevator set
 		Random r = new Random();
-		int nPeople = r.nextInt(4) + 1;
+		int nPeople = r.nextInt(8 - minPeople) + minPeople;
 		while(nPeople-- > 0)
 			elevator.getStopFloors().add(
-					new TakeRequest(generateFloor(),10));
+					new TakeRequest(generateFloor(),generateWeight()));
 	}
 	
 	/**
@@ -67,10 +78,11 @@ public class ReceiveRequest extends Request {
 	 * @return whether or not it enter the elevator
 	 */
 	public boolean willEnterElevator(Elevator elevator) {
-		return direction == elevator.getDirection() || 
-				elevator.getDirection() == ElevatorDirection.NO_DIRECTION ||
-				(elevator.getDirection() != direction && 
-					elevator.isLastDirection(floor));
+		return elevator.getPassengersWeight() < elevator.ELEVATOR_WARNING_CAPACITY &&
+				(direction == elevator.getDirection() || 
+					elevator.getDirection() == ElevatorDirection.NO_DIRECTION ||
+					(elevator.getDirection() != direction && 
+						elevator.isLastDirection(floor)));
 	}
 	
 	/**
@@ -90,6 +102,10 @@ public class ReceiveRequest extends Request {
 			delta_floors = floor - Elevator.MIN_FLOOR - 1;
 			return r.nextInt(delta_floors) - floor;
 		}
+	}
+	
+	private int generateWeight() {
+		return (new Random()).nextInt(MAX_WEIGHT - MIN_WEIGHT) + MIN_WEIGHT;
 	}
 
 	@Override

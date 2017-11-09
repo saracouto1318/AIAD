@@ -12,6 +12,10 @@ public class TakeRequest extends Request {
 		super(floor);
 		this.weight = weight;
 	}
+	
+	public int getWeight() {
+		return weight;
+	}
 
 	/**
 	 * Called when the elevator gets to this floor.

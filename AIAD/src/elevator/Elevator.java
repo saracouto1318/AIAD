@@ -11,15 +11,21 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import request.Request;
+import request.TakeRequest;
 
 public class Elevator extends Agent {
 	public static final int MAX_FLOOR = 30;
 	public static final int MIN_FLOOR = -5;
 	
 	/**
-	 * Number of people the elevator can take at a time
+	 * Maximum capacity for the elevator
 	 */
-	private final int ELEVATOR_CAPACITY;
+	public final int ELEVATOR_CAPACITY;
+	/**
+	 * Elevator capacity which does not allow any more passengers
+	 * Meaning it'll not attend receive requests
+	 */
+	public final int ELEVATOR_WARNING_CAPACITY;	
 	/**
 	 * Number of the floors to where the elevator's passengers want to go
 	 */
@@ -36,12 +42,17 @@ public class Elevator extends Agent {
 	protected ElevatorStatus status;
 		
 	public Elevator() {
-		ELEVATOR_CAPACITY = 200;
+		ELEVATOR_CAPACITY = 500;
+		ELEVATOR_WARNING_CAPACITY = 400;
 		stopFloors = new TreeSet<>();
 	}	
 	
-	public int getElevatorCapacity() {
-		return ELEVATOR_CAPACITY;
+	public int getPassengersWeight() {
+		int passengersWeight = 0;
+		for(Request r : stopFloors)
+			if(r.getClass().isAssignableFrom(TakeRequest.class))
+				passengersWeight += ((TakeRequest)r).getFloor();
+		return passengersWeight;		
 	}
 
 	public TreeSet<Request> getStopFloors() {

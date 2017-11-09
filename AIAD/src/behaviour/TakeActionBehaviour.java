@@ -32,9 +32,6 @@ public class TakeActionBehaviour extends Behaviour {
 			System.out.println("Elevator stopped to leave some passengers");
 			this.elevator.setStatus(ElevatorStatus.STOPPED);
 		}
-
-		if(this.elevator.getDirection() == ElevatorDirection.NO_DIRECTION)
-			System.out.println("Ending program now");
 		
 		moveElevator();
 	}
@@ -62,7 +59,7 @@ public class TakeActionBehaviour extends Behaviour {
 		for(Request r : this.elevator.getStopFloors())
 			if(r.stop(elevator))
 				return true;
-		return true;
+		return false;
 	}
 	
 	/**
@@ -95,6 +92,6 @@ public class TakeActionBehaviour extends Behaviour {
 	 */
 	@Override
 	public boolean done() {
-		return this.elevator.getDirection() == ElevatorDirection.NO_DIRECTION;
+		return false;
 	}
 }

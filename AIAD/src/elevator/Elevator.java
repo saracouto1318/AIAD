@@ -51,7 +51,7 @@ public class Elevator extends Agent {
 		int passengersWeight = 0;
 		for(Request r : stopFloors)
 			if(r.getClass().isAssignableFrom(TakeRequest.class))
-				passengersWeight += ((TakeRequest)r).getFloor();
+				passengersWeight += ((TakeRequest)r).getWeight();
 		return passengersWeight;		
 	}
 
@@ -81,6 +81,16 @@ public class Elevator extends Agent {
 	
 	public void setDirection(ElevatorDirection direction) {
 		this.direction = direction;
+	}
+	
+	/**
+	 * 
+	 */
+	public boolean addPassenger(int floor, int weight) {
+		if(getPassengersWeight() + weight >= ELEVATOR_CAPACITY)
+			return false;
+		stopFloors.add(new TakeRequest(floor,weight));
+		return true;
 	}
 	
 	/**

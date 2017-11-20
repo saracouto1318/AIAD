@@ -49,16 +49,25 @@ public class ReceiveRequest extends Request {
 		//- If if does not enter elevator -> end function
 		if(!willEnterElevator(elevator))
 			return;
-		//- Remove this request from the elevator set
-		elevator.getStopFloors().remove(this);
 		//- Add several (random - the elevator doesn't know 
 		//	how many passengers are waiting for it) 
 		//	TakeRequests (random floor) to the elevator set
 		Random r = new Random();
 		int nPeople = r.nextInt(8 - minPeople) + minPeople;
-		while(nPeople-- > 0)
-			elevator.getStopFloors().add(
-					new TakeRequest(generateFloor(),generateWeight()));
+		while(nPeople-- > 0) {
+			int weight = generateWeight();
+			int floor = generateFloor();
+			if(!elevator.addPassenger(floor, weight))
+				break;
+		}
+
+		//- Remove this request from the elevator set
+		elevator.getStopFloors().remove(this);
+		
+		// TODO: Warn the building about new request
+		/*if(nPeople > 0)
+			building.warn();
+		*/			
 	}
 	
 	/**

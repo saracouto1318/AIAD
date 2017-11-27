@@ -21,13 +21,4 @@ public class NegociateBehaviour extends TakeActionBehaviour {
 	public void action() {
 		System.out.println("I'm \'" + id + "\'");
 	}
-
-	/**
-	 * Returns false
-	 */
-	@Override
-	public boolean done() {
-		return hello_behaviour.done();
-	}
-
 }

@@ -10,13 +10,4 @@ public class SelfishBehaviour extends TakeActionBehaviour {
 	
 	@Override
 	public void action() {}
-
-	/**
-	 * Returns false
-	 */
-	@Override
-	public boolean done() {
-		return false;
-	}
-
 }

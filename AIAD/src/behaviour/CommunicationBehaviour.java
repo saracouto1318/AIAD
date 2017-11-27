@@ -1,28 +1,72 @@
 package behaviour;
 
-import jade.core.behaviours.Behaviour;
+import java.io.IOException;
 
-public class CommunicationBehaviour extends Behaviour {
+import elevator.Elevator;
+import jade.core.behaviours.CyclicBehaviour;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.UnreadableException;
+import model.AnswerBuilding;
+import model.BuildingRequest;
+
+public class CommunicationBehaviour extends CyclicBehaviour {
+	private Elevator elevator;
 	
-	private static final int MAX_PRINTS = 200;
-	private int number_prints = 0;
+	public CommunicationBehaviour(Elevator elevator) {
+		this.elevator = elevator;
+	}
 
 	/**
 	 * Reads all the messages received and handles them
 	 */
 	@Override
 	public void action() {
-		System.out.println("Hello World");
-		number_prints++;
-
+		ACLMessage message = this.elevator.receive();
+		if(message != null) {
+			handler(message);
+		}
 	}
-
+	
 	/**
-	 * Returns false
+	 * 
+	 * @param message
 	 */
-	@Override
-	public boolean done() {
-		return number_prints >= MAX_PRINTS;
+	private void handler(ACLMessage message) {
+		BuildingRequest request;
+		ACLMessage reply;
+		AnswerBuilding answer;
+
+		//Get message content
+		try {
+			request = (BuildingRequest) message.getContentObject();
+		} catch (UnreadableException e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		//Create a reply message
+		reply = message.createReply();
+		answer = new AnswerBuilding(request.getId(), availability(request.getFloor()));
+		try {
+			reply.setContentObject(answer);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		//Send message
+		elevator.send(reply);
+	}
+	
+	/**
+	 * Calculates how available this elevator is to answer a request.
+	 * The elevator with the availability closer to zero gets the request.
+	 * @param request The requested floor
+	 * @return int value representing the availability of this elevator. 
+	 * The Integer is 0 if the elevator can answer the request right away and increases the further it is from being able to answer.
+	 */
+	public int availability(int request) {
+		return 0;
 	}
 
 }

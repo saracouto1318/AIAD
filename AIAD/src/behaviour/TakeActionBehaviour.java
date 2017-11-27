@@ -6,10 +6,10 @@ import java.util.TreeSet;
 import elevator.Elevator;
 import elevator.ElevatorDirection;
 import elevator.ElevatorStatus;
-import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.CyclicBehaviour;
 import request.Request;
 
-public class TakeActionBehaviour extends Behaviour {
+public class TakeActionBehaviour extends CyclicBehaviour {
 	private Elevator elevator;
 	
 	public TakeActionBehaviour(Elevator elevator) {
@@ -85,13 +85,5 @@ public class TakeActionBehaviour extends Behaviour {
 			this.elevator.changeDirection();
 			System.out.println("Changing direction");
 		}
-	}
-
-	/**
-	 * Returns true when there are no more requests on the set
-	 */
-	@Override
-	public boolean done() {
-		return false;
 	}
 }

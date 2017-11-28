@@ -6,19 +6,25 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 
 import behaviour.*;
 
 public class Building extends Agent {
 	private int bottomFloor;
 	private int topFloor;
+	private int numberOfFloors;
 	private int requestFreq;
 	
-	private final static int DEFAULT_FREQ = 10;
+	private final static int DEFAULT_FREQ = 20;
 	
-	private final static List<Entry<Integer,Integer>> FLOOR_FREQ = new java.util.ArrayList<>();
+	private final static Map<Integer,Integer> FLOOR_FREQ = new HashMap<Integer,Integer>();
+	
+	static {
+		FLOOR_FREQ.put(0,10);
+	}
 	
 	@Override
 	protected void setup() {
@@ -26,6 +32,7 @@ public class Building extends Agent {
 		bottomFloor = (int) args[0];
 		topFloor = (int) args[1];
 		requestFreq = (int) args[2];
+		numberOfFloors = topFloor - bottomFloor + 1;
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());
 		ServiceDescription sd = new ServiceDescription();
@@ -58,5 +65,13 @@ public class Building extends Agent {
 	
 	public int getTopFloor() {
 		return topFloor;
+	}
+	
+	public int getNumberOfFloors() {
+		return numberOfFloors;
+	}
+	
+	public int getFreqOfFloor(int floor) {
+		return FLOOR_FREQ.get(floor);
 	}
 }

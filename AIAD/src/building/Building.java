@@ -6,12 +6,26 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
+import java.util.List;
+import java.util.Map.Entry;
+
+import behaviour.*;
+
 public class Building extends Agent {
-	public static final int MIN_FLOOR = -5;
-	public static final int MAX_FLOOR = 50;
+	private int bottomFloor;
+	private int topFloor;
+	private int requestFreq;
+	
+	private final static int DEFAULT_FREQ = 10;
+	
+	private final static List<Entry<Integer,Integer>> FLOOR_FREQ = new java.util.ArrayList<>();
 	
 	@Override
 	protected void setup() {
+		Object[] args = getArguments();
+		bottomFloor = (int) args[0];
+		topFloor = (int) args[1];
+		requestFreq = (int) args[2];
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());
 		ServiceDescription sd = new ServiceDescription();
@@ -25,6 +39,8 @@ public class Building extends Agent {
 		}
 		
 		//Create behaviour
+		GenerateRequestsBehaviour nb = new GenerateRequestsBehaviour(this);
+		this.addBehaviour(nb);
 	}
 
 	@Override
@@ -35,5 +51,12 @@ public class Building extends Agent {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public int getBottomFloor() {
+		return bottomFloor;
+	}
+	
+	public int getTopFloor() {
+		return topFloor;
+	}
 }

@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import elevator.Elevator;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
-import model.*;
+import model.AnswerRequest;
+import model.Message;
+import model.MessageType;
+import model.NewRequest;
+import model.SatisfiedRequest;
+import model.StatusRequest;
 import request.ReceiveRequest;
 
 public class CommunicationBehaviour extends CyclicBehaviour {

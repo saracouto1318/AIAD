@@ -1,17 +1,24 @@
 package behaviour;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import elevator.Elevator;
+import elevator.ElevatorDirection;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
 import model.*;
+import request.ReceiveRequest;
 
 public class CommunicationBehaviour extends CyclicBehaviour {
 	/*
+
 		Behaviour 		- Reads and sends messages
 		Negotiation		- Every message sent by the building will be read by this behaviour. If that message is a new request 
 						then the elevator will calculate it's availability and send it to the building. 
@@ -25,11 +32,23 @@ public class CommunicationBehaviour extends CyclicBehaviour {
 		Answered		- When an elevator answers a request than it send a message to the building.
 						The building broadcasts a message to all elevators letting them know the request was already
 						answered.
+						
+		NewRequest <- Message
+		AnswerRequest <- Message
+		SatisfiedRequest <- Message
+		RenogatiateRequest <- Message(edited)
+		AckRequest <- Message
+		RejRequest <- Message
+		
 	 */
+	
 	private Elevator elevator;
+	
+	private Map<Integer, StatusRequest> rejectRequests;
 	
 	public CommunicationBehaviour(Elevator elevator) {
 		this.elevator = elevator;
+		this.rejectRequests = new HashMap<>();
 	}
 
 	/**
@@ -64,11 +83,11 @@ public class CommunicationBehaviour extends CyclicBehaviour {
 			case NEW:
 				handleNew(message.createReply(), (NewRequest)request);
 				break;
-			case ACK:
-				handleAck((AckRequest)request);
+			case STATUS:
+				handleStatus((StatusRequest)request);
 				break;
-			case REJ:
-				handleRej((RejRequest)request);
+			case SATISFIED:
+				handleSatisfied((SatisfiedRequest)request);
 				break;
 			default:
 				return;
@@ -77,7 +96,12 @@ public class CommunicationBehaviour extends CyclicBehaviour {
 	
 	private void handleNew(ACLMessage reply, NewRequest request) {
 		//Create a reply message
-		AnswerRequest answer = new AnswerRequest(/*request.getId(), diff(request.getFloor()), capacity(), numRequests()*/);
+		AnswerRequest answer = new AnswerRequest(request.getId(), 
+				this.elevator.getDirection(), 
+				this.elevator.getCFloor(), 
+				this.elevator.getLastFloorInDirection(), 
+				this.elevator.getPassengersWeight(), 
+				this.elevator.getStopFloors().size());
 		try {
 			reply.setContentObject(answer);
 		} catch (IOException e) {
@@ -86,16 +110,18 @@ public class CommunicationBehaviour extends CyclicBehaviour {
 		}
 		
 		//Send message
-		elevator.send(reply);
+		this.elevator.send(reply);
 	}
 	
-	private void handleAck(AckRequest request) {
-		//TODO: Set new ReceiveRequest
-		//elevator.getStopFloors().add(new ReceiveRequest());
+	private void handleStatus(StatusRequest request) {
+		if(request.isAck())
+			this.elevator.getStopFloors().add(new ReceiveRequest(request.getFloor(), request.getDirection()));
+		else
+			this.rejectRequests.put(request.getId(), request);
 	}
 	
-	private void handleRej(RejRequest request) {
-		//TODO: add floor to the rejected floors
+	private void handleSatisfied(SatisfiedRequest request) {
+		this.rejectRequests.remove(request.getId());
 	}
 	
 	/**
@@ -106,7 +132,7 @@ public class CommunicationBehaviour extends CyclicBehaviour {
 	 * @return int value representing the availability of this elevator. 
 	 * The Integer is 0 if the elevator can answer the request right away and increases the further it is from being able to answer.
 	 */
-	public int diff(int request) {
+	/*public int diff(int request) {
 		return Math.abs(elevator.getCFloor() - request);
 	}
 	
@@ -116,6 +142,6 @@ public class CommunicationBehaviour extends CyclicBehaviour {
 	
 	public int numRequests() {
 		return this.elevator.getStopFloors().size();
-	}
+	}*/
 
 }

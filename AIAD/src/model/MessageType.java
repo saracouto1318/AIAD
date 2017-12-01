@@ -3,45 +3,38 @@ package model;
 public enum MessageType {
 	NEW {
 		public Class<?> getMessageClass() {
-			return Message.class;
+			return NewRequest.class;
 		}
 		public boolean canCastAs(Message message) {
 			return NewRequest.class.isInstance(message);
 		}
 	}, ANSWER {
 		public Class<?> getMessageClass() {
-			return Message.class;
+			return AnswerRequest.class;
 		}
 		public boolean canCastAs(Message message) {
 			return AnswerRequest.class.isInstance(message);
 		}
 	}, SATISFIED {
 		public Class<?> getMessageClass() {
-			return Message.class;
+			return SatisfiedRequest.class;
 		}
 		public boolean canCastAs(Message message) {
 			return SatisfiedRequest.class.isInstance(message);
 		}
 	}, RENEGOTIATE {
 		public Class<?> getMessageClass() {
-			return Message.class;
+			return RenegotiateRequest.class;
 		}
 		public boolean canCastAs(Message message) {
 			return RenegotiateRequest.class.isInstance(message);
 		}
-	}, ACK {
+	}, STATUS {
 		public Class<?> getMessageClass() {
-			return Message.class;
+			return StatusRequest.class;
 		}
 		public boolean canCastAs(Message message) {
-			return AckRequest.class.isInstance(message);
-		}
-	}, REJ {
-		public Class<?> getMessageClass() {
-			return Message.class;			
-		}
-		public boolean canCastAs(Message message) {
-			return RejRequest.class.isInstance(message);
+			return StatusRequest.class.isInstance(message);
 		}
 	};
 	
@@ -58,9 +51,7 @@ public enum MessageType {
 			return SATISFIED;
 		else if(RENEGOTIATE.canCastAs(message))
 			return RENEGOTIATE;
-		else if(ACK.canCastAs(message))
-			return ACK;
-		else
-			return REJ;
+		else 
+			return STATUS;
 	}
 }

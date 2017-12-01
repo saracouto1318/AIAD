@@ -10,10 +10,19 @@ import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import request.ReceiveRequest;
 import request.Request;
 import request.TakeRequest;
 
 public class Elevator extends Agent {
+	/*
+	 * Questões:
+	 * 	É suposto termos uma forma automática de criar todos os elevadores e edifico dado um argumento?
+	 * 	Como é para fazer a interface? Swing?
+	 * 	Os elevadores podem e devem comunicar entre si certo?
+	 * 	O edíficio servirá apenas para decidir qual o melhor?
+	 * 	Tendo a inteface é suposto os elevadores moverem-se a um passo mais lento?
+	 */
 	public static final int MAX_FLOOR = 30;
 	public static final int MIN_FLOOR = -5;
 	
@@ -83,6 +92,27 @@ public class Elevator extends Agent {
 		this.direction = direction;
 	}
 	
+	public int getLastFloorInDirection() {
+		//TODO: Melhorar este algoritmo #naoconsigopensar
+		int floor = this.cFloor;
+		if(isLastDirection(this.cFloor))
+			return floor;
+		do {
+			for(Request r : this.stopFloors) {
+				if(r.getFloor() == floor && ReceiveRequest.class.isInstance(r.getClass())) 
+					if(this.direction == ElevatorDirection.DOWN)
+						return floor = MIN_FLOOR;
+					else
+						return floor = MAX_FLOOR;
+				//Since it's ordered
+				else if(r.getFloor() > floor)
+					break;
+			}
+			floor = move(floor);
+		} while(!isLastDirection(floor));
+		return floor;
+	}
+	
 	/**
 	 * 
 	 */
@@ -96,41 +126,59 @@ public class Elevator extends Agent {
 	/**
 	 * 	
 	 */
-	public void changeDirection() {
+	public boolean changeDirection() {
 		if(this.stopFloors.isEmpty())
 			this.direction = ElevatorDirection.NO_DIRECTION;
+		else if(!isLastDirection(cFloor))
+			return false;
 		else
 			this.direction = ElevatorDirection.changeDirection(this.direction);
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param floor
+	 * @return
+	 */
+	private int move(int floor) {
+		if(direction == ElevatorDirection.DOWN) {
+			floor--;
+			System.out.println("Move down");
+		} else if(direction == ElevatorDirection.UP) {
+			floor++;
+			System.out.println("Move up");
+		}
+		return floor;
 	}
 	
 	/**
 	 * 
 	 */
 	public void move() {
-		if(direction == ElevatorDirection.DOWN) {
-			cFloor--;
-			System.out.println("Move down");
-		} else if(direction == ElevatorDirection.UP) {
-			cFloor++;
-			System.out.println("Move up");
-		}
+		cFloor = move(cFloor);
 	}
 	
 	
 	public boolean isAbove(int floor) {
+		if(this.stopFloors.isEmpty())
+			return false;
 		LinkedList<Request> list = new LinkedList<>(this.stopFloors);
 		return list.getLast().getFloor() <= floor;
 	}
 	
 	public boolean isBelow(int floor) {
+		if(this.stopFloors.isEmpty())
+			return false;
 		LinkedList<Request> list = new LinkedList<>(this.stopFloors);
 		return list.getFirst().getFloor() >= floor;
 	}
 	
 	public boolean isLastDirection(int floor) {
-		return (direction == ElevatorDirection.UP && 
+		return this.stopFloors.isEmpty() ||
+				(this.direction == ElevatorDirection.UP && 
 					isAbove(cFloor)) ||
-				(direction == ElevatorDirection.DOWN && 
+				(this.direction == ElevatorDirection.DOWN && 
 					isBelow(cFloor));
 	}
 	

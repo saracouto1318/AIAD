@@ -1,15 +1,11 @@
 package behaviour;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import elevator.Elevator;
-import elevator.ElevatorDirection;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;

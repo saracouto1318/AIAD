@@ -6,12 +6,23 @@ import elevator.ElevatorStatus;
 import request.ReceiveRequest;
 import request.TakeRequest;
 
+/**
+ * 
+ * This class tests the elevator behaviour
+ *
+ */
 public class ElevatorTestPassengers extends Elevator {
+	/**
+	 * Constructor of the class ElevatorTestPassengers
+	 */
 	public ElevatorTestPassengers() {
 		super();
 		testFloors();
 	}
 	
+	/**
+	 * This functions tests the requests of the elevator
+	 */
 	private void testFloors() {
 		stopFloors.add(new TakeRequest(1,50));
 		stopFloors.add(new TakeRequest(14,50));

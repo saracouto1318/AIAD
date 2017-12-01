@@ -1,0 +1,87 @@
+package gui;
+
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionListener;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JSlider;
+
+import java.awt.*;
+import javax.swing.JButton;
+import java.awt.event.ActionEvent;
+import javax.swing.SwingUtilities;
+
+
+public class form extends JFrame implements ActionListener {
+	int nFloors;
+	int nElevators;
+	JSlider slider, slider_1;
+	/**
+	 * Create the application.
+	 */
+	public form() {
+		super("Configuration");
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		setBounds(100, 100, 450, 300);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		getContentPane().setLayout(null);
+		
+		slider = new JSlider(JSlider.HORIZONTAL, 0, 10, 4);
+		slider.setBounds(98, 70, 200, 50);
+		slider.setMajorTickSpacing(5);
+		slider.setMinorTickSpacing(1);
+		slider.setPaintTicks(true);
+		slider.setPaintLabels(true);
+		getContentPane().add(slider);
+		
+		slider_1 = new JSlider(JSlider.HORIZONTAL, 0, 30, 5);
+		slider_1.setBounds(98, 157, 200, 45);
+		slider_1.setMajorTickSpacing(5);
+		slider_1.setMinorTickSpacing(1);
+		slider_1.setPaintTicks(true);
+		slider_1.setPaintLabels(true);
+		getContentPane().add(slider_1);
+		
+		JLabel lblNumberOfElevators = new JLabel("Number of Elevators");
+		lblNumberOfElevators.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNumberOfElevators.setBounds(98, 47, 149, 14);
+		getContentPane().add(lblNumberOfElevators);
+		
+		JLabel lblNumberOf = new JLabel("Number of Floors");
+		lblNumberOf.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNumberOf.setBounds(98, 131, 130, 14);
+		getContentPane().add(lblNumberOf);
+		
+		JButton btnNext = new JButton("Next");
+		btnNext.setBounds(175, 227, 89, 23);
+		btnNext.addActionListener(this);
+		btnNext.setActionCommand("Next");
+		getContentPane().add(btnNext);
+		
+        setVisible(true);
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String cmd = e.getActionCommand();
+		nElevators = slider.getValue();
+		nFloors = slider_1.getValue();
+
+        if(cmd.equals("Next"))
+        {
+        	dispose();
+            new elevatorConf(nElevators, nFloors);
+        }
+		
+		
+	}
+}

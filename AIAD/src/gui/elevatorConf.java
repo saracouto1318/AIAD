@@ -84,10 +84,37 @@ public class elevatorConf extends JFrame implements ActionListener {
 			maxCapacity.setBounds(34+(i*50), 22+((aux+1)*10)+20, 27, 14);
 			getContentPane().add(maxCapacity);
 			
-			/*int capacity = Integer.parseInt(maxCapacity.getText());
-			
-			capacities.add(capacity);
-			System.out.println(capacity);	*/
+			maxCapacity.getDocument().addDocumentListener(new DocumentListener() {
+
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					onChange();
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					onChange();
+					
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					onChange();
+					
+				}
+				
+				public void onChange(){
+					int capacity = Integer.parseInt(maxCapacity.getText());
+					
+					capacities.add(capacity);
+					System.out.println(capacities);
+					if(capacities.get(capacities.size()-1) >= 10)
+						capacities.remove(capacities.size()-2);
+					
+					System.out.println(capacities);
+				}
+			});
 		}
 
         setVisible(true);

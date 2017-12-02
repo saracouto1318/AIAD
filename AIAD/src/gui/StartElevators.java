@@ -56,27 +56,15 @@ public class StartElevators extends JFrame implements ActionListener {
 		//ciclo em que a cada iteração vai apagando as labels????
 		for(int i=0; i<nElevators; i++){
 			for(int j=0; j<nFloors; j++){
-				//sem request
-				if(j % 2 == 0){
-					label.setBounds(34+(i*50), 22+(j*10), 25, 10);
-					label.setForeground(Color.black);
-					label.setBorder(border);
-					label.setBackground(Color.white);
-					label.setOpaque(true);
-					getContentPane().add(label);
-				}
-				else{
-					//com request
-					label.setBounds(34+(i*50), 22+(j*10), 25, 10);
-					label.setForeground(Color.black);
-					label.setBorder(border);
-					label.setBackground(Color.green);
-					label.setOpaque(true);
-					getContentPane().add(label);
-				}
+				label = new JLabel("");
+				label.setBounds(34+(i*50), 22+(j*10), 25, 10);
+				label.setForeground(Color.black);
+				label.setBorder(border);
+				label.setBackground(Color.white);
+				label.setOpaque(true);
+				getContentPane().add(label);	
 			}
-		}
-		
+		}	
         setVisible(true);
 		
 	}

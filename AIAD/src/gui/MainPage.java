@@ -1,17 +1,14 @@
 package gui;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import java.awt.*;
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.SwingUtilities;
 
-public class mainPage extends JFrame implements ActionListener {
+public class MainPage extends JFrame implements ActionListener {
 
 	/**
 	 * Launch the application.
@@ -19,7 +16,7 @@ public class mainPage extends JFrame implements ActionListener {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				new mainPage().setVisible(true);
+				new MainPage().setVisible(true);
 			}
 		});
 	}
@@ -28,7 +25,7 @@ public class mainPage extends JFrame implements ActionListener {
 	/**
 	 * Create the application.
 	 */
-	public mainPage() {
+	public MainPage() {
 		super("Elevators Manager");
 		initialize();
 	}
@@ -66,7 +63,7 @@ public class mainPage extends JFrame implements ActionListener {
         if(cmd.equals("OpenNormal") || cmd.equals("OpenSpecial"))
         {
         	dispose();
-            new form();
+            new Form();
         }
 		
 	}

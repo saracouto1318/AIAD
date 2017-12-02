@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 
@@ -8,20 +7,18 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 
-import java.awt.*;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
-import javax.swing.SwingUtilities;
 
 
-public class form extends JFrame implements ActionListener {
+public class Form extends JFrame implements ActionListener {
 	int nFloors;
 	int nElevators;
 	JSlider slider, slider_1;
 	/**
 	 * Create the application.
 	 */
-	public form() {
+	public Form() {
 		super("Configuration");
 		initialize();
 	}
@@ -79,7 +76,7 @@ public class form extends JFrame implements ActionListener {
         if(cmd.equals("Next"))
         {
         	dispose();
-            new elevatorConf(nElevators, nFloors);
+            new ElevatorConf(nElevators, nFloors);
         }
 		
 		

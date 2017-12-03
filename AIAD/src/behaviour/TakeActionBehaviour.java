@@ -75,15 +75,15 @@ public class TakeActionBehaviour extends CyclicBehaviour {
 	 * Calculates the next move for the elevator
 	 */
 	private void nextDirection() {
-		//If stop floors is empty then there are no more requests
+		/*//If stop floors is empty then there are no more requests
 		if(this.elevator.getStopFloors().isEmpty())
 			this.elevator.setDirection(ElevatorDirection.NO_DIRECTION);
 		
 		//Check if moving in the current elevator direction will lead them to a stop
 		else if(this.elevator.isLastDirection(this.elevator.getCFloor())) {
-			//If it doesn't -> Change direction
-			this.elevator.changeDirection();
+			//If it doesn't -> Change direction*/
+		if(this.elevator.changeDirection())
 			System.out.println("Changing direction");
-		}
+		//}
 	}
 }

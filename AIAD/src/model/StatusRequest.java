@@ -2,18 +2,28 @@ package model;
 
 import elevator.ElevatorDirection;
 
-public class NewRequest extends Message {
+public class StatusRequest extends Message {
+	private boolean ack;
 	private int floor;
 	private ElevatorDirection direction;
-	
-	public NewRequest() {
+
+	public StatusRequest() {
 		super();
 	}
 	
-	public NewRequest(int id, int floor, ElevatorDirection direction) {
+	public StatusRequest(int id, boolean ack, int floor, ElevatorDirection direction) {
 		super(id);
+		this.ack = ack;
 		this.floor = floor;
 		this.direction = direction;
+	}
+
+	public boolean isAck() {
+		return ack;
+	}
+
+	public void setAck(boolean ack) {
+		this.ack = ack;
 	}
 
 	public int getFloor() {

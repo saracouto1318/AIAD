@@ -20,14 +20,14 @@ import java.util.*;
 
 
 public class StartElevators extends JFrame implements ActionListener {
-	int nElevators;
-	int nFloors;
-
-	ArrayList<Integer> capacities;
+	private int nElevators;
+	private int nFloors;
+	private Integer[] capacities;
+	
 	/**
 	 * Create the application.
 	 */
-	public StartElevators(int nElevators, int nFloors, ArrayList<Integer> capacities) {
+	public StartElevators(int nElevators, int nFloors, Integer[] capacities) {
 		super("Elevators");
 		this.nElevators = nElevators;
 		this.nFloors = nFloors;
@@ -40,6 +40,13 @@ public class StartElevators extends JFrame implements ActionListener {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		try {
+			JadeBoot boot = new JadeBoot(this.nFloors, this.nElevators, this.capacities);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(ABORT);
+		}
+		
 		setBounds(100, 100, 550, 500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);

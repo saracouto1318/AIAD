@@ -35,21 +35,21 @@ public class Elevator extends Agent {
 	/**
 	 * Maximum possible floor
 	 */
-	public static final int MAX_FLOOR = 30;
+	public int maxFloor = 30;
 	/**
 	 * Minimum possible floor
 	 */
-	public static final int MIN_FLOOR = -5;
+	public int minFloor = 0;
 
 	/**
 	 * Maximum capacity for the elevator
 	 */
-	public final int ELEVATOR_CAPACITY;
+	public int ELEVATOR_CAPACITY;
 	/**
 	 * Elevator capacity which does not allow any more passengers Meaning it'll
 	 * not attend receive requests
 	 */
-	public final int ELEVATOR_WARNING_CAPACITY;
+	public int ELEVATOR_WARNING_CAPACITY;
 	/**
 	 * Number of the floors to where the elevator's passengers want to go
 	 */
@@ -174,9 +174,9 @@ public class Elevator extends Agent {
 			for(Request r : this.stopFloors) {
 				if(r.getFloor() == floor && ReceiveRequest.class.isInstance(r.getClass())) 
 					if(this.direction == ElevatorDirection.DOWN)
-						return floor = MIN_FLOOR;
+						return floor = minFloor;
 					else
-						return floor = MAX_FLOOR;
+						return floor = maxFloor;
 				//Since it's ordered
 				else if(r.getFloor() > floor)
 					break;
@@ -277,6 +277,15 @@ public class Elevator extends Agent {
 	 */
 	@Override
 	protected void setup() {
+		Object[] args = getArguments();
+		try {
+			minFloor = 0; //Integer.parseInt(args[0].toString());
+			maxFloor = Integer.parseInt(args[0].toString());
+			ELEVATOR_CAPACITY = Integer.parseInt(args[1].toString());
+			ELEVATOR_WARNING_CAPACITY = ELEVATOR_CAPACITY - 50;
+		} catch(ArrayIndexOutOfBoundsException exc) {
+			throw(exc);
+		}
 		String type = "No Communication";
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());

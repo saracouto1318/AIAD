@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 
 public class MainPage extends JFrame implements ActionListener {
 
+
 	/**
 	 * Launch the application.
 	 */

@@ -20,10 +20,10 @@ import java.util.*;
 
 
 public class ElevatorConf extends JFrame implements ActionListener {
-	int nElevators;
-	int nFloors;
+	private int nElevators;
+	private int nFloors;
+	private Integer[] capacities;
 	
-	ArrayList<Integer> capacities;
 	/**
 	 * Create the application.
 	 */
@@ -31,7 +31,7 @@ public class ElevatorConf extends JFrame implements ActionListener {
 		super("Elevators Configuration");
 		this.nElevators = nElevators;
 		this.nFloors = nFloors;
-		this.capacities = new ArrayList<Integer>(Collections.nCopies(this.nElevators, 0));
+		this.capacities = new Integer[this.nElevators];
 		getContentPane().setForeground(Color.BLACK);
 		initialize();
 	}
@@ -113,7 +113,7 @@ public class ElevatorConf extends JFrame implements ActionListener {
 			
 			public void onChange(){
 				int capacity = Integer.parseInt(textField.getText());
-				capacities.set(i, capacity);
+				capacities[i] = capacity;
 				System.out.println(capacities);
 			}
 		});

@@ -12,9 +12,10 @@ import java.awt.event.ActionEvent;
 
 
 public class Form extends JFrame implements ActionListener {
-	int nFloors;
-	int nElevators;
-	JSlider slider, slider_1;
+	private int nFloors;
+	private int nElevators;
+	private JSlider slider, slider_1;
+	
 	/**
 	 * Create the application.
 	 */

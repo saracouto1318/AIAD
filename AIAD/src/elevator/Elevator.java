@@ -295,7 +295,7 @@ public class Elevator extends Agent {
 		}
 
 		// Create behaviour
-		CommunicationBehaviour cb = new CommunicationBehaviour(this);
+		CommunicationBehaviour cb = new ElevatorCommunicationBehaviour(this);
 		this.addBehaviour(cb);
 		TakeActionBehaviour nb = new TakeActionBehaviour(this);
 		this.addBehaviour(nb);

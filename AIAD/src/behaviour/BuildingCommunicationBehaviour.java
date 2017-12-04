@@ -1,8 +1,11 @@
 package behaviour;
 
 import building.Building;
+import model.Message;
+import model.MessageType;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.UnreadableException;
 
 public class BuildingCommunicationBehaviour extends CommunicationBehaviour {
 
@@ -12,7 +15,18 @@ public class BuildingCommunicationBehaviour extends CommunicationBehaviour {
 
 	@Override
 	protected void handler(ACLMessage message) {
-		// TODO Auto-generated method stub
-		
+		Message content;
+		MessageType type;
+		try {
+			content = (Message) message.getContentObject();
+		} catch (UnreadableException e) {
+			e.printStackTrace();
+			return;
+		}
+		type = MessageType.getMessageType(content);
+		switch(type){
+			default:
+				return;
+		}
 	}
 }

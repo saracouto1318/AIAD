@@ -221,10 +221,8 @@ public class Elevator extends Agent {
 	private int move(int floor) {
 		if(direction == ElevatorDirection.DOWN) {
 			floor--;
-			System.out.println("Move down");
 		} else if(direction == ElevatorDirection.UP) {
 			floor++;
-			System.out.println("Move up");
 		}
 		return floor;
 	}

@@ -28,8 +28,6 @@ public class TakeRequest extends Request {
 		//- Remove this request from the elevator set
 		//	this also removes the weight of this passenger
 		elevator.getStopFloors().remove(this);
-		System.out.println("Removing take request on floor " + floor 
-				+ " - elevator cFloor " + elevator.getCFloor());
 	}
 	
 	@Override

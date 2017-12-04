@@ -17,7 +17,6 @@ import model.StatusRequest;
 import request.ReceiveRequest;
 
 public class ElevatorCommunicationBehaviour extends CommunicationBehaviour {
-
 	/*
 	 * 
 	 * Behaviour - Reads and sends messages Negotiation - Every message sent by
@@ -51,6 +50,8 @@ public class ElevatorCommunicationBehaviour extends CommunicationBehaviour {
 
 	@Override
 	protected void handler(ACLMessage message) {
+		System.out.print("Handler for message: ");
+		
 		Message request;
 		MessageType type;
 
@@ -66,12 +67,15 @@ public class ElevatorCommunicationBehaviour extends CommunicationBehaviour {
 		type = MessageType.getMessageType(request);
 		switch (type) {
 		case NEW:
+			System.out.print("NEW");
 			handleNew(message.createReply(), (NewRequest) request);
 			break;
 		case STATUS:
+			System.out.print("STATUS");
 			handleStatus((StatusRequest) request);
 			break;
 		case SATISFIED:
+			System.out.print("SATISFIED");
 			handleSatisfied((SatisfiedRequest) request);
 			break;
 		default:

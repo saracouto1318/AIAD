@@ -33,11 +33,16 @@ public class TakeActionBehaviour extends TickerBehaviour {
 		}
 		//Stop if this cFloor is a stopFloor
 		else if(shouldStop()) {
-			System.out.println("Elevator stopped to leave some passengers");
 			this.elevator.setStatus(ElevatorStatus.STOPPED);
 		}
 		
 		moveElevator();		
+		
+		StringBuilder strBuilder = new StringBuilder("");
+		strBuilder.append(this.elevator.getAID()).append(" ").append(this.elevator.getCFloor()).append(" ");
+		for(Request r : this.elevator.getStopFloors())
+			strBuilder.append(" ").append(r.getClass()).append(":").append(r.getFloor());
+		System.out.println(strBuilder.toString());
 	}
 	
 	/**
@@ -86,8 +91,7 @@ public class TakeActionBehaviour extends TickerBehaviour {
 		//Check if moving in the current elevator direction will lead them to a stop
 		else if(this.elevator.isLastDirection(this.elevator.getCFloor())) {
 			//If it doesn't -> Change direction*/
-		if(this.elevator.changeDirection())
-			System.out.println("Changing direction");
+		this.elevator.changeDirection();
 		//}
 	}
 }

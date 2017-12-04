@@ -25,6 +25,7 @@ public class TakeActionBehaviour extends TickerBehaviour {
 	 */
 	@Override
 	protected void onTick() {
+		System.out.println("ACTION TICK");
 		if(this.elevator.getStatus() == ElevatorStatus.STOPPED) {
 			//Go from stopped to moving
 			this.elevator.setStatus(ElevatorStatus.MOVING);

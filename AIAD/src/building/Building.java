@@ -34,9 +34,13 @@ public class Building extends Agent {
 	@Override
 	protected void setup() {
 		Object[] args = getArguments();
-		bottomFloor = (int) args[0];
-		topFloor = (int) args[1];
-		requestFreq = (int) args[2];
+		try {
+			bottomFloor = (int) args[0];
+			topFloor = (int) args[1];
+			requestFreq = (int) args[2];
+		} catch(ArrayIndexOutOfBoundsException exc) {
+			throw(exc);
+		}
 		numberOfFloors = topFloor - bottomFloor + 1;
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());

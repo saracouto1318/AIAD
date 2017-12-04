@@ -55,8 +55,10 @@ public class Building extends Agent {
 		}
 
 		// Create behaviour
-		GenerateRequestsBehaviour nb = new GenerateRequestsBehaviour(this);
-		this.addBehaviour(nb);
+		GenerateRequestsBehaviour reqBehaviour = new GenerateRequestsBehaviour(this);
+		CommunicationBehaviour comBehaviour = new BuildingCommunicationBehaviour(this); 
+		this.addBehaviour(reqBehaviour);
+		this.addBehaviour(comBehaviour);
 	}
 
 	@Override

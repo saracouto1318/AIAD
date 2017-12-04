@@ -23,7 +23,7 @@ public class ElevatorConf extends JFrame implements ActionListener {
 	int nElevators;
 	int nFloors;
 	
-	ArrayList<Integer> capacities = new ArrayList<Integer>();
+	ArrayList<Integer> capacities;
 	/**
 	 * Create the application.
 	 */
@@ -31,6 +31,7 @@ public class ElevatorConf extends JFrame implements ActionListener {
 		super("Elevators Configuration");
 		this.nElevators = nElevators;
 		this.nFloors = nFloors;
+		this.capacities = new ArrayList<Integer>(Collections.nCopies(this.nElevators, 0));
 		getContentPane().setForeground(Color.BLACK);
 		initialize();
 	}
@@ -71,7 +72,7 @@ public class ElevatorConf extends JFrame implements ActionListener {
 			maxCapacity.setBounds(34+(i*50), 22+((nFloors+1)*10)+20, 27, 14);
 			getContentPane().add(maxCapacity);
 			
-			this.getCapacities(maxCapacity);
+			this.getCapacities(maxCapacity, i);
 		}	
         setVisible(true);
 		
@@ -89,7 +90,7 @@ public class ElevatorConf extends JFrame implements ActionListener {
     }
 	
 	
-	public void getCapacities(JTextField textField){
+	public void getCapacities(JTextField textField, final int i){
 		textField.getDocument().addDocumentListener(new DocumentListener() {
 
 			@Override
@@ -112,14 +113,7 @@ public class ElevatorConf extends JFrame implements ActionListener {
 			
 			public void onChange(){
 				int capacity = Integer.parseInt(textField.getText());
-				
-				capacities.add(capacity);
-				System.out.println(capacities);
-				if(capacities.get(capacities.size()-1) >= 10 && capacities.get(capacities.size()-1) < 100)
-					capacities.remove(capacities.size()-2);
-				else if(capacities.get(capacities.size()-1) >= 100)
-					capacities.remove(capacities.size()-3);
-				
+				capacities.set(i, capacity);
 				System.out.println(capacities);
 			}
 		});

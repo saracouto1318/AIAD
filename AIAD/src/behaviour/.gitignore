@@ -3,3 +3,5 @@
 /NegociateBehaviour.class
 /SelfishBehaviour.class
 /TakeActionBehaviour.class
+/BuildingCommunicationBehaviour.class
+/ElevatorCommunicationBehaviour.class

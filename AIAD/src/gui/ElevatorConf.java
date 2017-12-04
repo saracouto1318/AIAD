@@ -114,7 +114,6 @@ public class ElevatorConf extends JFrame implements ActionListener {
 			public void onChange(){
 				int capacity = Integer.parseInt(textField.getText());
 				capacities[i] = capacity;
-				System.out.println(capacities);
 			}
 		});
 	}

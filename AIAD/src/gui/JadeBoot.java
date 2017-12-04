@@ -27,7 +27,6 @@ public class JadeBoot {
 	private boolean initAgents(int nFloors, int nElevators, Integer[] elevatorCapacities) {
 		p = new ProfileImpl(true);
 		container = jade.core.Runtime.instance().createMainContainer(p);
-		
 		try {
 			String name;
 			for(int i = 0; i < nElevators; i++) {
@@ -38,7 +37,6 @@ public class JadeBoot {
 			name = "building"; 
 			container.createNewAgent(name, Building.class.getName(), new Object[] {nFloors, 2000000});
 			agentsNames[nElevators] = name;
-			
 		} catch(StaleProxyException e) {
 			e.printStackTrace();
 			return false;

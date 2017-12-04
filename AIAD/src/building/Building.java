@@ -9,6 +9,7 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,11 +27,13 @@ public class Building extends Agent {
 	private final static int DEFAULT_FREQ = 20;
 
 	private final static Map<Integer, Integer> FLOOR_FREQ = new HashMap<Integer, Integer>();
+	
+	private Map<Integer, List<Message>> requestResponses = new HashMap<Integer, List<Message>>();
 
 	static {
 		FLOOR_FREQ.put(0, 10);
 	}
-
+	
 	@Override
 	protected void setup() {
 		Object[] args = getArguments();
@@ -60,7 +63,7 @@ public class Building extends Agent {
 		this.addBehaviour(reqBehaviour);
 		this.addBehaviour(comBehaviour);
 	}
-
+	
 	@Override
 	protected void takeDown() {
 		try {
@@ -69,31 +72,62 @@ public class Building extends Agent {
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public int getBottomFloor() {
 		return bottomFloor;
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public int getTopFloor() {
 		return topFloor;
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public int getNumberOfFloors() {
 		return numberOfFloors;
 	}
 
+	/**
+	 * 
+	 * @param floor
+	 * @return
+	 */
 	public int getFreqOfFloor(int floor) {
 		return FLOOR_FREQ.get(floor) == null ? DEFAULT_FREQ : FLOOR_FREQ.get(floor);
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public int getRequestFreq() {
 		return requestFreq;
 	}
 	
+	/**
+	 * 
+	 * @param floor
+	 * @return
+	 */
 	public int getRequestFreqOfFloor(int floor) {
 		return getFreqOfFloor(floor) * getRequestFreq();
 	}
-
+	
+	/**
+	 * 
+	 * @param message
+	 * @return
+	 */
 	public int sendMessage(Message message) {
 		int n = 0;
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
@@ -108,5 +142,19 @@ public class Building extends Agent {
 			msg.addReceiver(elev);
 		send(msg);
 		return n;
+	}
+	
+	/**
+	 * 
+	 * @param requestId
+	 * @param response
+	 */
+	public void receiveRequestResponse(int requestId, Message response) {
+		List<Message> list = requestResponses.get(requestId);
+		if (list == null) {
+			list = new ArrayList<Message>();
+			requestResponses.put(requestId,list);
+		}
+		list.add(response);
 	}
 }

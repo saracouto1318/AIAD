@@ -29,8 +29,10 @@ public abstract class CommunicationBehaviour extends CyclicBehaviour {
 	@Override
 	public void action() {
 		ACLMessage message = this.myAgent.receive();
-		while (message != null)
+		while (message != null) {
 			handler(message);
+			message = this.myAgent.receive();
+		}
 	}
 	
 	/**

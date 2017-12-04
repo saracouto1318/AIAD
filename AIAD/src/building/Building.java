@@ -85,6 +85,14 @@ public class Building extends Agent {
 	public int getFreqOfFloor(int floor) {
 		return FLOOR_FREQ.get(floor) == null ? DEFAULT_FREQ : FLOOR_FREQ.get(floor);
 	}
+	
+	public int getRequestFreq() {
+		return requestFreq;
+	}
+	
+	public int getRequestFreqOfFloor(int floor) {
+		return getFreqOfFloor(floor) * getRequestFreq();
+	}
 
 	public int sendMessage(Message message) {
 		int n = 0;

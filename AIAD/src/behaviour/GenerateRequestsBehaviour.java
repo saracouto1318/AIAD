@@ -28,6 +28,7 @@ public class GenerateRequestsBehaviour extends CyclicBehaviour {
 		int n = 0;
 		for (int i = bf; i <= tf; i++) {
 			if (randomGenerator.nextInt(building.getFreqOfFloor(i)) == 0) {
+				System.out.println("New request");
 				int floor = i;
 				int d = randomGenerator.nextInt(1);
 				ElevatorDirection direction = ElevatorDirection.values()[d];

@@ -93,10 +93,9 @@ public class Building extends Agent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		AID[] elevators = Elevator.getAllElevators(this);
-		for (int i = 0; i < elevators.length; i++) {
-			msg.addReceiver(elevators[i]);
-		}
+		List<AID> elevators = Elevator.getAllElevators(this);
+		for (AID elev : elevators)
+			msg.addReceiver(elev);
 		send(msg);
 		return n;
 	}

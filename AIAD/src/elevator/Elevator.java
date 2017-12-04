@@ -68,7 +68,7 @@ public class Elevator extends Agent {
 	 */
 	protected ElevatorStatus status;
 
-	public static final AID[] getAllElevators(Agent a) {
+	public static final List<AID> getAllElevators(Agent a) {
 		AMSAgentDescription[] agents = null;
 		List<AID> agentsAID = new ArrayList<AID>();
 		try {
@@ -81,7 +81,7 @@ public class Elevator extends Agent {
 		} catch (Exception e) {
 
 		}
-		return (AID[]) agentsAID.toArray();
+		return agentsAID;
 	}
 	
 	/**

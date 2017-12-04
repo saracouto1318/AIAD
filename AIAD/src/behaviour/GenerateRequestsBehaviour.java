@@ -18,8 +18,7 @@ public class GenerateRequestsBehaviour extends CyclicBehaviour {
 
 	@Override
 	public void action() {
-		// TODO Auto-generated method stub
-
+		generateRandomRequests();
 	}
 
 	public int generateRandomRequests() {

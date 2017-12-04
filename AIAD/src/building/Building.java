@@ -35,9 +35,9 @@ public class Building extends Agent {
 	protected void setup() {
 		Object[] args = getArguments();
 		try {
-			bottomFloor = (int) args[0];
-			topFloor = (int) args[1];
-			requestFreq = (int) args[2];
+			bottomFloor = Integer.parseInt(args[0].toString());
+			topFloor = Integer.parseInt(args[1].toString());
+			requestFreq = Integer.parseInt(args[2].toString());
 		} catch(ArrayIndexOutOfBoundsException exc) {
 			throw(exc);
 		}

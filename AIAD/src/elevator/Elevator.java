@@ -1,14 +1,19 @@
 package elevator;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.TreeSet;
 
 import behaviour.*;
-
+import jade.core.AID;
 import jade.core.Agent;
+import jade.domain.AMSService;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
+import jade.domain.FIPAAgentManagement.AMSAgentDescription;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import request.ReceiveRequest;
 import request.Request;
@@ -37,16 +42,16 @@ public class Elevator extends Agent {
 	 * Minimum possible floor
 	 */
 	public static final int MIN_FLOOR = -5;
-	
+
 	/**
 	 * Maximum capacity for the elevator
 	 */
 	public final int ELEVATOR_CAPACITY;
 	/**
-	 * Elevator capacity which does not allow any more passengers
-	 * Meaning it'll not attend receive requests
+	 * Elevator capacity which does not allow any more passengers Meaning it'll
+	 * not attend receive requests
 	 */
-	public final int ELEVATOR_WARNING_CAPACITY;	
+	public final int ELEVATOR_WARNING_CAPACITY;
 	/**
 	 * Number of the floors to where the elevator's passengers want to go
 	 */
@@ -64,6 +69,22 @@ public class Elevator extends Agent {
 	 * Enumerates the elevator's different status
 	 */
 	protected ElevatorStatus status;
+
+	public static final AID[] getAllElevators(Agent a) {
+		AMSAgentDescription[] agents = null;
+		List<AID> agentsAID = new ArrayList<AID>();
+		try {
+			SearchConstraints c = new SearchConstraints();
+			c.setMaxResults(new Long(-1));
+			agents = AMSService.search(a, new AMSAgentDescription(), c);
+			for (int i = 0; i < agents.length; i++) {
+				agentsAID.add(agents[i].getName());
+			}
+		} catch (Exception e) {
+
+		}
+		return (AID[]) agentsAID.toArray();
+	}
 	
 	/**
 	 * Creates an elevator with a max capacity, a warning capacity and a set of floors where the elevator must stop
@@ -72,7 +93,7 @@ public class Elevator extends Agent {
 		ELEVATOR_CAPACITY = 500;
 		ELEVATOR_WARNING_CAPACITY = 400;
 		stopFloors = new TreeSet<>();
-	}	
+	}
 	
 	/**
 	 * Calculates the total weight of the passengers
@@ -80,10 +101,10 @@ public class Elevator extends Agent {
 	 */
 	public int getPassengersWeight() {
 		int passengersWeight = 0;
-		for(Request r : stopFloors)
-			if(r.getClass().isAssignableFrom(TakeRequest.class))
-				passengersWeight += ((TakeRequest)r).getWeight();
-		return passengersWeight;		
+		for (Request r : stopFloors)
+			if (r.getClass().isAssignableFrom(TakeRequest.class))
+				passengersWeight += ((TakeRequest) r).getWeight();
+		return passengersWeight;
 	}
 
 	/**
@@ -141,7 +162,7 @@ public class Elevator extends Agent {
 	public void setDirection(ElevatorDirection direction) {
 		this.direction = direction;
 	}
-	
+
 	/**
 	 * Gets the last floor possible in a certain direction
 	 * @return The last floor possible in a certain direction
@@ -174,12 +195,12 @@ public class Elevator extends Agent {
 	 * @return true if it's possible to add the new passenger to the elevator; false otherwise
 	 */
 	public boolean addPassenger(int floor, int weight) {
-		if(getPassengersWeight() + weight >= ELEVATOR_CAPACITY)
+		if (getPassengersWeight() + weight >= ELEVATOR_CAPACITY)
 			return false;
-		stopFloors.add(new TakeRequest(floor,weight));
+		stopFloors.add(new TakeRequest(floor, weight));
 		return true;
 	}
-	
+
 	/**
 	 * This function changes the elevator's direction
 	 * @return true if it's possible to change the elevator's direction; false otherwise
@@ -193,7 +214,7 @@ public class Elevator extends Agent {
 			this.direction = ElevatorDirection.changeDirection(this.direction);
 		return true;
 	}
-	
+
 	/**
 	 * This function creates the elevator's movements
 	 * @param floor Elevator's current floor
@@ -269,14 +290,14 @@ public class Elevator extends Agent {
 		dfd.addServices(sd);
 		try {
 			DFService.register(this, dfd);
-		} catch(FIPAException e) {
+		} catch (FIPAException e) {
 			e.printStackTrace();
 		}
-		
-		//Create behaviour
+
+		// Create behaviour
 		CommunicationBehaviour cb = new CommunicationBehaviour(this);
 		this.addBehaviour(cb);
-		TakeActionBehaviour nb = new TakeActionBehaviour (this);
+		TakeActionBehaviour nb = new TakeActionBehaviour(this);
 		this.addBehaviour(nb);
 	}
 
@@ -287,7 +308,7 @@ public class Elevator extends Agent {
 	protected void takeDown() {
 		try {
 			DFService.deregister(this);
-		} catch(FIPAException e) {
+		} catch (FIPAException e) {
 			e.printStackTrace();
 		}
 	}

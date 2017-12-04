@@ -7,7 +7,4 @@ public class SelfishBehaviour extends TakeActionBehaviour {
 	public SelfishBehaviour(Elevator elevator) {
 		super(elevator);
 	}
-	
-	@Override
-	public void action() {}
 }

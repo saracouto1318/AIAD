@@ -20,9 +20,7 @@ import request.Request;
 import request.TakeRequest;
 
 /**
- * 
  * This class creates an elevator which is a JADE agent
- *
  */
 public class Elevator extends Agent {
 	/*

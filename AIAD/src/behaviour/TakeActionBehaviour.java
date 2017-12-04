@@ -7,20 +7,24 @@ import elevator.Elevator;
 import elevator.ElevatorDirection;
 import elevator.ElevatorStatus;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.TickerBehaviour;
 import request.Request;
 
-public class TakeActionBehaviour extends CyclicBehaviour {
+public class TakeActionBehaviour extends TickerBehaviour {
+	private static final int ACTION_TIME = 500;
 	private Elevator elevator;
 	
 	public TakeActionBehaviour(Elevator elevator) {
+		super(elevator, ACTION_TIME);
 		this.elevator = elevator;
 	}
 	
+
 	/**
 	 * According to the status this method will lead the elevator in a certain way
 	 */
 	@Override
-	public void action() {
+	protected void onTick() {
 		if(this.elevator.getStatus() == ElevatorStatus.STOPPED) {
 			//Go from stopped to moving
 			this.elevator.setStatus(ElevatorStatus.MOVING);
@@ -33,7 +37,7 @@ public class TakeActionBehaviour extends CyclicBehaviour {
 			this.elevator.setStatus(ElevatorStatus.STOPPED);
 		}
 		
-		moveElevator();
+		moveElevator();		
 	}
 	
 	/**

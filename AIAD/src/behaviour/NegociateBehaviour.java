@@ -14,11 +14,4 @@ public class NegociateBehaviour extends TakeActionBehaviour {
 		this.id = id;
 	}
 
-	/**
-	 * 
-	 */
-	@Override
-	public void action() {
-		System.out.println("I'm \'" + id + "\'");
-	}
 }

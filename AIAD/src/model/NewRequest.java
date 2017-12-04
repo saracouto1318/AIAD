@@ -5,13 +5,14 @@ import elevator.ElevatorDirection;
 public class NewRequest extends Message {
 	private int floor;
 	private ElevatorDirection direction;
+	private static int NEW_REQUEST_ID = 0;
 	
 	public NewRequest() {
 		super();
 	}
 	
-	public NewRequest(int id, int floor, ElevatorDirection direction) {
-		super(id);
+	public NewRequest(int floor, ElevatorDirection direction) {
+		super(NEW_REQUEST_ID++);
 		this.floor = floor;
 		this.direction = direction;
 	}

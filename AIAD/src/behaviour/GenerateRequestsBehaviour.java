@@ -29,11 +29,10 @@ public class GenerateRequestsBehaviour extends CyclicBehaviour {
 		int n = 0;
 		for (int i = bf; i <= tf; i++) {
 			if (randomGenerator.nextInt(building.getFreqOfFloor(i)) == 0) {
-				int id = 0;
 				int floor = i;
 				int d = randomGenerator.nextInt(1);
 				ElevatorDirection direction = ElevatorDirection.values()[d];
-				Message m = new NewRequest(id, floor, direction);
+				Message m = new NewRequest(floor, direction);
 				this.building.sendMessage(m);
 				n++;
 			}

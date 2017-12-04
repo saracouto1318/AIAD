@@ -38,11 +38,11 @@ public class TakeActionBehaviour extends TickerBehaviour {
 		
 		moveElevator();		
 		
-		StringBuilder strBuilder = new StringBuilder("");
+		/*StringBuilder strBuilder = new StringBuilder("");
 		strBuilder.append(this.elevator.getAID()).append(" ").append(this.elevator.getCFloor()).append(" ");
 		for(Request r : this.elevator.getStopFloors())
 			strBuilder.append(" ").append(r.getClass()).append(":").append(r.getFloor());
-		System.out.println(strBuilder.toString());
+		System.out.println(strBuilder.toString());*/
 	}
 	
 	/**

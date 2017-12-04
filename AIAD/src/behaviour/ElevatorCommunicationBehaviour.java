@@ -67,15 +67,15 @@ public class ElevatorCommunicationBehaviour extends CommunicationBehaviour {
 		type = MessageType.getMessageType(request);
 		switch (type) {
 		case NEW:
-			System.out.print("NEW");
+			System.out.print("NEW\n");
 			handleNew(message.createReply(), (NewRequest) request);
 			break;
 		case STATUS:
-			System.out.print("STATUS");
+			System.out.print("STATUS\n");
 			handleStatus((StatusRequest) request);
 			break;
 		case SATISFIED:
-			System.out.print("SATISFIED");
+			System.out.print("SATISFIED\n");
 			handleSatisfied((SatisfiedRequest) request);
 			break;
 		default:

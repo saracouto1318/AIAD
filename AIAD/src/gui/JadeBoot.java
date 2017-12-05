@@ -12,9 +12,12 @@ public class JadeBoot {
 	private static Profile p;
 	private static ContainerController container;
 	private String[] agentsNames;
+	
+	private Elevator[] elevatorAgents;
 
 	public JadeBoot(int nFloors, int nElevators, Integer[] elevatorCapacities) throws Exception {
 		agentsNames = new String[nElevators + 1];
+		elevatorAgents = new Elevator[nElevators];
 		
 		if(elevatorCapacities.length != nElevators)
 			throw new Exception("Invalid length");
@@ -24,6 +27,21 @@ public class JadeBoot {
 			throw new Exception("Error starting agents");
 	}
 	
+	public void addAgent(Elevator elevator, int i) {
+		this.elevatorAgents[i] = elevator;
+	}
+	
+	public Elevator[] getElevatorAgents() {
+		return elevatorAgents;
+	}
+	
+	public boolean hasAllInstancesOfElevator() {
+		for(int i = 0; i < elevatorAgents.length; i++)
+			if(elevatorAgents[i] == null)
+				return false;
+		return true;
+	}
+	
 	private boolean initAgents(int nFloors, int nElevators, Integer[] elevatorCapacities) {
 		p = new ProfileImpl(true);
 		container = jade.core.Runtime.instance().createMainContainer(p);
@@ -31,7 +49,7 @@ public class JadeBoot {
 			String name;
 			for(int i = 0; i < nElevators; i++) {
 				name = "elev" + i;
-				container.createNewAgent(name, Elevator.class.getName(), new Object[] {nFloors, elevatorCapacities[i]});
+				container.createNewAgent(name, Elevator.class.getName(), new Object[] {nFloors, elevatorCapacities[i], true, this, i});
 				agentsNames[i] = name;
 			}
 			name = "building"; 
@@ -45,6 +63,7 @@ public class JadeBoot {
 	}
 	
 	private boolean startAgents() {
+		System.out.println("Start agents");
 		try {
 			for(int i = 0; i < agentsNames.length; i++) 
 				container.getAgent(agentsNames[i]).start();

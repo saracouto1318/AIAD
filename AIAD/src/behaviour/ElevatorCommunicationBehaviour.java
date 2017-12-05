@@ -40,7 +40,6 @@ public class ElevatorCommunicationBehaviour extends CommunicationBehaviour {
 	 * RejRequest <- Message
 	 * 
 	 */
-
 	private Map<Integer, StatusRequest> rejectRequests;
 
 	public ElevatorCommunicationBehaviour(Elevator elevator) {

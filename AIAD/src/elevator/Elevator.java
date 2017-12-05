@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 import behaviour.*;
+import gui.JadeBoot;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.AMSService;
@@ -283,6 +284,15 @@ public class Elevator extends Agent {
 			maxFloor = Integer.parseInt(args[0].toString());
 			ELEVATOR_CAPACITY = Integer.parseInt(args[1].toString());
 			ELEVATOR_WARNING_CAPACITY = ELEVATOR_CAPACITY - 50;
+			
+			//Add instance to jade boot if aplicable
+			boolean hasInterface = Boolean.parseBoolean(args[2].toString());
+			
+			if(hasInterface) {
+				JadeBoot boot = (JadeBoot)args[3];
+				int elevatorIndex = Integer.parseInt(args[4].toString());
+				boot.addAgent(this, elevatorIndex);
+			}
 		} catch(ArrayIndexOutOfBoundsException exc) {
 			throw(exc);
 		}

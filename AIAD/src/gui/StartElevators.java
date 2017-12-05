@@ -16,6 +16,8 @@ import javax.swing.border.Border;
 import javax.swing.JTextField;
 import javax.swing.event.*;
 
+import elevator.Elevator;
+
 import java.util.*;
 
 
@@ -40,8 +42,9 @@ public class StartElevators extends JFrame implements ActionListener {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		JadeBoot boot = null;
 		try {
-			JadeBoot boot = new JadeBoot(this.nFloors, this.nElevators, this.capacities);
+			boot = new JadeBoot(this.nFloors, this.nElevators, this.capacities);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(ABORT);
@@ -60,7 +63,7 @@ public class StartElevators extends JFrame implements ActionListener {
 		
 		Border border = LineBorder.createGrayLineBorder();
 		JLabel label = new JLabel("");
-		//ciclo em que a cada iteração vai apagando as labels????
+
 		for(int i=0; i<nElevators; i++){
 			for(int j=0; j<nFloors; j++){
 				label = new JLabel("");
@@ -73,7 +76,9 @@ public class StartElevators extends JFrame implements ActionListener {
 			}
 		}	
         setVisible(true);
-		
+        
+        Thread updateGUI = new UpdateGUI(this, boot);
+        updateGUI.start();
 	}
 
 	@Override

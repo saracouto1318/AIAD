@@ -48,9 +48,7 @@ public class ElevatorCommunicationBehaviour extends CommunicationBehaviour {
 	}
 
 	@Override
-	protected void handler(ACLMessage message) {
-		System.out.print("Handler for message: ");
-		
+	protected void handler(ACLMessage message) {		
 		Message request;
 		MessageType type;
 
@@ -66,15 +64,12 @@ public class ElevatorCommunicationBehaviour extends CommunicationBehaviour {
 		type = MessageType.getMessageType(request);
 		switch (type) {
 		case NEW:
-			System.out.print("NEW\n");
 			handleNew(message.createReply(), (NewRequest) request);
 			break;
 		case STATUS:
-			System.out.print("STATUS\n");
 			handleStatus((StatusRequest) request);
 			break;
 		case SATISFIED:
-			System.out.print("SATISFIED\n");
 			handleSatisfied((SatisfiedRequest) request);
 			break;
 		default:
@@ -88,6 +83,7 @@ public class ElevatorCommunicationBehaviour extends CommunicationBehaviour {
 		AnswerRequest answer = new AnswerRequest(request.getId(), elevator.getDirection(),
 				elevator.getCFloor(), elevator.getLastFloorInDirection(), elevator.getPassengersWeight(),
 				elevator.getStopFloors().size());
+		System.out.println(answer.getLastFloorInDirection());
 		try {
 			reply.setContentObject(answer);
 		} catch (IOException e) {

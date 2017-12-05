@@ -50,11 +50,11 @@ public class JadeBoot {
 			String name;
 			for(int i = 0; i < nElevators; i++) {
 				name = "elev" + i;
-				container.createNewAgent(name, Elevator.class.getName(), new Object[] {nFloors, elevatorCapacities[i], true, this, i});
+				container.createNewAgent(name, Elevator.class.getName(), new Object[] {nFloors - 1, elevatorCapacities[i], true, this, i});
 				agentsNames[i] = name;
 			}
 			name = "building"; 
-			container.createNewAgent(name, Building.class.getName(), new Object[] {nFloors, 2000000});
+			container.createNewAgent(name, Building.class.getName(), new Object[] {nFloors - 1, 1000000});
 			agentsNames[nElevators] = name;
 		} catch(StaleProxyException e) {
 			e.printStackTrace();

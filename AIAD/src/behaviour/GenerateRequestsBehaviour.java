@@ -33,7 +33,6 @@ public class GenerateRequestsBehaviour extends CyclicBehaviour {
 				int d = randomGenerator.nextInt(1);
 				ElevatorDirection direction = ElevatorDirection.values()[d];
 				Message m = new NewRequest(floor, direction);
-				System.out.println("New request " + m.getId());
 				this.building.sendMessage(m);
 				n++;
 			}

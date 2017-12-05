@@ -1,7 +1,7 @@
 package elevator;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -167,23 +167,27 @@ public class Elevator extends Agent {
 	 * @return The last floor possible in a certain direction
 	 */
 	public int getLastFloorInDirection() {
-		//TODO: Melhorar este algoritmo #naoconsigopensar
 		int floor = this.cFloor;
 		if(isLastDirection(this.cFloor))
 			return floor;
-		do {
-			for(Request r : this.stopFloors) {
-				if(r.getFloor() == floor && ReceiveRequest.class.isInstance(r.getClass())) 
-					if(this.direction == ElevatorDirection.DOWN)
-						return floor = minFloor;
-					else
-						return floor = maxFloor;
-				//Since it's ordered
-				else if(r.getFloor() > floor)
-					break;
+		boolean isDown = this.direction == ElevatorDirection.DOWN;
+		Iterator<Request> iter;
+		if(isDown)
+			iter = stopFloors.descendingIterator();
+		else
+			iter = stopFloors.iterator();
+		
+		while(iter.hasNext()) {
+			Request r = iter.next();
+			if(r instanceof ReceiveRequest && ((ReceiveRequest)r).getDirection() == this.getDirection())
+				return isDown ? minFloor : maxFloor;
+			else if(r instanceof TakeRequest) {
+				floor = r.getFloor();
+				if(isLastDirection(floor))
+					return floor;
 			}
-			floor = move(floor);
-		} while(!isLastDirection(floor));
+		}
+
 		return floor;
 	}
 	
@@ -243,8 +247,8 @@ public class Elevator extends Agent {
 	public boolean isAbove(int floor) {
 		if(this.stopFloors.isEmpty())
 			return false;
-		LinkedList<Request> list = new LinkedList<>(this.stopFloors);
-		return list.getLast().getFloor() <= floor;
+		System.out.println("LAST FLOOR " + floor + " -> " + (this.stopFloors.last().getFloor() <= floor));
+		return this.stopFloors.last().getFloor() <= floor;
 	}
 	
 	/**
@@ -255,8 +259,8 @@ public class Elevator extends Agent {
 	public boolean isBelow(int floor) {
 		if(this.stopFloors.isEmpty())
 			return false;
-		LinkedList<Request> list = new LinkedList<>(this.stopFloors);
-		return list.getFirst().getFloor() >= floor;
+		System.out.println("FIRST FLOOR " + floor + " -> " + (this.stopFloors.first().getFloor() <= floor));
+		return this.stopFloors.first().getFloor() >= floor;
 	}
 	
 	/**
@@ -267,9 +271,9 @@ public class Elevator extends Agent {
 	public boolean isLastDirection(int floor) {
 		return this.stopFloors.isEmpty() ||
 				(this.direction == ElevatorDirection.UP && 
-					isAbove(cFloor)) ||
+					isAbove(floor)) ||
 				(this.direction == ElevatorDirection.DOWN && 
-					isBelow(cFloor));
+					isBelow(floor));
 	}
 	
 	

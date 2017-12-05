@@ -13,18 +13,13 @@ import javax.swing.border.LineBorder;
 
 import javax.swing.border.Border;
 
-import javax.swing.JTextField;
-import javax.swing.event.*;
-
-import elevator.Elevator;
-
-import java.util.*;
-
-
 public class StartElevators extends JFrame implements ActionListener {
 	private int nElevators;
 	private int nFloors;
 	private Integer[] capacities;
+	private volatile JLabel[] labels;
+	
+	private Thread updateGUI;
 	
 	/**
 	 * Create the application.
@@ -34,6 +29,7 @@ public class StartElevators extends JFrame implements ActionListener {
 		this.nElevators = nElevators;
 		this.nFloors = nFloors;
 		this.capacities = capacities;
+		this.labels = new JLabel[this.nElevators * this.nFloors];
 		getContentPane().setForeground(Color.BLACK);
 		initialize();
 	}
@@ -63,7 +59,6 @@ public class StartElevators extends JFrame implements ActionListener {
 		
 		Border border = LineBorder.createGrayLineBorder();
 		JLabel label = new JLabel("");
-
 		for(int i=0; i<nElevators; i++){
 			for(int j=0; j<nFloors; j++){
 				label = new JLabel("");
@@ -72,12 +67,15 @@ public class StartElevators extends JFrame implements ActionListener {
 				label.setBorder(border);
 				label.setBackground(Color.white);
 				label.setOpaque(true);
-				getContentPane().add(label);	
+				
+				labels[j + i*nFloors] = label;
+				
+				getContentPane().add(label);
 			}
 		}	
         setVisible(true);
         
-        Thread updateGUI = new UpdateGUI(this, boot);
+        updateGUI = new UpdateGUI(this, boot);
         updateGUI.start();
 	}
 
@@ -87,8 +85,30 @@ public class StartElevators extends JFrame implements ActionListener {
 
         if(cmd.equals("Next"))
         {
+        	updateGUI.interrupt();
         	dispose();
             new Form();
         }
     }
+	
+	private int labelIndex(int floor, int elevator) {
+		return (nFloors - floor - 1) + (nFloors * elevator);
+	}
+	
+	public synchronized void eraseFloor(int floor, int elevator) {
+		int index;
+		if(floor > 0) {
+			index = labelIndex(floor - 1, elevator);
+			labels[index].setBackground(Color.WHITE);
+		}
+		if(floor < nFloors - 1) {
+			index = labelIndex(floor + 1, elevator);
+			labels[index].setBackground(Color.WHITE);
+		}
+	}
+	
+	public synchronized void paintFloor(int floor, int elevator){
+		int index = labelIndex(floor, elevator);
+		labels[index].setBackground(Color.GREEN);
+	}
 }

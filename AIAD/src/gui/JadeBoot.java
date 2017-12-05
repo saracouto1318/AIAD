@@ -7,6 +7,7 @@ import jade.core.ProfileImpl;
 import jade.wrapper.ContainerController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.StaleProxyException;
+import tests.ElevatorTestPassengers;
 
 public class JadeBoot {
 	private static Profile p;
@@ -49,7 +50,7 @@ public class JadeBoot {
 			String name;
 			for(int i = 0; i < nElevators; i++) {
 				name = "elev" + i;
-				container.createNewAgent(name, Elevator.class.getName(), new Object[] {nFloors, elevatorCapacities[i], true, this, i});
+				container.createNewAgent(name, ElevatorTestPassengers.class.getName(), new Object[] {nFloors, elevatorCapacities[i], true, this, i});
 				agentsNames[i] = name;
 			}
 			name = "building"; 

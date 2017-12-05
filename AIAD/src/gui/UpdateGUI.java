@@ -14,10 +14,17 @@ public class UpdateGUI extends Thread {
 	@Override
 	public void run() {
 		boolean hasAllElevators = false;
-		Elevator[] elevators;
-		while(true) {
+		Elevator[] elevators = null;
+		while(!isInterrupted()) {
 			if(hasAllElevators) {
-				//TODO: update labels
+				updateElevators(elevators);
+
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					System.out.println("I can't fall asleep for some strange and sexual reason");
+				}
+				
 			} else if(boot.hasAllInstancesOfElevator()) {
 				hasAllElevators = true;
 				elevators = boot.getElevatorAgents();
@@ -25,6 +32,13 @@ public class UpdateGUI extends Thread {
 				//No need for this
 				this.boot = null;
 			}
+		}
+	}
+	
+	private void updateElevators(Elevator[] elevators) {
+		for(int i = 0; i < elevators.length; i++) {
+			gui.eraseFloor(elevators[i].getCFloor(), i);
+			gui.paintFloor(elevators[i].getCFloor(), i);
 		}
 	}
 

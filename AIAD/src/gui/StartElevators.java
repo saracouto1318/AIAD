@@ -23,6 +23,7 @@ public class StartElevators extends JFrame implements ActionListener {
 	private int nElevators;
 	private int nFloors;
 	private Integer[] capacities;
+	private JLabel[] labels;
 	
 	/**
 	 * Create the application.
@@ -32,6 +33,7 @@ public class StartElevators extends JFrame implements ActionListener {
 		this.nElevators = nElevators;
 		this.nFloors = nFloors;
 		this.capacities = capacities;
+		this.labels = new JLabel[this.nElevators * this.nFloors];
 		getContentPane().setForeground(Color.BLACK);
 		initialize();
 	}
@@ -60,6 +62,7 @@ public class StartElevators extends JFrame implements ActionListener {
 		
 		Border border = LineBorder.createGrayLineBorder();
 		JLabel label = new JLabel("");
+		int index = 0;
 		//ciclo em que a cada iteração vai apagando as labels????
 		for(int i=0; i<nElevators; i++){
 			for(int j=0; j<nFloors; j++){
@@ -69,11 +72,22 @@ public class StartElevators extends JFrame implements ActionListener {
 				label.setBorder(border);
 				label.setBackground(Color.white);
 				label.setOpaque(true);
-				getContentPane().add(label);	
+				
+				labels[index] = label;
+				index++;
+				
+				getContentPane().add(label);
 			}
-		}	
-        setVisible(true);
-		
+		}
+		setVisible(true);
+		paintingElevators(3, 0);
+		paintingElevators(1, 2);
+		paintingElevators(29, 4);
+		paintingElevators(29, 0);
+		paintingElevators(29, 1);
+		paintingElevators(29, 2);
+		paintingElevators(29, 3);
+		paintingElevators(27, 3);
 	}
 
 	@Override
@@ -86,4 +100,9 @@ public class StartElevators extends JFrame implements ActionListener {
             new Form();
         }
     }
+	
+	public void paintingElevators(int floor, int elevator){
+		int index = (nFloors - floor - 1) + (nFloors * elevator);
+		labels[index].setBackground(Color.GREEN);
+	}
 }

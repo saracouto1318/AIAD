@@ -18,7 +18,7 @@ public class GenerateRequestsBehaviour extends CyclicBehaviour {
 
 	@Override
 	public void action() {
-		System.out.println("ACTION GENERATE");
+		//System.out.println("ACTION GENERATE");
 		generateRandomRequests();
 	}
 

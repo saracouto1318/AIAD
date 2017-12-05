@@ -6,16 +6,20 @@ import java.util.List;
 import java.util.TreeSet;
 
 import behaviour.*;
+import contract.ElevatorResponder;
 import gui.JadeBoot;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.AMSService;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
+import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.AMSAgentDescription;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 import request.ReceiveRequest;
 import request.Request;
 import request.TakeRequest;
@@ -41,7 +45,6 @@ public class Elevator extends Agent {
 	 * Minimum possible floor
 	 */
 	public int minFloor = 0;
-
 	/**
 	 * Maximum capacity for the elevator
 	 */
@@ -92,6 +95,67 @@ public class Elevator extends Agent {
 		ELEVATOR_CAPACITY = 500;
 		ELEVATOR_WARNING_CAPACITY = 400;
 		stopFloors = new TreeSet<>();
+	}
+	
+	/**
+	 * Sets up the elevator with its behaviour, registering it
+	 */
+	@Override
+	protected void setup() {
+		Object[] args = getArguments();
+		try {
+			minFloor = 0; //Integer.parseInt(args[0].toString());
+			maxFloor = Integer.parseInt(args[0].toString());
+			ELEVATOR_CAPACITY = Integer.parseInt(args[1].toString());
+			ELEVATOR_WARNING_CAPACITY = ELEVATOR_CAPACITY - 50;
+			
+			//Add instance to jade boot if aplicable
+			boolean hasInterface = Boolean.parseBoolean(args[2].toString());
+			
+			if(hasInterface) {
+				JadeBoot boot = (JadeBoot)args[3];
+				int elevatorIndex = Integer.parseInt(args[4].toString());
+				boot.addAgent(this, elevatorIndex);
+			}
+		} catch(ArrayIndexOutOfBoundsException exc) {
+			throw(exc);
+		}
+		String type = "No Communication";
+		DFAgentDescription dfd = new DFAgentDescription();
+		dfd.setName(getAID());
+		ServiceDescription sd = new ServiceDescription();
+		sd.setName(getName());
+		sd.setType("Agent " + type);
+		dfd.addServices(sd);
+		try {
+			DFService.register(this, dfd);
+		} catch (FIPAException e) {
+			e.printStackTrace();
+		}
+
+		// Create behaviours
+		CommunicationBehaviour cb = new ElevatorCommunicationBehaviour(this);
+		this.addBehaviour(cb);
+		TakeActionBehaviour nb = new TakeActionBehaviour(this);
+		this.addBehaviour(nb);
+		//Contract net behaviour
+		MessageTemplate template = MessageTemplate.and(
+		  		MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
+		  		MessageTemplate.MatchPerformative(ACLMessage.CFP) );
+		ElevatorResponder er = new ElevatorResponder(this, template);
+		this.addBehaviour(er);
+	}
+
+	/**
+	 * Removes the register of DF
+	 */
+	@Override
+	protected void takeDown() {
+		try {
+			DFService.deregister(this);
+		} catch (FIPAException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -274,61 +338,5 @@ public class Elevator extends Agent {
 					isAbove(floor)) ||
 				(this.direction == ElevatorDirection.DOWN && 
 					isBelow(floor));
-	}
-	
-	
-	/**
-	 * Sets up the elevator with its behaviour, registering it
-	 */
-	@Override
-	protected void setup() {
-		Object[] args = getArguments();
-		try {
-			minFloor = 0; //Integer.parseInt(args[0].toString());
-			maxFloor = Integer.parseInt(args[0].toString());
-			ELEVATOR_CAPACITY = Integer.parseInt(args[1].toString());
-			ELEVATOR_WARNING_CAPACITY = ELEVATOR_CAPACITY - 50;
-			
-			//Add instance to jade boot if aplicable
-			boolean hasInterface = Boolean.parseBoolean(args[2].toString());
-			
-			if(hasInterface) {
-				JadeBoot boot = (JadeBoot)args[3];
-				int elevatorIndex = Integer.parseInt(args[4].toString());
-				boot.addAgent(this, elevatorIndex);
-			}
-		} catch(ArrayIndexOutOfBoundsException exc) {
-			throw(exc);
-		}
-		String type = "No Communication";
-		DFAgentDescription dfd = new DFAgentDescription();
-		dfd.setName(getAID());
-		ServiceDescription sd = new ServiceDescription();
-		sd.setName(getName());
-		sd.setType("Agent " + type);
-		dfd.addServices(sd);
-		try {
-			DFService.register(this, dfd);
-		} catch (FIPAException e) {
-			e.printStackTrace();
-		}
-
-		// Create behaviour
-		CommunicationBehaviour cb = new ElevatorCommunicationBehaviour(this);
-		this.addBehaviour(cb);
-		TakeActionBehaviour nb = new TakeActionBehaviour(this);
-		this.addBehaviour(nb);
-	}
-
-	/**
-	 * Removes the register of DF
-	 */
-	@Override
-	protected void takeDown() {
-		try {
-			DFService.deregister(this);
-		} catch (FIPAException e) {
-			e.printStackTrace();
-		}
 	}
 }

@@ -4,17 +4,22 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
+import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
+import jade.proto.ContractNetInitiator;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import behaviour.*;
+import contract.BuildingInitiator;
 import elevator.Elevator;
 import model.Message;
 
@@ -130,6 +135,7 @@ public class Building extends Agent {
 	 */
 	public int sendMessage(Message message) {
 		int n = 0;
+		/*
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 		try {
 			msg.setContentObject(message);
@@ -141,6 +147,23 @@ public class Building extends Agent {
 		for (AID elev : elevators)
 			msg.addReceiver(elev);
 		send(msg);
+		return n;
+		*/
+		ACLMessage msg = new ACLMessage(ACLMessage.CFP);
+		List<AID> elevators = Elevator.getAllElevators(this);
+		for (AID elev : elevators)
+			msg.addReceiver(elev);
+		msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
+		// We want to receive a reply in 100 milliseconds
+		msg.setReplyByDate(new Date(System.currentTimeMillis() + 100));
+		try {
+			msg.setContentObject(message);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		this.addBehaviour(new BuildingInitiator(this, msg));
+		
 		return n;
 	}
 	

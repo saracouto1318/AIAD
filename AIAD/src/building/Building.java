@@ -27,13 +27,15 @@ public class Building extends Agent {
 	private final static int DEFAULT_FREQ = 20;
 
 	private final static Map<Integer, Integer> FLOOR_FREQ = new HashMap<Integer, Integer>();
-	
-	private Map<Integer, List<Message>> requestResponses = new HashMap<Integer, List<Message>>();
+
+	private Map<Integer, List<Message>> requestResponses;
+
+	private List<Message> requests;
 
 	static {
 		FLOOR_FREQ.put(0, 10);
 	}
-	
+
 	@Override
 	protected void setup() {
 		Object[] args = getArguments();
@@ -41,10 +43,11 @@ public class Building extends Agent {
 			bottomFloor = Integer.parseInt(args[0].toString());
 			topFloor = Integer.parseInt(args[1].toString());
 			requestFreq = Integer.parseInt(args[2].toString());
-		} catch(ArrayIndexOutOfBoundsException exc) {
-			throw(exc);
+		} catch (ArrayIndexOutOfBoundsException exc) {
+			throw (exc);
 		}
 		numberOfFloors = topFloor - bottomFloor + 1;
+		requestResponses = new HashMap<Integer, List<Message>>();
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());
 		ServiceDescription sd = new ServiceDescription();
@@ -59,11 +62,11 @@ public class Building extends Agent {
 
 		// Create behaviour
 		GenerateRequestsBehaviour reqBehaviour = new GenerateRequestsBehaviour(this);
-		CommunicationBehaviour comBehaviour = new BuildingCommunicationBehaviour(this); 
+		CommunicationBehaviour comBehaviour = new BuildingCommunicationBehaviour(this);
 		this.addBehaviour(reqBehaviour);
 		this.addBehaviour(comBehaviour);
 	}
-	
+
 	@Override
 	protected void takeDown() {
 		try {
@@ -72,7 +75,7 @@ public class Building extends Agent {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -80,7 +83,7 @@ public class Building extends Agent {
 	public int getBottomFloor() {
 		return bottomFloor;
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -88,7 +91,7 @@ public class Building extends Agent {
 	public int getTopFloor() {
 		return topFloor;
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -105,7 +108,7 @@ public class Building extends Agent {
 	public int getFreqOfFloor(int floor) {
 		return FLOOR_FREQ.get(floor) == null ? DEFAULT_FREQ : FLOOR_FREQ.get(floor);
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -113,7 +116,7 @@ public class Building extends Agent {
 	public int getRequestFreq() {
 		return requestFreq;
 	}
-	
+
 	/**
 	 * 
 	 * @param floor
@@ -122,7 +125,7 @@ public class Building extends Agent {
 	public int getRequestFreqOfFloor(int floor) {
 		return getFreqOfFloor(floor) * getRequestFreq();
 	}
-	
+
 	/**
 	 * 
 	 * @param message
@@ -143,7 +146,7 @@ public class Building extends Agent {
 		send(msg);
 		return n;
 	}
-	
+
 	/**
 	 * 
 	 * @param requestId
@@ -153,7 +156,7 @@ public class Building extends Agent {
 		List<Message> list = requestResponses.get(requestId);
 		if (list == null) {
 			list = new ArrayList<Message>();
-			requestResponses.put(requestId,list);
+			requestResponses.put(requestId, list);
 		}
 		list.add(response);
 	}

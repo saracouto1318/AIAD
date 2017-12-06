@@ -24,9 +24,16 @@ public class BuildingCommunicationBehaviour extends CommunicationBehaviour {
 			return;
 		}
 		type = MessageType.getMessageType(content);
-		switch(type){
-			default:
-				return;
+		switch (type) {
+		case ANSWER:
+			((Building) this.myAgent).receiveRequestResponse(content.getId(), content);
+			break;
+		case RENEGOTIATE:
+			break;
+		case SATISFIED:
+			break;
+		default:
+			return;
 		}
 	}
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 import behaviour.*;
 import contract.ElevatorResponder;
@@ -80,7 +81,10 @@ public class Elevator extends Agent {
 			c.setMaxResults(new Long(-1));
 			agents = AMSService.search(a, new AMSAgentDescription(), c);
 			for (int i = 0; i < agents.length; i++) {
-				agentsAID.add(agents[i].getName());
+				if(Pattern.compile(".*elev.*").matcher(agents[i].getName().getLocalName()).find()) {
+					System.out.println("Match elevator " + agents[i].getName().getLocalName());
+					agentsAID.add(agents[i].getName());
+				}
 			}
 		} catch (Exception e) {
 
@@ -134,16 +138,12 @@ public class Elevator extends Agent {
 		}
 
 		// Create behaviours
-		CommunicationBehaviour cb = new ElevatorCommunicationBehaviour(this);
-		this.addBehaviour(cb);
+		//CommunicationBehaviour cb = new ElevatorCommunicationBehaviour(this);
+		//this.addBehaviour(cb);
 		TakeActionBehaviour nb = new TakeActionBehaviour(this);
 		this.addBehaviour(nb);
 		//Contract net behaviour
-		MessageTemplate template = MessageTemplate.and(
-		  		MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
-		  		MessageTemplate.MatchPerformative(ACLMessage.CFP) );
-		ElevatorResponder er = new ElevatorResponder(this, template);
-		this.addBehaviour(er);
+		initiateNewResponder();
 	}
 
 	/**
@@ -156,6 +156,14 @@ public class Elevator extends Agent {
 		} catch (FIPAException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void initiateNewResponder() {
+		MessageTemplate template = MessageTemplate.and(
+		  		MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
+		  		MessageTemplate.MatchPerformative(ACLMessage.CFP) );
+		ElevatorResponder er = new ElevatorResponder(this, template);
+		this.addBehaviour(er);		
 	}
 	
 	/**

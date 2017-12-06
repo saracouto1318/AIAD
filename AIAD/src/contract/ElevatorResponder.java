@@ -10,56 +10,32 @@ import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.FailureException;
 
 public class ElevatorResponder extends ContractNetResponder {
-	public ElevatorResponder(Agent a, MessageTemplate mt) {
+	public ElevatorResponder(Elevator a, MessageTemplate mt) {
 		super(a, mt);
 	}
-
+	
 	protected ACLMessage prepareResponse(ACLMessage cfp) throws NotUnderstoodException, RefuseException {
-		System.out.println("Elevator prepare response " + this.getAgent().getName());
-		//TODO: Send a meaningful message instead of 3
-		/*
-		System.out.println("Agent "+getLocalName()+": CFP received from "+cfp.getSender().getName()+". Action is "+cfp.getContent());
-		int proposal = evaluateAction();
-		if (proposal > 2) {
-			// We provide a proposal
-			System.out.println("Agent "+getLocalName()+": Proposing "+proposal);
-		*/
+		System.out.println("Agent "+ this.getAgent().getLocalName()+": CFP received from "+cfp.getSender().getName()+". Action is "+cfp.getContent());
+		
+		((Elevator)this.getAgent()).initiateNewResponder();
+		
+		double proposal = Math.random();
+		// We provide a proposal
+		System.out.println("Agent "+ this.getAgent().getLocalName()+": Proposing "+proposal);
 		ACLMessage propose = cfp.createReply();
 		propose.setPerformative(ACLMessage.PROPOSE);
-		propose.setContent(String.valueOf(3));
+		propose.setContent(String.valueOf(proposal));
 		return propose;
-		/*
-		}
-		else {
-			// We refuse to provide a proposal
-			System.out.println("Agent "+getLocalName()+": Refuse");
-			throw new RefuseException("evaluation-failed");
-		}
-		*/
 	}
 	
 	protected ACLMessage prepareResultNotification(ACLMessage cfp, ACLMessage propose,ACLMessage accept) throws FailureException {
-		System.out.println("Elevator prepare result " + this.getAgent().getName());
-		//TODO: Sends inform message - to be defined
-		/*
-		System.out.println("Agent "+getLocalName()+": Proposal accepted");
-		if (performAction()) {
-			System.out.println("Agent "+getLocalName()+": Action successfully performed");
-		*/
+		System.out.println("Agent "+this.getAgent().getLocalName()+": Action successfully performed");
 		ACLMessage inform = accept.createReply();
 		inform.setPerformative(ACLMessage.INFORM);
 		return inform;
-		/*
-		}
-		else {
-			System.out.println("Agent "+getLocalName()+": Action execution failed");
-			throw new FailureException("unexpected-error");
-		}
-		*/
 	}
 	
 	protected void handleRejectProposal(ACLMessage reject) {
-		System.out.println("Rejected proposal " + this.getAgent().getName());
-		//TODO: Define what the rejection means to the elevator
+		System.out.println("Agent "+ this.getAgent().getLocalName()+": Proposal rejected");
 	}
 }

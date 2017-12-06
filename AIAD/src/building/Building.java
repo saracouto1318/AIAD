@@ -22,13 +22,15 @@ import behaviour.*;
 import contract.BuildingInitiator;
 import elevator.Elevator;
 import model.Message;
+import model.NewRequest;
 
 public class Building extends Agent {
 	private int bottomFloor;
 	private int topFloor;
 	private int numberOfFloors;
 	private int requestFreq;
-
+	private List<AID> elevators;
+	
 	private final static int DEFAULT_FREQ = 20;
 
 	private final static Map<Integer, Integer> FLOOR_FREQ = new HashMap<Integer, Integer>();
@@ -61,12 +63,14 @@ public class Building extends Agent {
 		} catch (FIPAException e) {
 			e.printStackTrace();
 		}
+		
+		elevators = Elevator.getAllElevators(this);
 
 		// Create behaviour
 		GenerateRequestsBehaviour reqBehaviour = new GenerateRequestsBehaviour(this);
-		CommunicationBehaviour comBehaviour = new BuildingCommunicationBehaviour(this); 
 		this.addBehaviour(reqBehaviour);
-		this.addBehaviour(comBehaviour);
+		//CommunicationBehaviour comBehaviour = new BuildingCommunicationBehaviour(this);
+		//this.addBehaviour(comBehaviour);
 	}
 	
 	@Override
@@ -133,38 +137,15 @@ public class Building extends Agent {
 	 * @param message
 	 * @return
 	 */
-	public int sendMessage(Message message) {
-		int n = 0;
-		/*
-		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-		try {
-			msg.setContentObject(message);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		List<AID> elevators = Elevator.getAllElevators(this);
-		for (AID elev : elevators)
-			msg.addReceiver(elev);
-		send(msg);
-		return n;
-		*/
+	public void sendMessage(Message message) {
 		ACLMessage msg = new ACLMessage(ACLMessage.CFP);
-		List<AID> elevators = Elevator.getAllElevators(this);
-		for (AID elev : elevators)
-			msg.addReceiver(elev);
+		for(AID aid : elevators)
+			msg.addReceiver(aid);
 		msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
 		// We want to receive a reply in 100 milliseconds
 		msg.setReplyByDate(new Date(System.currentTimeMillis() + 100));
-		try {
-			msg.setContentObject(message);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		this.addBehaviour(new BuildingInitiator(this, msg));
-		
-		return n;
+		msg.setContent("dummy-action");
+		this.addBehaviour(new BuildingInitiator(this, msg, message, elevators.size()));
 	}
 	
 	/**

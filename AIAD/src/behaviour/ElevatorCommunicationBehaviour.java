@@ -83,7 +83,6 @@ public class ElevatorCommunicationBehaviour extends CommunicationBehaviour {
 		AnswerRequest answer = new AnswerRequest(request.getId(), elevator.getDirection(),
 				elevator.getCFloor(), elevator.getLastFloorInDirection(), elevator.getPassengersWeight(),
 				elevator.getStopFloors().size());
-		System.out.println(answer.getLastFloorInDirection());
 		try {
 			reply.setContentObject(answer);
 		} catch (IOException e) {

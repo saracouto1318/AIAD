@@ -311,7 +311,6 @@ public class Elevator extends Agent {
 	public boolean isAbove(int floor) {
 		if(this.stopFloors.isEmpty())
 			return false;
-		System.out.println("LAST FLOOR " + floor + " -> " + (this.stopFloors.last().getFloor() <= floor));
 		return this.stopFloors.last().getFloor() <= floor;
 	}
 	
@@ -323,7 +322,6 @@ public class Elevator extends Agent {
 	public boolean isBelow(int floor) {
 		if(this.stopFloors.isEmpty())
 			return false;
-		System.out.println("FIRST FLOOR " + floor + " -> " + (this.stopFloors.first().getFloor() <= floor));
 		return this.stopFloors.first().getFloor() >= floor;
 	}
 	

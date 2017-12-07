@@ -56,7 +56,7 @@ public class ReceiveRequest extends Request {
 		int nPeople = r.nextInt(8 - minPeople) + minPeople;
 		while(nPeople-- > 0) {
 			int weight = generateWeight();
-			int floor = generateFloor();
+			int floor = generateFloor(elevator);
 			if(!elevator.addPassenger(floor, weight))
 				break;
 		}
@@ -99,16 +99,16 @@ public class ReceiveRequest extends Request {
 	 * the elevator wished to go.
 	 * @return an integer value representing the floor
 	 */
-	private int generateFloor() {
+	private int generateFloor(Elevator elevator) {
 		Random r = new Random();
 		//get building min floor and max floor
 		//currently working with hard-coded values
 		int delta_floors;
 		if(direction == ElevatorDirection.UP) {
-			delta_floors = Elevator.MAX_FLOOR - floor - 1;
+			delta_floors = elevator.maxFloor - floor - 1;
 			return r.nextInt(delta_floors) + floor + 1;
 		} else {
-			delta_floors = floor - Elevator.MIN_FLOOR - 1;
+			delta_floors = floor - elevator.minFloor - 1;
 			return r.nextInt(delta_floors) - floor;
 		}
 	}

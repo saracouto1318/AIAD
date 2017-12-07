@@ -13,25 +13,23 @@ import javax.swing.border.LineBorder;
 
 import javax.swing.border.Border;
 
-import javax.swing.JTextField;
-import javax.swing.event.*;
-
-import java.util.*;
-
-
 public class StartElevators extends JFrame implements ActionListener {
-	int nElevators;
-	int nFloors;
-
-	ArrayList<Integer> capacities;
+	private int nElevators;
+	private int nFloors;
+	private Integer[] capacities;
+	private volatile JLabel[] labels;
+	
+	private Thread updateGUI;
+	
 	/**
 	 * Create the application.
 	 */
-	public StartElevators(int nElevators, int nFloors, ArrayList<Integer> capacities) {
+	public StartElevators(int nElevators, int nFloors, Integer[] capacities) {
 		super("Elevators");
 		this.nElevators = nElevators;
 		this.nFloors = nFloors;
 		this.capacities = capacities;
+		this.labels = new JLabel[this.nElevators * this.nFloors];
 		getContentPane().setForeground(Color.BLACK);
 		initialize();
 	}
@@ -40,6 +38,14 @@ public class StartElevators extends JFrame implements ActionListener {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		JadeBoot boot = null;
+		try {
+			boot = new JadeBoot(this.nFloors, this.nElevators, this.capacities);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(ABORT);
+		}
+		
 		setBounds(100, 100, 550, 500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
@@ -53,7 +59,6 @@ public class StartElevators extends JFrame implements ActionListener {
 		
 		Border border = LineBorder.createGrayLineBorder();
 		JLabel label = new JLabel("");
-		//ciclo em que a cada iteração vai apagando as labels????
 		for(int i=0; i<nElevators; i++){
 			for(int j=0; j<nFloors; j++){
 				label = new JLabel("");
@@ -62,11 +67,16 @@ public class StartElevators extends JFrame implements ActionListener {
 				label.setBorder(border);
 				label.setBackground(Color.white);
 				label.setOpaque(true);
-				getContentPane().add(label);	
+				
+				labels[j + i*nFloors] = label;
+				
+				getContentPane().add(label);
 			}
 		}	
         setVisible(true);
-		
+        
+        updateGUI = new UpdateGUI(this, boot);
+        updateGUI.start();
 	}
 
 	@Override
@@ -75,8 +85,30 @@ public class StartElevators extends JFrame implements ActionListener {
 
         if(cmd.equals("Next"))
         {
+        	updateGUI.interrupt();
         	dispose();
             new Form();
         }
     }
+	
+	private int labelIndex(int floor, int elevator) {
+		return (nFloors - floor - 1) + (nFloors * elevator);
+	}
+	
+	public synchronized void eraseFloor(int floor, int elevator) {
+		int index;
+		if(floor > 0) {
+			index = labelIndex(floor - 1, elevator);
+			labels[index].setBackground(Color.WHITE);
+		}
+		if(floor < nFloors - 1) {
+			index = labelIndex(floor + 1, elevator);
+			labels[index].setBackground(Color.WHITE);
+		}
+	}
+	
+	public synchronized void paintFloor(int floor, int elevator){
+		int index = labelIndex(floor, elevator);
+		labels[index].setBackground(Color.GREEN);
+	}
 }

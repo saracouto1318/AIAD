@@ -6,35 +6,35 @@ public enum MessageType {
 			return NewRequest.class;
 		}
 		public boolean canCastAs(Message message) {
-			return NewRequest.class.isInstance(message);
+			return message instanceof NewRequest;
 		}
 	}, ANSWER {
 		public Class<?> getMessageClass() {
 			return AnswerRequest.class;
 		}
 		public boolean canCastAs(Message message) {
-			return AnswerRequest.class.isInstance(message);
+			return message instanceof AnswerRequest;
 		}
 	}, SATISFIED {
 		public Class<?> getMessageClass() {
 			return SatisfiedRequest.class;
 		}
 		public boolean canCastAs(Message message) {
-			return SatisfiedRequest.class.isInstance(message);
+			return message instanceof SatisfiedRequest;
 		}
 	}, RENEGOTIATE {
 		public Class<?> getMessageClass() {
 			return RenegotiateRequest.class;
 		}
 		public boolean canCastAs(Message message) {
-			return RenegotiateRequest.class.isInstance(message);
+			return message instanceof RenegotiateRequest;
 		}
 	}, STATUS {
 		public Class<?> getMessageClass() {
 			return StatusRequest.class;
 		}
 		public boolean canCastAs(Message message) {
-			return StatusRequest.class.isInstance(message);
+			return message instanceof StatusRequest;
 		}
 	};
 	

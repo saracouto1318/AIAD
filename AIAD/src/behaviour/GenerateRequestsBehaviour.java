@@ -18,6 +18,7 @@ public class GenerateRequestsBehaviour extends CyclicBehaviour {
 
 	@Override
 	public void action() {
+		//System.out.println("ACTION GENERATE");
 		generateRandomRequests();
 	}
 
@@ -28,7 +29,6 @@ public class GenerateRequestsBehaviour extends CyclicBehaviour {
 		int n = 0;
 		for (int i = bf; i <= tf; i++) {
 			if (randomGenerator.nextInt(building.getRequestFreqOfFloor(i)) == 0) {
-				System.out.println("New request");
 				int floor = i;
 				int d = randomGenerator.nextInt(1);
 				ElevatorDirection direction = ElevatorDirection.values()[d];
@@ -39,5 +39,4 @@ public class GenerateRequestsBehaviour extends CyclicBehaviour {
 		}
 		return n;
 	}
-
 }

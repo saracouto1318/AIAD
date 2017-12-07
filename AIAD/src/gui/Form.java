@@ -12,9 +12,10 @@ import java.awt.event.ActionEvent;
 
 
 public class Form extends JFrame implements ActionListener {
-	int nFloors;
-	int nElevators;
-	JSlider slider, slider_1;
+	private int nFloors;
+	private int nElevators;
+	private JSlider slider, slider_1;
+	
 	/**
 	 * Create the application.
 	 */
@@ -57,16 +58,10 @@ public class Form extends JFrame implements ActionListener {
 		lblNumberOf.setBounds(98, 131, 130, 14);
 		getContentPane().add(lblNumberOf);
 		
-		JButton btnNext = new JButton("Random Capacity");
-		btnNext.setBounds(84, 227, 140, 23);
-		btnNext.addActionListener(this);
-		btnNext.setActionCommand("Random");
-		getContentPane().add(btnNext);
-		
-		JButton btnNext1 = new JButton("Manual Capacity");
-		btnNext1.setBounds(236, 227, 140, 23);
+		JButton btnNext1 = new JButton("Elevators Capacity");
+		btnNext1.setBounds(147, 227, 140, 23);
 		btnNext1.addActionListener(this);
-		btnNext1.setActionCommand("Manual");
+		btnNext1.setActionCommand("Capacity");
 		getContentPane().add(btnNext1);
 		
         setVisible(true);
@@ -79,14 +74,10 @@ public class Form extends JFrame implements ActionListener {
 		nElevators = slider.getValue();
 		nFloors = slider_1.getValue();
 
-        if(cmd.equals("Manual"))
+        if(cmd.equals("Capacity"))
         {
         	dispose();
             new ElevatorConf(nElevators, nFloors);
-        }
-        else if(cmd.equals("Random")){
-        	dispose();
-        	//chamar a pagina dos elevadores já com capacidade pré definida
         }
 		
 		

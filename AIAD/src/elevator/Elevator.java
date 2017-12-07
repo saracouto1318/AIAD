@@ -1,20 +1,25 @@
 package elevator;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
 import behaviour.*;
+import contract.ElevatorResponder;
+import gui.JadeBoot;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.AMSService;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
+import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.AMSAgentDescription;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 import request.ReceiveRequest;
 import request.Request;
 import request.TakeRequest;
@@ -35,21 +40,20 @@ public class Elevator extends Agent {
 	/**
 	 * Maximum possible floor
 	 */
-	public static final int MAX_FLOOR = 30;
+	public int maxFloor = 30;
 	/**
 	 * Minimum possible floor
 	 */
-	public static final int MIN_FLOOR = -5;
-
+	public int minFloor = 0;
 	/**
 	 * Maximum capacity for the elevator
 	 */
-	public final int ELEVATOR_CAPACITY;
+	public int ELEVATOR_CAPACITY;
 	/**
 	 * Elevator capacity which does not allow any more passengers Meaning it'll
 	 * not attend receive requests
 	 */
-	public final int ELEVATOR_WARNING_CAPACITY;
+	public int ELEVATOR_WARNING_CAPACITY;
 	/**
 	 * Number of the floors to where the elevator's passengers want to go
 	 */
@@ -91,6 +95,67 @@ public class Elevator extends Agent {
 		ELEVATOR_CAPACITY = 500;
 		ELEVATOR_WARNING_CAPACITY = 400;
 		stopFloors = new TreeSet<>();
+	}
+	
+	/**
+	 * Sets up the elevator with its behaviour, registering it
+	 */
+	@Override
+	protected void setup() {
+		Object[] args = getArguments();
+		try {
+			minFloor = 0; //Integer.parseInt(args[0].toString());
+			maxFloor = Integer.parseInt(args[0].toString());
+			ELEVATOR_CAPACITY = Integer.parseInt(args[1].toString());
+			ELEVATOR_WARNING_CAPACITY = ELEVATOR_CAPACITY - 50;
+			
+			//Add instance to jade boot if aplicable
+			boolean hasInterface = Boolean.parseBoolean(args[2].toString());
+			
+			if(hasInterface) {
+				JadeBoot boot = (JadeBoot)args[3];
+				int elevatorIndex = Integer.parseInt(args[4].toString());
+				boot.addAgent(this, elevatorIndex);
+			}
+		} catch(ArrayIndexOutOfBoundsException exc) {
+			throw(exc);
+		}
+		String type = "No Communication";
+		DFAgentDescription dfd = new DFAgentDescription();
+		dfd.setName(getAID());
+		ServiceDescription sd = new ServiceDescription();
+		sd.setName(getName());
+		sd.setType("Agent " + type);
+		dfd.addServices(sd);
+		try {
+			DFService.register(this, dfd);
+		} catch (FIPAException e) {
+			e.printStackTrace();
+		}
+
+		// Create behaviours
+		CommunicationBehaviour cb = new ElevatorCommunicationBehaviour(this);
+		this.addBehaviour(cb);
+		TakeActionBehaviour nb = new TakeActionBehaviour(this);
+		this.addBehaviour(nb);
+		//Contract net behaviour
+		MessageTemplate template = MessageTemplate.and(
+		  		MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
+		  		MessageTemplate.MatchPerformative(ACLMessage.CFP) );
+		ElevatorResponder er = new ElevatorResponder(this, template);
+		this.addBehaviour(er);
+	}
+
+	/**
+	 * Removes the register of DF
+	 */
+	@Override
+	protected void takeDown() {
+		try {
+			DFService.deregister(this);
+		} catch (FIPAException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -166,23 +231,27 @@ public class Elevator extends Agent {
 	 * @return The last floor possible in a certain direction
 	 */
 	public int getLastFloorInDirection() {
-		//TODO: Melhorar este algoritmo #naoconsigopensar
 		int floor = this.cFloor;
 		if(isLastDirection(this.cFloor))
 			return floor;
-		do {
-			for(Request r : this.stopFloors) {
-				if(r.getFloor() == floor && ReceiveRequest.class.isInstance(r.getClass())) 
-					if(this.direction == ElevatorDirection.DOWN)
-						return floor = MIN_FLOOR;
-					else
-						return floor = MAX_FLOOR;
-				//Since it's ordered
-				else if(r.getFloor() > floor)
-					break;
+		boolean isDown = this.direction == ElevatorDirection.DOWN;
+		Iterator<Request> iter;
+		if(isDown)
+			iter = stopFloors.descendingIterator();
+		else
+			iter = stopFloors.iterator();
+		
+		while(iter.hasNext()) {
+			Request r = iter.next();
+			if(r instanceof ReceiveRequest && ((ReceiveRequest)r).getDirection() == this.getDirection())
+				return isDown ? minFloor : maxFloor;
+			else if(r instanceof TakeRequest) {
+				floor = r.getFloor();
+				if(isLastDirection(floor))
+					return floor;
 			}
-			floor = move(floor);
-		} while(!isLastDirection(floor));
+		}
+
 		return floor;
 	}
 	
@@ -242,8 +311,7 @@ public class Elevator extends Agent {
 	public boolean isAbove(int floor) {
 		if(this.stopFloors.isEmpty())
 			return false;
-		LinkedList<Request> list = new LinkedList<>(this.stopFloors);
-		return list.getLast().getFloor() <= floor;
+		return this.stopFloors.last().getFloor() <= floor;
 	}
 	
 	/**
@@ -254,8 +322,7 @@ public class Elevator extends Agent {
 	public boolean isBelow(int floor) {
 		if(this.stopFloors.isEmpty())
 			return false;
-		LinkedList<Request> list = new LinkedList<>(this.stopFloors);
-		return list.getFirst().getFloor() >= floor;
+		return this.stopFloors.first().getFloor() >= floor;
 	}
 	
 	/**
@@ -266,46 +333,8 @@ public class Elevator extends Agent {
 	public boolean isLastDirection(int floor) {
 		return this.stopFloors.isEmpty() ||
 				(this.direction == ElevatorDirection.UP && 
-					isAbove(cFloor)) ||
+					isAbove(floor)) ||
 				(this.direction == ElevatorDirection.DOWN && 
-					isBelow(cFloor));
-	}
-	
-	
-	/**
-	 * Sets up the elevator with its behaviour, registering it
-	 */
-	@Override
-	protected void setup() {
-		String type = "No Communication";
-		DFAgentDescription dfd = new DFAgentDescription();
-		dfd.setName(getAID());
-		ServiceDescription sd = new ServiceDescription();
-		sd.setName(getName());
-		sd.setType("Agent " + type);
-		dfd.addServices(sd);
-		try {
-			DFService.register(this, dfd);
-		} catch (FIPAException e) {
-			e.printStackTrace();
-		}
-
-		// Create behaviour
-		CommunicationBehaviour cb = new ElevatorCommunicationBehaviour(this);
-		this.addBehaviour(cb);
-		TakeActionBehaviour nb = new TakeActionBehaviour(this);
-		this.addBehaviour(nb);
-	}
-
-	/**
-	 * Removes the register of DF
-	 */
-	@Override
-	protected void takeDown() {
-		try {
-			DFService.deregister(this);
-		} catch (FIPAException e) {
-			e.printStackTrace();
-		}
+					isBelow(floor));
 	}
 }

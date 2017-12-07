@@ -5,7 +5,6 @@ import java.util.Random;
 import building.Building;
 import elevator.ElevatorDirection;
 import jade.core.behaviours.CyclicBehaviour;
-import model.Message;
 import model.NewRequest;
 
 public class GenerateRequestsBehaviour extends CyclicBehaviour {
@@ -32,8 +31,7 @@ public class GenerateRequestsBehaviour extends CyclicBehaviour {
 				int floor = i;
 				int d = randomGenerator.nextInt(1);
 				ElevatorDirection direction = ElevatorDirection.values()[d];
-				Message m = new NewRequest(floor, direction);
-				this.building.sendMessage(m);
+				this.building.sendMessage(new NewRequest(floor, direction));
 				n++;
 			}
 		}

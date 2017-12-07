@@ -20,7 +20,6 @@ public class BuildingCommunicationBehaviour extends CommunicationBehaviour {
 		try {
 			content = (Message) message.getContentObject();
 		} catch (UnreadableException e) {
-			e.printStackTrace();
 			return;
 		}
 		type = MessageType.getMessageType(content);

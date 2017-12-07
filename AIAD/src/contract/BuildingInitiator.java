@@ -1,41 +1,83 @@
 package contract;
 
+import java.util.Enumeration;
 import java.util.Vector;
 
+import building.Building;
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.DataStore;
 import jade.lang.acl.ACLMessage;
 import jade.proto.ContractNetInitiator;
+import model.Message;
 
 public class BuildingInitiator extends ContractNetInitiator {
-
-	public BuildingInitiator(Agent a, ACLMessage cfp) {
+	private int nResponders = 1;
+	private Message content;
+	
+	public BuildingInitiator(Agent a, ACLMessage cfp, Message content, int nResponders) {
 		super(a, cfp);
+		this.nResponders = nResponders;
+		this.content = content;
 	}
 	
 	protected void handlePropose(ACLMessage propose, Vector v) {
-		System.out.println("Building Handle propose");
-		//TODO: Define if this should do something
+		System.out.println("Agent "+propose.getSender().getName()+" proposed "+propose.getContent());
 	}
 	
 	protected void handleRefuse(ACLMessage refuse) {
-		System.out.println("Building Handle reject");
-		//TODO: This will never happen - send exception
+		System.out.println("Agent "+refuse.getSender().getName()+" refused");
 	}
 	
 	protected void handleFailure(ACLMessage failure) {
-		System.out.println("Building Handle failure");
-		//TODO: Failure to execute request
+		if (failure.getSender().equals(myAgent.getAMS())) {
+			// FAILURE notification from the JADE runtime: the receiver
+			// does not exist
+			System.out.println("Responder does not exist");
+		}
+		else {
+			System.out.println("Agent "+failure.getSender().getName()+" failed");
+		}
+		// Immediate failure --> we will not receive a response from this agent
+		nResponders--;
 	}
 	
 	protected void handleAllResponses(Vector responses, Vector acceptances) {
-		System.out.println("Building Handle responses");
-		//TODO: Algorithm that determines the best proposal
+		if (responses.size() < nResponders) {
+			// Some responder didn't reply within the specified timeout
+			System.out.println("Timeout expired: missing "+(nResponders - responses.size())+" responses");
+			if(responses.size() == 0) {
+				((Building)this.getAgent()).sendMessage(content);
+				return;
+			}
+		}
+		// Evaluate proposals.
+		double bestProposal = -1;
+		AID bestProposer = null;
+		ACLMessage accept = null;
+		Enumeration e = responses.elements();
+		while (e.hasMoreElements()) {
+			ACLMessage msg = (ACLMessage) e.nextElement();
+			if (msg.getPerformative() == ACLMessage.PROPOSE) {
+				ACLMessage reply = msg.createReply();
+				reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
+				acceptances.addElement(reply);
+				double proposal = Double.parseDouble(msg.getContent());
+				if (proposal > bestProposal) {
+					bestProposal = proposal;
+					bestProposer = msg.getSender();
+					accept = reply;
+				}
+			}
+		}
+		// Accept the proposal of the best proposer
+		if (accept != null) {
+			System.out.println("Accepting proposal "+bestProposal+" from responder "+bestProposer.getName());
+			accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+		}						
 	}
 	
 	protected void handleInform(ACLMessage inform) {
-		System.out.println("Building Handle inform");
-		//TODO: Define if this should receive response when the elevator accepts or when it satisfies the request
+		System.out.println("Agent "+inform.getSender().getName()+" successfully performed the requested action");
 	}
-
 }

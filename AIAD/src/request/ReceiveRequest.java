@@ -5,26 +5,49 @@ import java.util.Random;
 import elevator.Elevator;
 import elevator.ElevatorDirection;
 
+/**
+ * 
+ * Creates the requests that a elevator will receive
+ *
+ */
 public class ReceiveRequest extends Request {
+	/**
+	 * Possible maximum weight
+	 */
 	public static final int MAX_WEIGHT = 200;
+	/**
+	 * Possible minimum weight
+	 */
 	public static final int MIN_WEIGHT = 10;
 	/**
 	 * Enum value that represents, in this case, the direction the passenger wants go
 	 */
 	private ElevatorDirection direction;
 	
+	/**
+	 * Minimum number of people
+	 */
 	private int minPeople;
 
+	/**
+	 * ReceiveRequest's constructor
+	 * @param floor Request's floor
+	 * @param direction Elevator's direction
+	 */
 	public ReceiveRequest(int floor, ElevatorDirection direction) {
 		super(floor);
-		//Return exception if Direction is NO_DIRECTION
 		this.direction = direction;
 		this.minPeople = 1;
 	}
 	
+	/**
+	 * ReceiveRequest's constructor
+	 * @param floor Request's floor
+	 * @param direction Elevator's direction
+	 * @param minPeople Minimum number of people of request
+	 */
 	public ReceiveRequest(int floor, ElevatorDirection direction, int minPeople) {
 		super(floor);
-		//Return exception if Direction is NO_DIRECTION
 		this.direction = direction;
 		this.minPeople = minPeople <= 0 ? 1 : minPeople;
 	}
@@ -42,7 +65,8 @@ public class ReceiveRequest extends Request {
 	 * This function is an override method from the parent class Request
 	 * and, in the case of ReceiveRequest, this function will remove this
 	 * request from the set of floors and it'll add a new TakeRequest
-	 * that represents the floor to which the passenger want to go.
+	 * that represents the floor to which the passenger want to go
+	 * @param elevator Elevator that will receive the request
 	 */
 	@Override
 	public void onFloor(Elevator elevator) {
@@ -84,7 +108,7 @@ public class ReceiveRequest extends Request {
 	 * Determines if, considering that the elevator is in this floor,
 	 * the passenger will enter the elevator
 	 * @param elevator Elevator the is used to determine
-	 * @return whether or not it enter the elevator
+	 * @return Whether or not it enter the elevator (true if it enters; false otherwise)
 	 */
 	public boolean willEnterElevator(Elevator elevator) {
 		return elevator.getPassengersWeight() < elevator.elevatorWarningCapacity &&
@@ -97,6 +121,7 @@ public class ReceiveRequest extends Request {
 	/**
 	 * Generate a value that simulates the floor the passenger entering 
 	 * the elevator wished to go.
+	 * @param elevator Elevator that receives the request
 	 * @return an integer value representing the floor
 	 */
 	private int generateFloor(Elevator elevator) {
@@ -117,10 +142,19 @@ public class ReceiveRequest extends Request {
 		}
 	}
 	
+	/**
+	 * Generates the weight of the request
+	 * @return The weight generated
+	 */
 	private int generateWeight() {
 		return (new Random()).nextInt(MAX_WEIGHT - MIN_WEIGHT) + MIN_WEIGHT;
 	}
 
+	/**
+	 * Compares two requests
+	 * @param arg0 The request that will be used in the comparison
+	 * @return 0 if the requests are equal; -1 if the elevator floor or id is smaller
+	 */
 	@Override
 	public int compareTo(Object arg) {
 		Request r = (Request)arg;

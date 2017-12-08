@@ -10,14 +10,27 @@ import javax.swing.JSlider;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 
-
+/**
+ * 
+ * Class that allows to choose the number of elevators and floors of a building
+ *
+ */
 public class Form extends JFrame implements ActionListener {
+	/**
+	 * Building's floors
+	 */
 	private int nFloors;
+	/**
+	 * Building's number of elevators
+	 */
 	private int nElevators;
+	/**
+	 * Sliders that allows to choose the floors and elevators
+	 */
 	private JSlider slider, slider_1;
 	
 	/**
-	 * Create the application.
+	 * Creates the GUI that allows to choose the number of floors and elevators of a building
 	 */
 	public Form() {
 		super("Configuration");
@@ -25,7 +38,7 @@ public class Form extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Initialize the contents of the frame
 	 */
 	private void initialize() {
 		setBounds(100, 100, 450, 300);
@@ -68,6 +81,9 @@ public class Form extends JFrame implements ActionListener {
 		
 	}
 
+	/**
+	 * Changes the GUI when we click in the option 'Capacity'
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();

@@ -8,10 +8,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.SwingUtilities;
 
+/**
+ * 
+ * Creates the program's main page
+ *
+ */
 public class MainPage extends JFrame implements ActionListener {
 
 	/**
-	 * Launch the application.
+	 * Launch the application
 	 */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -23,7 +28,7 @@ public class MainPage extends JFrame implements ActionListener {
 
 
 	/**
-	 * Create the application.
+	 * Create the application's main page
 	 */
 	public MainPage() {
 		super("Elevators Manager");
@@ -31,7 +36,7 @@ public class MainPage extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Initialize the contents of the frame
 	 */
 	private void initialize() {
 		setBounds(100, 100, 475, 316);
@@ -56,6 +61,9 @@ public class MainPage extends JFrame implements ActionListener {
 		getContentPane().add(btnSpecial);
 	}
 
+	/**
+	 * Changes the GUI when we click in the different options
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();

@@ -9,13 +9,37 @@ import jade.wrapper.ControllerException;
 import jade.wrapper.StaleProxyException;
 import tests.ElevatorTestPassengers;
 
+/**
+ * 
+ * Class that allows to initiate the JADE profile, the container and the different agents
+ *
+ */
 public class JadeBoot {
+	/**
+	 * JADE profile
+	 */
 	private static Profile p;
+	/**
+	 * Agents' container
+	 */
 	private static ContainerController container;
+	/**
+	 * Array with the agents' name
+	 */
 	private String[] agentsNames;
 	
+	/**
+	 * Array with the different "Elevator" Agents
+	 */
 	private Elevator[] elevatorAgents;
 
+	/**
+	 * Initiates the profile, container and its agents
+	 * @param nFloors Building's number of floors
+	 * @param nElevators Building's number of elevators
+	 * @param elevatorCapacities Capacity of each elevator
+	 * @throws Exception The class Exception and its subclasses are a form of Throwable that indicates conditions that a reasonable application might want to catch
+	 */
 	public JadeBoot(int nFloors, int nElevators, Integer[] elevatorCapacities) throws Exception {
 		agentsNames = new String[nElevators + 1];
 		elevatorAgents = new Elevator[nElevators];
@@ -28,14 +52,27 @@ public class JadeBoot {
 			throw new Exception("Error starting agents");
 	}
 	
+	/**
+	 * Adds an "Elevator" agent to the respective array, in a certain index
+	 * @param elevator Elevator that will be added to the array
+	 * @param i Index where the Elevator will be placed
+	 */
 	public void addAgent(Elevator elevator, int i) {
 		this.elevatorAgents[i] = elevator;
 	}
 	
+	/**
+	 * Gets all the "Elevator" Agents
+	 * @return The "Elevator" agents
+	 */
 	public Elevator[] getElevatorAgents() {
 		return elevatorAgents;
 	}
 	
+	/**
+	 * Verifies if all "Elevator" agents are an instance of Elevator
+	 * @return
+	 */
 	public boolean hasAllInstancesOfElevator() {
 		for(int i = 0; i < elevatorAgents.length; i++)
 			if(elevatorAgents[i] == null)
@@ -43,6 +80,13 @@ public class JadeBoot {
 		return true;
 	}
 	
+	/**
+	 * Initiates the different agents
+	 * @param nFloors Building's number of floors
+	 * @param nElevators Building's number of elevators
+	 * @param elevatorCapacities Capacity of each elevator
+	 * @return true if it was possible to initiate the different agents; false otherwise
+	 */
 	private boolean initAgents(int nFloors, int nElevators, Integer[] elevatorCapacities) {
 		p = new ProfileImpl(true);
 		container = jade.core.Runtime.instance().createMainContainer(p);
@@ -63,6 +107,10 @@ public class JadeBoot {
 		return true;
 	}
 	
+	/**
+	 * This function starts the agents
+	 * @return true if it was possible to initiate the agents; false otherwise
+	 */
 	private boolean startAgents() {
 		System.out.println("Start agents");
 		try {

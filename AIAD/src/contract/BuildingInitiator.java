@@ -13,10 +13,28 @@ import jade.proto.ContractNetInitiator;
 import model.AnswerRequest;
 import model.Message;
 
+/**
+ * 
+ * This class initiates the building as a ContractNetInitiator
+ *
+ */
 public class BuildingInitiator extends ContractNetInitiator {
+	/**
+	 * Number of responders
+	 */
 	private int nResponders = 1;
+	/**
+	 * Mesage's content
+	 */
 	private Message content;
 	
+	/**
+	 * BuildingInitiator's constructor
+	 * @param a Agent that will be the initiator
+	 * @param cfp ACLMessage
+	 * @param content Message's content
+	 * @param nResponders Number of responders
+	 */
 	public BuildingInitiator(Agent a, ACLMessage cfp, Message content, int nResponders) {
 		super(a, cfp);
 		this.nResponders = nResponders;
@@ -27,10 +45,20 @@ public class BuildingInitiator extends ContractNetInitiator {
 	
 	protected void handleRefuse(ACLMessage refuse) {}
 	*/
+	
+	/**
+	 * This function handles the failure of ACLMessage
+	 * @param failure ACLMessage
+	 */
 	protected void handleFailure(ACLMessage failure) {
 		nResponders--;
 	}
 	
+	/**
+	 * This function handles with all the responses obtained
+	 * @param responses Vector with all the responses obtained
+	 * @param acceptances Vector with all the acceptances obtained
+	 */
 	protected void handleAllResponses(Vector responses, Vector acceptances) {
 		if (responses.size() < nResponders) {
 			// Some responder didn't reply within the specified timeout
@@ -83,6 +111,13 @@ public class BuildingInitiator extends ContractNetInitiator {
 	/*
 	protected void handleInform(ACLMessage inform) {}
 	*/
+	
+	/**
+	 * Verifies if a proposal is better than the best proposal obtained until now
+	 * @param proposal Proposal to be compared
+	 * @param bestProposal Bes proposal until now
+	 * @return true if the new proposal is better; false otherwise
+	 */
 	private boolean isBetterProposal(AnswerRequest proposal, AnswerRequest bestProposal) {
 		return bestProposal == null || proposal.getStopFloorsLength() < bestProposal.getStopFloorsLength();
 	}

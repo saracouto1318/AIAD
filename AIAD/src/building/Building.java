@@ -25,25 +25,60 @@ import elevator.ElevatorDirection;
 import model.Message;
 import model.NewRequest;
 
+/**
+ * 
+ * This class creates the agent "Building"
+ *
+ */
 public class Building extends Agent {
+	/**
+	 * Building's bottom floor
+	 */
 	private int bottomFloor;
+	/**
+	 * Building's top floor
+	 */
 	private int topFloor;
+	/**
+	 * Building's number of floors
+	 */
 	private int numberOfFloors;
+	/**
+	 * Frequency of requests
+	 */
 	private int requestFreq;
+	/**
+	 * List of AID of the elevators
+	 */
 	private List<AID> elevators;
 	
+	/**
+	 * Default frequency
+	 */
 	private final static double DEFAULT_FREQ = 1.0;
 
+	/**
+	 * Map with the floors' frequency
+	 */
 	private final static Map<Integer, Double> FLOOR_FREQ = new HashMap<Integer, Double>();
 
+	/**
+	 * Map with the responses of a request
+	 */
 	private Map<Integer, List<Message>> requestResponses;
 
+	/**
+	 * 	List of request's messages
+	 */
 	private List<Message> requests;
 
 	static {
 		FLOOR_FREQ.put(0, 0.5);
 	}
 
+	/**
+	 * Sets up the "Building" agent
+	 */
 	@Override
 	protected void setup() {
 		Object[] args = getArguments();
@@ -77,6 +112,9 @@ public class Building extends Agent {
 		this.addBehaviour(comBehaviour);*/
 	}
 
+	/**
+	 * Takes down the "Building" agent
+	 */
 	@Override
 	protected void takeDown() {
 		try {
@@ -87,33 +125,33 @@ public class Building extends Agent {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Gets the building's bottom floor
+	 * @return The building's bottom floor
 	 */
 	public int getBottomFloor() {
 		return bottomFloor;
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Gets the building's top floor
+	 * @return The building's top floor
 	 */
 	public int getTopFloor() {
 		return topFloor;
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Gets the number of floor of the building
+	 * @return The number of floor of the building
 	 */
 	public int getNumberOfFloors() {
 		return numberOfFloors;
 	}
 
 	/**
-	 * 
-	 * @param floor
-	 * @return
+	 * Gets the frequency of a floor
+	 * @param floor The floor that will be analyzed
+	 * @return The frequency of the floor
 	 */
 	public double getFreqOfFloor(int floor) {
 		Double res = FLOOR_FREQ.get(floor);
@@ -121,26 +159,25 @@ public class Building extends Agent {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Gets the request's frequency
+	 * @return The request's frequency
 	 */
 	public int getRequestFreq() {
 		return requestFreq;
 	}
 
 	/**
-	 * 
-	 * @param floor
-	 * @return
+	 * Gets the request's frequency of a certain floor
+	 * @param floor Floor that will be analyzed
+	 * @return The request's frequency of a certain floor
 	 */
 	public int getRequestFreqOfFloor(int floor) {
 		return (int)(getFreqOfFloor(floor) * getRequestFreq());
 	}
 
 	/**
-	 * 
-	 * @param message
-	 * @return
+	 * Sends a message to the elevators
+	 * @param message Message that will be sent
 	 */
 	public void sendMessage(Message message) {
 		ACLMessage msg = new ACLMessage(ACLMessage.CFP);
@@ -159,9 +196,9 @@ public class Building extends Agent {
 	}
 
 	/**
-	 * 
-	 * @param requestId
-	 * @param response
+	 * Receives a response to a request
+	 * @param requestId Request's identifier
+	 * @param response Response message
 	 */
 	public void receiveRequestResponse(int requestId, Message response) {
 		List<Message> list = requestResponses.get(requestId);

@@ -20,11 +20,27 @@ import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.FailureException;
 
+/**
+ * 
+ * This class initiates the elevator agent as a ContractNetResponder
+ *
+ */
 public class ElevatorResponder extends ContractNetResponder {
+	/**
+	 * ElevatorResponder's constructor
+	 * @param a Agent "Elevator"
+	 * @param mt Message template
+	 */
 	public ElevatorResponder(Elevator a, MessageTemplate mt) {
 		super(a, mt);
 	}
 	
+	/**
+	 * This function prepares a response to the message sent by the Building
+	 * @param cfp Message sent by the Building
+	 * @return The response to the message sent by the Building
+	 * @throws RefuseException
+	 */
 	protected ACLMessage prepareResponse(ACLMessage cfp) throws RefuseException {
 		((Elevator)this.getAgent()).initiateNewResponder();
 		
@@ -41,6 +57,14 @@ public class ElevatorResponder extends ContractNetResponder {
 		return propose;
 	}
 	
+	/**
+	 * Prepares the notification of the result of the negotiation
+	 * @param cfp
+	 * @param propose
+	 * @param accept
+	 * @return 
+	 * @throws FailureException
+	 */
 	protected ACLMessage prepareResultNotification(ACLMessage cfp, ACLMessage propose, ACLMessage accept) throws FailureException {
 		handleAccept(cfp);
 		ACLMessage inform = accept.createReply();

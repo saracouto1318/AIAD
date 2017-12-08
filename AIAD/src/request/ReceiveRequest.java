@@ -87,7 +87,7 @@ public class ReceiveRequest extends Request {
 	 * @return whether or not it enter the elevator
 	 */
 	public boolean willEnterElevator(Elevator elevator) {
-		return elevator.getPassengersWeight() < elevator.ELEVATOR_WARNING_CAPACITY &&
+		return elevator.getPassengersWeight() < elevator.elevatorWarningCapacity &&
 				(direction == elevator.getDirection() || 
 					elevator.getDirection() == ElevatorDirection.NO_DIRECTION ||
 					(elevator.getDirection() != direction && 
@@ -105,11 +105,15 @@ public class ReceiveRequest extends Request {
 		//currently working with hard-coded values
 		int delta_floors;
 		if(direction == ElevatorDirection.UP) {
-			delta_floors = elevator.maxFloor - floor - 1;
-			return r.nextInt(delta_floors) + floor + 1;
+			delta_floors = elevator.maxFloor - floor;
+			// 29 - 0 = 29
+			int d = r.nextInt(delta_floors) + 1;
+			// [0, 28] + 1 = [1, 29]
+			return floor + d;
 		} else {
-			delta_floors = floor - elevator.minFloor - 1;
-			return r.nextInt(delta_floors) - floor;
+			delta_floors = floor - elevator.minFloor;
+			int d = r.nextInt(delta_floors) + 1; 
+			return floor - d;
 		}
 	}
 	

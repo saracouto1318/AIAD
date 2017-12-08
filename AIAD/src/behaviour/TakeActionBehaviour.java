@@ -25,6 +25,7 @@ public class TakeActionBehaviour extends TickerBehaviour {
 	 */
 	@Override
 	protected void onTick() {
+		System.out.println("TICK floor " + this.elevator.getCFloor() + " - " + this.elevator.getStatus() + " - " + this.elevator.getDirection());
 		if(this.elevator.getStatus() == ElevatorStatus.STOPPED) {
 			//Go from stopped to moving
 			this.elevator.setStatus(ElevatorStatus.MOVING);

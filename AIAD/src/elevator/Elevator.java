@@ -49,12 +49,12 @@ public class Elevator extends Agent {
 	/**
 	 * Maximum capacity for the elevator
 	 */
-	public int ELEVATOR_CAPACITY;
+	public int elevatorCapacity;
 	/**
 	 * Elevator capacity which does not allow any more passengers Meaning it'll
 	 * not attend receive requests
 	 */
-	public int ELEVATOR_WARNING_CAPACITY;
+	public int elevatorWarningCapacity;
 	/**
 	 * Number of the floors to where the elevator's passengers want to go
 	 */
@@ -96,9 +96,9 @@ public class Elevator extends Agent {
 	 * Creates an elevator with a max capacity, a warning capacity and a set of floors where the elevator must stop
 	 */
 	public Elevator() {
-		ELEVATOR_CAPACITY = 500;
-		ELEVATOR_WARNING_CAPACITY = 400;
 		stopFloors = new TreeSet<>();
+		direction = ElevatorDirection.NO_DIRECTION;
+		status = ElevatorStatus.STOPPED;
 	}
 	
 	/**
@@ -110,8 +110,8 @@ public class Elevator extends Agent {
 		try {
 			minFloor = 0; //Integer.parseInt(args[0].toString());
 			maxFloor = Integer.parseInt(args[0].toString());
-			ELEVATOR_CAPACITY = Integer.parseInt(args[1].toString());
-			ELEVATOR_WARNING_CAPACITY = ELEVATOR_CAPACITY - 50;
+			elevatorCapacity = Integer.parseInt(args[1].toString());
+			elevatorWarningCapacity = elevatorCapacity - 100;
 			
 			//Add instance to jade boot if aplicable
 			boolean hasInterface = Boolean.parseBoolean(args[2].toString());
@@ -270,10 +270,44 @@ public class Elevator extends Agent {
 	 * @return true if it's possible to add the new passenger to the elevator; false otherwise
 	 */
 	public boolean addPassenger(int floor, int weight) {
-		if (getPassengersWeight() + weight >= ELEVATOR_CAPACITY)
+		if (getPassengersWeight() + weight >= elevatorCapacity)
 			return false;
 		stopFloors.add(new TakeRequest(floor, weight));
 		return true;
+	}
+	
+	private ElevatorDirection nextDirection() {
+		if(this.stopFloors.size() == 0)
+			return ElevatorDirection.NO_DIRECTION;
+		Integer lowerFloor = null;
+		Integer upperFloor = null;
+		for(Request r : stopFloors) {
+			if(r.getFloor() <= cFloor)
+				lowerFloor = r.getFloor();
+			if(r.getFloor() >= cFloor) {
+				upperFloor = r.getFloor();
+				break;
+			}
+		}
+		
+		if(lowerFloor == null && upperFloor == null) {
+			return ElevatorDirection.NO_DIRECTION;
+		} else if(lowerFloor != null) {
+			if(upperFloor != null) {
+				if(lowerFloor == cFloor && upperFloor == cFloor) {
+					return direction;
+				} else if(cFloor - lowerFloor > upperFloor - cFloor) {
+					return ElevatorDirection.UP;
+				} else {
+					return ElevatorDirection.DOWN;
+				}				
+			} else {
+				return ElevatorDirection.DOWN;
+			}
+		} else if(upperFloor != null) {
+			return ElevatorDirection.UP;
+		}
+		return direction;
 	}
 
 	/**
@@ -281,13 +315,16 @@ public class Elevator extends Agent {
 	 * @return true if it's possible to change the elevator's direction; false otherwise
 	 */
 	public boolean changeDirection() {
-		if(this.stopFloors.isEmpty())
-			this.direction = ElevatorDirection.NO_DIRECTION;
-		else if(!isLastDirection(cFloor))
+		if(stopFloors.isEmpty())
+			direction = ElevatorDirection.NO_DIRECTION;
+		else if(direction != ElevatorDirection.NO_DIRECTION && !isLastDirection(cFloor))
 			return false;
-		else
-			this.direction = ElevatorDirection.changeDirection(this.direction);
-		return true;
+		ElevatorDirection nDirection = nextDirection();
+		if(direction != nDirection) {
+			direction = nDirection;
+			return true;
+		}
+		return false;
 	}
 
 	/**

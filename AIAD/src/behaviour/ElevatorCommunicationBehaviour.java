@@ -6,6 +6,7 @@ import java.util.Map;
 
 import elevator.Elevator;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
 import model.AnswerRequest;
@@ -96,10 +97,11 @@ public class ElevatorCommunicationBehaviour extends CommunicationBehaviour {
 
 	private void handleStatus(StatusRequest request) {
 		Elevator elevator = (Elevator) this.myAgent;
-		if (request.isAck())
+		if (request.isAck()) {
 			elevator.getStopFloors().add(new ReceiveRequest(request.getFloor(), request.getDirection()));
-		else
+		} else {
 			this.rejectRequests.put(request.getId(), request);
+		}
 	}
 
 	private void handleSatisfied(SatisfiedRequest request) {
@@ -126,5 +128,4 @@ public class ElevatorCommunicationBehaviour extends CommunicationBehaviour {
 	 * 
 	 * public int numRequests() { return this.elevator.getStopFloors().size(); }
 	 */
-
 }

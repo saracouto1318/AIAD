@@ -1,24 +1,33 @@
-package gui;
+package main;
+
+import javax.swing.SwingUtilities;
 
 import building.Building;
 import elevator.Elevator;
+import gui.MainPage;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.wrapper.ContainerController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.StaleProxyException;
-import tests.ElevatorTestPassengers;
 
-public class JadeBoot {
+public class FastInitiate {
 	private static Profile p;
 	private static ContainerController container;
 	private String[] agentsNames;
 	
-	private Elevator[] elevatorAgents;
+	
+	public static void main(String[] args) {
+		try {
+			int[] capacities = {500};
+			new FastInitiate(30, 1, capacities);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-	public JadeBoot(int nFloors, int nElevators, Integer[] elevatorCapacities) throws Exception {
+	public FastInitiate(int nFloors, int nElevators, int[] elevatorCapacities) throws Exception {
 		agentsNames = new String[nElevators + 1];
-		elevatorAgents = new Elevator[nElevators];
 		
 		if(elevatorCapacities.length != nElevators)
 			throw new Exception("Invalid length");
@@ -27,30 +36,15 @@ public class JadeBoot {
 		if(!startAgents())
 			throw new Exception("Error starting agents");
 	}
-	
-	public void addAgent(Elevator elevator, int i) {
-		this.elevatorAgents[i] = elevator;
-	}
-	
-	public Elevator[] getElevatorAgents() {
-		return elevatorAgents;
-	}
-	
-	public boolean hasAllInstancesOfElevator() {
-		for(int i = 0; i < elevatorAgents.length; i++)
-			if(elevatorAgents[i] == null)
-				return false;
-		return true;
-	}
-	
-	private boolean initAgents(int nFloors, int nElevators, Integer[] elevatorCapacities) {
+		
+	private boolean initAgents(int nFloors, int nElevators, int[] elevatorCapacities) {
 		p = new ProfileImpl(true);
 		container = jade.core.Runtime.instance().createMainContainer(p);
 		try {
 			String name;
 			for(int i = 0; i < nElevators; i++) {
 				name = "elev" + i;
-				container.createNewAgent(name, Elevator.class.getName(), new Object[] {nFloors - 1, elevatorCapacities[i], true, this, i});
+				container.createNewAgent(name, Elevator.class.getName(), new Object[] {nFloors - 1, elevatorCapacities[i], false});
 				agentsNames[i] = name;
 			}
 			name = "building"; 

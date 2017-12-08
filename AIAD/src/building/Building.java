@@ -21,6 +21,7 @@ import java.util.Vector;
 import behaviour.*;
 import contract.BuildingInitiator;
 import elevator.Elevator;
+import elevator.ElevatorDirection;
 import model.Message;
 import model.NewRequest;
 
@@ -31,7 +32,7 @@ public class Building extends Agent {
 	private int requestFreq;
 	private List<AID> elevators;
 	
-	private final static int DEFAULT_FREQ = 20;
+	private final static int DEFAULT_FREQ = 1;
 
 	private final static Map<Integer, Integer> FLOOR_FREQ = new HashMap<Integer, Integer>();
 	
@@ -71,6 +72,7 @@ public class Building extends Agent {
 		this.addBehaviour(reqBehaviour);
 		//CommunicationBehaviour comBehaviour = new BuildingCommunicationBehaviour(this);
 		//this.addBehaviour(comBehaviour);
+		//sendMessage(new NewRequest(10, ElevatorDirection.DOWN));
 	}
 	
 	@Override
@@ -112,7 +114,8 @@ public class Building extends Agent {
 	 * @return
 	 */
 	public int getFreqOfFloor(int floor) {
-		return FLOOR_FREQ.get(floor) == null ? DEFAULT_FREQ : FLOOR_FREQ.get(floor);
+		Integer res = FLOOR_FREQ.get(floor);
+		return res == null ? DEFAULT_FREQ : res;
 	}
 	
 	/**
@@ -144,7 +147,12 @@ public class Building extends Agent {
 		msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
 		// We want to receive a reply in 100 milliseconds
 		msg.setReplyByDate(new Date(System.currentTimeMillis() + 100));
-		msg.setContent("dummy-action");
+		try {
+			msg.setContentObject(message);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
 		this.addBehaviour(new BuildingInitiator(this, msg, message, elevators.size()));
 	}
 	

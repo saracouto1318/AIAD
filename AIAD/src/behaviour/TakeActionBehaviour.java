@@ -10,10 +10,25 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import request.Request;
 
+/**
+ * 
+ * This class creates a behaviour that allows the elevators to take an action
+ *
+ */
 public class TakeActionBehaviour extends TickerBehaviour {
+	/**
+	 * Action time of the behaviour
+	 */
 	private static final int ACTION_TIME = 500;
+	/**
+	 * Elevator that will be used
+	 */
 	private Elevator elevator;
 	
+	/**
+	 * TakeActionBehaviour's constructor
+	 * @param elevator Elevator that will be used
+	 */
 	public TakeActionBehaviour(Elevator elevator) {
 		super(elevator, ACTION_TIME);
 		this.elevator = elevator;
@@ -67,7 +82,7 @@ public class TakeActionBehaviour extends TickerBehaviour {
 	/**
 	 * Iterates through all requests determining if the elevator should, or not,
 	 * stop at the current floor
-	 * @return
+	 * @return true if it should stop at the current floor; false otherwise
 	 */
 	private boolean shouldStop() {
 		for(Request r : this.elevator.getStopFloors())

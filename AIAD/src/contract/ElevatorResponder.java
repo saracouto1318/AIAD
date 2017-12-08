@@ -59,11 +59,11 @@ public class ElevatorResponder extends ContractNetResponder {
 	
 	/**
 	 * Prepares the notification of the result of the negotiation
-	 * @param cfp
-	 * @param propose
-	 * @param accept
-	 * @return 
-	 * @throws FailureException
+	 * @param cfp The accept message
+	 * @param propose The propose message
+	 * @param accept The accept message used to get the reply
+	 * @return  The ACLMessage that informs about the state of the negotiation
+	 * @throws FailureException This class represents a generic FailureException
 	 */
 	protected ACLMessage prepareResultNotification(ACLMessage cfp, ACLMessage propose, ACLMessage accept) throws FailureException {
 		handleAccept(cfp);
@@ -74,6 +74,10 @@ public class ElevatorResponder extends ContractNetResponder {
 	/*
 	protected void handleRejectProposal(ACLMessage reject) {}
 	*/
+	/**
+	 * Handles the accept message sent by the initiator
+	 * @param cfp Accpet message sent
+	 */
 	private void handleAccept(ACLMessage cfp) 
 	{
 		NewRequest request;
@@ -87,6 +91,12 @@ public class ElevatorResponder extends ContractNetResponder {
 		((Elevator)this.getAgent()).getStopFloors().add(new ReceiveRequest(request.getFloor(), request.getDirection()));
 	}
 	
+	/**
+	 * Gets the reply to the proposal
+	 * @param message Message replied
+	 * @return The message answered to the request
+	 * @throws RefuseException This class represents a generic RefuseException
+	 */
 	private Message getReply(ACLMessage message) throws RefuseException {		
 		Message request;
 		MessageType type;
@@ -116,6 +126,13 @@ public class ElevatorResponder extends ContractNetResponder {
 		return null;
 	}
 	
+	/**
+	 * Replies to new requests
+	 * @param reply Reply message
+	 * @param request New request
+	 * @return The message answered to the request
+	 * @throws RefuseException This class represents a generic RefuseException
+	 */
 	private Message replyToNew(ACLMessage reply, NewRequest request) throws RefuseException {
 		// Create a reply message
 		Elevator elevator = (Elevator) this.myAgent;

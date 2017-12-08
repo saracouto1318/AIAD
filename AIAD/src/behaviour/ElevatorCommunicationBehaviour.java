@@ -17,6 +17,11 @@ import model.SatisfiedRequest;
 import model.StatusRequest;
 import request.ReceiveRequest;
 
+/**
+ * 
+ * This class creates the communication in the elevator
+ *
+ */
 public class ElevatorCommunicationBehaviour extends CommunicationBehaviour {
 	/*
 	 * 
@@ -41,13 +46,24 @@ public class ElevatorCommunicationBehaviour extends CommunicationBehaviour {
 	 * RejRequest <- Message
 	 * 
 	 */
+	/**
+	 * Map with the rejected requests
+	 */
 	private Map<Integer, StatusRequest> rejectRequests;
 
+	/**
+	 * ElevatorCommunicationBehaviour's constructor
+	 * @param elevator Elevator where the communication will be created
+	 */
 	public ElevatorCommunicationBehaviour(Elevator elevator) {
 		super(elevator);
 		this.rejectRequests = new HashMap<>();
 	}
 
+	/**
+	 * Handles the message received
+	 * @param message Message received
+	 */
 	@Override
 	protected void handler(ACLMessage message) {		
 		Message request;
@@ -78,6 +94,11 @@ public class ElevatorCommunicationBehaviour extends CommunicationBehaviour {
 		}
 	}
 
+	/**
+	 * Handles the new messages received
+	 * @param reply Replied messages received
+	 * @param request New request to be handled
+	 */
 	private void handleNew(ACLMessage reply, NewRequest request) {
 		// Create a reply message
 		Elevator elevator = (Elevator) this.myAgent;
@@ -95,6 +116,10 @@ public class ElevatorCommunicationBehaviour extends CommunicationBehaviour {
 		elevator.send(reply);
 	}
 
+	/**
+	 * Handles the communication according to the request status
+	 * @param request Request that will be analyzed
+	 */
 	private void handleStatus(StatusRequest request) {
 		Elevator elevator = (Elevator) this.myAgent;
 		if (request.isAck()) {
@@ -104,6 +129,10 @@ public class ElevatorCommunicationBehaviour extends CommunicationBehaviour {
 		}
 	}
 
+	/**
+	 * Handles the satisfied requests
+	 * @param request The satisfied requests
+	 */
 	private void handleSatisfied(SatisfiedRequest request) {
 		this.rejectRequests.remove(request.getId());
 	}

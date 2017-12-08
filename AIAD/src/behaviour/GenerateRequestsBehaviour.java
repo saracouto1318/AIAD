@@ -8,22 +8,45 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import model.NewRequest;
 
+/**
+ * 
+ * This class creates a behaviour that generates requests
+ *
+ */
 public class GenerateRequestsBehaviour extends TickerBehaviour {
+	/**
+	 * Action time of the behaviour
+	 */
 	private static final int ACTION_TIME = 500;
 
+	/**
+	 * Building that will be used
+	 */
 	private Building building;
 
+	/**
+	 * GenerateRequestsBehaviour's constructor
+	 * @param building Building that will be used
+	 */
 	public GenerateRequestsBehaviour(Building building) {
 		super(building, ACTION_TIME);
 		this.building = building;
 	}
 
+	/**
+	 * This method is invoked periodically with the period defined in the constructor
+	 * Subclasses are expected to define this method specifying the action that must be performed at every tick
+	 */
 	@Override
 	public void onTick() {
 		//System.out.println("ACTION GENERATE");
 		generateRandomRequests();
 	}
 
+	/**
+	 * This function generates random requests
+	 * @return The number of random requests
+	 */
 	public int generateRandomRequests() {
 		Random randomGenerator = new Random();
 		int bf = building.getBottomFloor();

@@ -4,8 +4,17 @@ import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
+/**
+ * 
+ * Creates the communication that will be used by the building or by the elevators
+ *
+ */
 public abstract class CommunicationBehaviour extends CyclicBehaviour {
 	
+	/**
+	 * CommunicationBehaviour's constructor
+	 * @param agent Agent that will have the communication associated
+	 */
 	public CommunicationBehaviour(Agent agent){
 		super(agent);
 	}

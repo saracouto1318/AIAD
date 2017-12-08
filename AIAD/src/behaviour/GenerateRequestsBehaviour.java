@@ -5,18 +5,21 @@ import java.util.Random;
 import building.Building;
 import elevator.ElevatorDirection;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.TickerBehaviour;
 import model.NewRequest;
 
-public class GenerateRequestsBehaviour extends CyclicBehaviour {
+public class GenerateRequestsBehaviour extends TickerBehaviour {
+	private static final int ACTION_TIME = 500;
 
 	private Building building;
 
 	public GenerateRequestsBehaviour(Building building) {
+		super(building, ACTION_TIME);
 		this.building = building;
 	}
 
 	@Override
-	public void action() {
+	public void onTick() {
 		//System.out.println("ACTION GENERATE");
 		generateRandomRequests();
 	}

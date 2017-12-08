@@ -74,19 +74,16 @@ public class BuildingInitiator extends ContractNetInitiator {
 		
 		// Accept the proposal of the best proposer
 		if (accept != null) {
-			System.out.println("Accepting proposal from responder "+bestProposer.getName());
 			accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
 		} else {
 			System.out.println("ACCEPT NULL");
 			((Building)this.getAgent()).sendMessage(content);
 		}
 	}
-	
-	protected void handleInform(ACLMessage inform) {
-		System.out.println("Agent "+inform.getSender().getName()+" successfully performed the requested action");
-	}
-	
+	/*
+	protected void handleInform(ACLMessage inform) {}
+	*/
 	private boolean isBetterProposal(AnswerRequest proposal, AnswerRequest bestProposal) {
-		return bestProposal == null || proposal.getFloor() > bestProposal.getFloor();
+		return bestProposal == null || proposal.getStopFloorsLength() < bestProposal.getStopFloorsLength();
 	}
 }

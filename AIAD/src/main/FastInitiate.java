@@ -48,7 +48,7 @@ public class FastInitiate {
 				agentsNames[i] = name;
 			}
 			name = "building"; 
-			container.createNewAgent(name, Building.class.getName(), new Object[] {nFloors - 1, 20000000});
+			container.createNewAgent(name, Building.class.getName(), new Object[] {0, nFloors - 1, 40});
 			agentsNames[nElevators] = name;
 		} catch(StaleProxyException e) {
 			e.printStackTrace();

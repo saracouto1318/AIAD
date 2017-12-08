@@ -59,7 +59,7 @@ public class ElevatorResponder extends ContractNetResponder {
 			e.printStackTrace();
 			return;
 		}
-		System.out.println("New request accepted for elevator " + this.getAgent().getAID().getLocalName() + " on floor " + request.getFloor());
+		System.out.println(this.getAgent().getAID().getLocalName() + " new request " + request.getFloor());
 		((Elevator)this.getAgent()).getStopFloors().add(new ReceiveRequest(request.getFloor(), request.getDirection()));
 	}
 	

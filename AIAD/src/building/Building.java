@@ -32,16 +32,16 @@ public class Building extends Agent {
 	private int requestFreq;
 	private List<AID> elevators;
 	
-	private final static int DEFAULT_FREQ = 1;
+	private final static double DEFAULT_FREQ = 1.0;
 
-	private final static Map<Integer, Integer> FLOOR_FREQ = new HashMap<Integer, Integer>();
+	private final static Map<Integer, Double> FLOOR_FREQ = new HashMap<Integer, Double>();
 
 	private Map<Integer, List<Message>> requestResponses;
 
 	private List<Message> requests;
 
 	static {
-		FLOOR_FREQ.put(0, 10);
+		FLOOR_FREQ.put(0, 0.5);
 	}
 
 	@Override
@@ -115,8 +115,8 @@ public class Building extends Agent {
 	 * @param floor
 	 * @return
 	 */
-	public int getFreqOfFloor(int floor) {
-		Integer res = FLOOR_FREQ.get(floor);
+	public double getFreqOfFloor(int floor) {
+		Double res = FLOOR_FREQ.get(floor);
 		return res == null ? DEFAULT_FREQ : res;
 	}
 
@@ -134,7 +134,7 @@ public class Building extends Agent {
 	 * @return
 	 */
 	public int getRequestFreqOfFloor(int floor) {
-		return getFreqOfFloor(floor) * getRequestFreq();
+		return (int)(getFreqOfFloor(floor) * getRequestFreq());
 	}
 
 	/**

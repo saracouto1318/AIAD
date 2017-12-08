@@ -73,6 +73,11 @@ public class Elevator extends Agent {
 	 */
 	protected ElevatorStatus status;
 
+	/**
+	 * Gets all the AID of elevators that match with the agent passed in the function
+	 * @param a Agent that will be used to compare with the other agents
+	 * @return The list off AID of all elevators that match with the respective agent
+	 */
 	public static final List<AID> getAllElevators(Agent a) {
 		AMSAgentDescription[] agents = null;
 		List<AID> agentsAID = new ArrayList<AID>();
@@ -158,6 +163,9 @@ public class Elevator extends Agent {
 		}
 	}
 	
+	/**
+	 * Initiates the new responder using a template based in FIPA_CONTACT_NET
+	 */
 	public void initiateNewResponder() {
 		MessageTemplate template = MessageTemplate.and(
 		  		MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
@@ -276,6 +284,10 @@ public class Elevator extends Agent {
 		return true;
 	}
 	
+	/**
+	 * Gets the next direction of the elevator
+	 * @return The elevator's new direction
+	 */
 	private ElevatorDirection nextDirection() {
 		if(this.stopFloors.size() == 0)
 			return ElevatorDirection.NO_DIRECTION;

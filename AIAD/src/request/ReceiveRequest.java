@@ -49,14 +49,6 @@ public class ReceiveRequest extends Request {
 		this.startTime = new Date();
 		this.startElevatorFloor = elevator.getCFloor();
 		this.startElevatorDirection = elevator.getDirection();
-
-		try {
-			Statistics.instance.newRequest(this.id, 
-					new Object[] {true, this.id, floor, this.startElevatorFloor, direction, this.startElevatorDirection, 
-							startTime.getTime(), 0, 0});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 		
 	/**
@@ -90,20 +82,15 @@ public class ReceiveRequest extends Request {
 			int floor = generateFloor(elevator);
 			if(!elevator.addPassenger(floor, weight))
 				break;
-		}
+		}		
 
 		//- Remove this request from the elevator set
 		elevator.getStopFloors().remove(this);
 		
-		try {
-			System.out.println("To floor " + id + " - " + floor + " vs " +  startElevatorFloor + " " + direction.toString() + " vs" + startElevatorDirection.toString());
-			Date finish = new Date();
-			Statistics.instance.updateInfo(id, 
-					new Object[] {true, id, floor, startElevatorFloor, direction, startElevatorDirection, 
-							startTime.getTime(), finish.getTime(), finish.getTime() - startTime.getTime()});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Date finish = new Date();
+		Statistics.instance.addInfo(id, 
+				new Object[] {true, id, floor, startElevatorFloor, direction, startElevatorDirection, 
+						startTime.getTime(), finish.getTime(), finish.getTime() - startTime.getTime()}, true);
 	}
 	
 	/**
@@ -170,11 +157,11 @@ public class ReceiveRequest extends Request {
 	@Override
 	public int compareTo(Object arg) {
 		Request r = (Request)arg;
-		if(r.getClass().isAssignableFrom(ReceiveRequest.class) 
-				&& direction == ((ReceiveRequest)r).getDirection())
+		if(r instanceof ReceiveRequest &&
+			direction == ((ReceiveRequest)r).getDirection())
 			return 0;
 		return (floor > r.floor || 
-				(floor == r.floor && id > r.id)) ? 
+				(floor == r.floor && id >= r.id)) ? 
 					1 : -1;
 	}
 

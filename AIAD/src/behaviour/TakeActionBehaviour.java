@@ -40,28 +40,24 @@ public class TakeActionBehaviour extends TickerBehaviour {
 	 */
 	@Override
 	protected void onTick() {
-		if(this.elevator.getStatus() == ElevatorStatus.STOPPED) {
-			//Go from stopped to moving
-			this.elevator.setStatus(ElevatorStatus.MOVING);
-			onFloor();
-			nextDirection();			
-		}
+		/*System.out.println("Agent " + elevator.getCFloor() + " dir " + elevator.getDirection() + " status " + elevator.getStatus());
+		for(Request r : elevator.getStopFloors())
+			System.out.print(r.getClass() + " - " + r.getFloor() + " -- ");
+		System.out.println();*/
+		
 		//Stop if this cFloor is a stopFloor
-		else if(shouldStop()) {
+		if(shouldStop()) {
 			this.elevator.setStatus(ElevatorStatus.STOPPED);
+			onFloor();
+			return;
 		}
-		//Might be time to change direction
-		else {
-			nextDirection();
-		}
+
+		//Go from stopped to moving
+		if(this.elevator.getStatus() == ElevatorStatus.STOPPED)
+			this.elevator.setStatus(ElevatorStatus.MOVING);
 		
-		moveElevator();		
-		
-		/*StringBuilder strBuilder = new StringBuilder("");
-		strBuilder.append(this.elevator.getAID()).append(" ").append(this.elevator.getCFloor()).append(" ");
-		for(Request r : this.elevator.getStopFloors())
-			strBuilder.append(" ").append(r.getClass()).append(":").append(r.getFloor());
-		System.out.println(strBuilder.toString());*/
+		nextDirection();
+		moveElevator();
 	}
 	
 	/**
@@ -103,14 +99,8 @@ public class TakeActionBehaviour extends TickerBehaviour {
 	 * Calculates the next move for the elevator
 	 */
 	private void nextDirection() {
-		/*//If stop floors is empty then there are no more requests
-		if(this.elevator.getStopFloors().isEmpty())
-			this.elevator.setDirection(ElevatorDirection.NO_DIRECTION);
-		
-		//Check if moving in the current elevator direction will lead them to a stop
-		else if(this.elevator.isLastDirection(this.elevator.getCFloor())) {
-			//If it doesn't -> Change direction*/
 		this.elevator.changeDirection();
-		//}
+		if(this.elevator.getDirection() == ElevatorDirection.NO_DIRECTION)
+			this.elevator.setStatus(ElevatorStatus.STOPPED);
 	}
 }

@@ -1,9 +1,8 @@
 package stats;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -11,15 +10,36 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class Statistics {
-	private volatile XSSFWorkbook workbook;
-	private volatile XSSFSheet spreadSheet;
+public class Statistics extends Thread {
+	private class StatisticsInfo {
+		private int id;
+		private Object[] info;
+		private boolean isNew;
+		
+		private StatisticsInfo(int id, Object[] info, boolean isNew) {
+			this.id = id;
+			this.info = info;
+			this.isNew = isNew;
+		}
+	}
 	
-	public static Statistics instance = new Statistics();
+
+	private XSSFWorkbook workbook;
+	private XSSFSheet spreadSheet;
+	
+	private BlockingQueue<StatisticsInfo> toAddInfos;
+	
+	public static Statistics instance;
+	
+	static {
+		instance = new Statistics();
+		instance.start();
+	}
 
 	private Statistics() {
 		workbook = WorkBook.create();
 		spreadSheet = workbook.createSheet("Sheet1");
+		toAddInfos = new LinkedBlockingQueue<StatisticsInfo>();
 		
 		initialize();
 	}
@@ -35,7 +55,7 @@ public class Statistics {
 		}
 	}
 	
-	public synchronized void newRequest(int id, Object[] info) throws IOException {
+	private void newRequest(int id, Object[] info) throws IOException {
 		if(info.length != 9)
 			throw new Error("Error updating new request");
 		
@@ -53,7 +73,7 @@ public class Statistics {
 		WorkBook.publishContents(workbook);
 	}
 		
-	public synchronized void updateInfo(int id, Object[] info) throws IOException {
+	private void updateInfo(int id, Object[] info) throws IOException {
 		if(info.length != 9)
 			throw new Error("Error updating new request");
 		
@@ -67,32 +87,26 @@ public class Statistics {
 
 		WorkBook.publishContents(workbook);
 	}
-		
-	private void testRun() throws IOException {
-		//This data needs to be written (Object[])
-		Map < Integer, Object[] > empinfo = new TreeMap < Integer, Object[] >();
-		empinfo.put(0, new Object[] { true, "EMP NAME", "DESIGNATION", "fjfj", "ffkkf", "fjfjfj", "fjfjfj", "fjfjfj", "ddkdkdk" });
-		empinfo.put(1, new Object[] { true, "Gopal", "Technical Manager", "fjfj", "ffkkf", "fjfjfj", "fjfjfj", "fjfjfj", "ddkdkdk" });
-		empinfo.put(2, new Object[] { true, "Manisha", "Proof Reader", "fjfj", "ffkkf", "fjfjfj", "fjfjfj", "fjfjfj", "ddkdkdk" });
-		empinfo.put(3, new Object[] { true, "Masthan", "Technical Writer", "fjfj", "ffkkf", "fjfjfj", "fjfjfj", "fjfjfj", "ddkdkdk" });
-		empinfo.put(4, new Object[] { true, "Satish", "Technical Writer", "fjfj", "ffkkf", "fjfjfj", "fjfjfj", "fjfjfj", "ddkdkdk" });
-		empinfo.put(5, new Object[] { true, "Krishna", "Technical Writer", "fjfj", "ffkkf", "fjfjfj", "fjfjfj", "fjfjfj", "ddkdkdk" });
-	  
-		//Iterate over data and write to sheet
-		Set < Integer > keyid = empinfo.keySet();
-		
-		for (Integer key : keyid) {
-			Object[] arr = empinfo.get(key);
-			key = key == 1 ? 4 : key == 4 ? 1 : key;
-			newRequest(key, arr);
-			arr[0] = false;
-			newRequest(key, arr);
-		}		
+
+	
+	public synchronized void addInfo(int id, Object[] info, boolean isNew) {
+		System.out.println("Write info for " + id + " " + info[0].toString());
+		try {
+			toAddInfos.put(new StatisticsInfo(id, info, isNew));
+		} catch (InterruptedException ignore) {}
 	}
 	
-	public static void main(String[] args) throws Exception {
-		Statistics s = new Statistics();
-		s.testRun();
+	@Override
+	public void run() {
+		try {
+			while(!isInterrupted()) {
+				StatisticsInfo info = toAddInfos.take();
+				if(info.isNew)
+					newRequest(info.id, info.info);
+				else
+					updateInfo(info.id, info.info);
+			}
+		} catch (InterruptedException | IOException ignore) {}
 	}
-
 }
+

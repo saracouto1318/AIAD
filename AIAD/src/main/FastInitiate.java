@@ -10,6 +10,7 @@ import jade.core.ProfileImpl;
 import jade.wrapper.ContainerController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.StaleProxyException;
+import tests.ElevatorTestPassengers;
 
 /**
  * 
@@ -51,7 +52,7 @@ public class FastInitiate {
 	 * @throws Exception The class Exception and its subclasses are a form of Throwable that indicates conditions that a reasonable application might want to catch
 	 */
 	public FastInitiate(int nFloors, int nElevators, int[] elevatorCapacities) throws Exception {
-		agentsNames = new String[nElevators + 1];
+		agentsNames = new String[nElevators];
 		
 		if(elevatorCapacities.length != nElevators)
 			throw new Exception("Invalid length");
@@ -76,13 +77,13 @@ public class FastInitiate {
 			for(int i = 0; i < nElevators; i++) {
 				name = "elev" + i;
 				//Creates the "Elevator" agent
-				container.createNewAgent(name, Elevator.class.getName(), new Object[] {nFloors - 1, elevatorCapacities[i], false});
+				container.createNewAgent(name, ElevatorTestPassengers.class.getName(), new Object[] {nFloors - 1, elevatorCapacities[i], false});
 				agentsNames[i] = name;
 			}
 			name = "building"; 
 			//Create the "Building" agent
-			container.createNewAgent(name, Building.class.getName(), new Object[] {0, nFloors - 1, 40});
-			agentsNames[nElevators] = name;
+			//container.createNewAgent(name, Building.class.getName(), new Object[] {0, nFloors - 1, 40});
+			//agentsNames[nElevators] = name;
 		} catch(StaleProxyException e) {
 			e.printStackTrace();
 			return false;

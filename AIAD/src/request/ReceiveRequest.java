@@ -1,9 +1,12 @@
 package request;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.Random;
 
 import elevator.Elevator;
 import elevator.ElevatorDirection;
+import stats.Statistics;
 
 public class ReceiveRequest extends Request {
 	public static final int MAX_WEIGHT = 200;
@@ -14,21 +17,29 @@ public class ReceiveRequest extends Request {
 	private ElevatorDirection direction;
 	
 	private int minPeople;
-
-	public ReceiveRequest(int floor, ElevatorDirection direction) {
+	
+	public ReceiveRequest(int floor, ElevatorDirection direction, Elevator elevator) {
 		super(floor);
+		
+		this.id = RECEIVE_ID++;
+		
 		//Return exception if Direction is NO_DIRECTION
 		this.direction = direction;
 		this.minPeople = 1;
+		
+		this.startTime = new Date();
+		this.startElevatorFloor = elevator.getCFloor();
+		this.startElevatorDirection = elevator.getDirection();
+
+		try {
+			Statistics.instance.newRequest(this.id, 
+					new Object[] {true, this.id, floor, this.startElevatorFloor, direction, this.startElevatorDirection, 
+							startTime.getTime(), 0, 0});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-	
-	public ReceiveRequest(int floor, ElevatorDirection direction, int minPeople) {
-		super(floor);
-		//Return exception if Direction is NO_DIRECTION
-		this.direction = direction;
-		this.minPeople = minPeople <= 0 ? 1 : minPeople;
-	}
-	
+		
 	/**
 	 * Getter for the value direction
 	 * @return direction
@@ -64,10 +75,15 @@ public class ReceiveRequest extends Request {
 		//- Remove this request from the elevator set
 		elevator.getStopFloors().remove(this);
 		
-		// TODO: Warn the building about new request
-		/*if(nPeople > 0)
-			building.warn();
-		*/			
+		try {
+			System.out.println("To floor " + id + " - " + floor + " vs " +  startElevatorFloor + " " + direction.toString() + " vs" + startElevatorDirection.toString());
+			Date finish = new Date();
+			Statistics.instance.updateInfo(id, 
+					new Object[] {true, id, floor, startElevatorFloor, direction, startElevatorDirection, 
+							startTime.getTime(), finish.getTime(), finish.getTime() - startTime.getTime()});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**

@@ -272,7 +272,7 @@ public class Elevator extends Agent {
 	public boolean addPassenger(int floor, int weight) {
 		if (getPassengersWeight() + weight >= elevatorCapacity)
 			return false;
-		stopFloors.add(new TakeRequest(floor, weight));
+		stopFloors.add(new TakeRequest(floor, weight, this));
 		return true;
 	}
 	

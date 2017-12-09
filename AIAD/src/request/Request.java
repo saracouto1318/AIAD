@@ -1,12 +1,20 @@
 package request;
 
+import java.util.Date;
+
 import elevator.Elevator;
+import elevator.ElevatorDirection;
 
 public abstract class Request implements Comparable {
-	private static long ID = 0;
+	protected static int RECEIVE_ID = 0;
+	protected static int TAKE_ID = 0;
 	
-	protected long id = ID++;
-	protected int floor;
+	protected int id;
+	protected int floor;	
+	
+	protected Date startTime;
+	protected int startElevatorFloor;
+	protected ElevatorDirection startElevatorDirection;
 	
 	public Request(int floor) {
 		this.floor = floor;

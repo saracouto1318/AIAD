@@ -96,12 +96,12 @@ public class ElevatorCommunicationBehaviour extends CommunicationBehaviour {
 	}
 
 	private void handleStatus(StatusRequest request) {
-		Elevator elevator = (Elevator) this.myAgent;
+		/*Elevator elevator = (Elevator) this.myAgent;
 		if (request.isAck()) {
 			elevator.getStopFloors().add(new ReceiveRequest(request.getFloor(), request.getDirection()));
 		} else {
 			this.rejectRequests.put(request.getId(), request);
-		}
+		}*/
 	}
 
 	private void handleSatisfied(SatisfiedRequest request) {

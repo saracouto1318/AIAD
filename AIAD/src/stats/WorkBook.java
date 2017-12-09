@@ -15,7 +15,6 @@ public class WorkBook {
 	
 	public static XSSFRow createRow(XSSFSheet sheet, int id) {
 		//Create a workbook
-		System.out.println("NEW ROW " + id);
 		return sheet.createRow(id);
 	}
 

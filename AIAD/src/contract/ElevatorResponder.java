@@ -59,8 +59,7 @@ public class ElevatorResponder extends ContractNetResponder {
 			e.printStackTrace();
 			return;
 		}
-		System.out.println(this.getAgent().getAID().getLocalName() + " new request " + request.getFloor());
-		((Elevator)this.getAgent()).getStopFloors().add(new ReceiveRequest(request.getFloor(), request.getDirection()));
+		((Elevator)this.getAgent()).getStopFloors().add(new ReceiveRequest(request.getFloor(), request.getDirection(), (Elevator)this.getAgent()));
 	}
 	
 	private Message getReply(ACLMessage message) throws RefuseException {		

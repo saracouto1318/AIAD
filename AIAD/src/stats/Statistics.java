@@ -12,8 +12,8 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class Statistics {
-	private XSSFWorkbook workbook;
-	private XSSFSheet spreadSheet;
+	private volatile XSSFWorkbook workbook;
+	private volatile XSSFSheet spreadSheet;
 	
 	public static Statistics instance = new Statistics();
 
@@ -35,52 +35,25 @@ public class Statistics {
 		}
 	}
 	
-	public void newRequest(int id, Object[] info) throws IOException {
-		/*Object[] myInfo = requestInfo.get(id);
-		if(myInfo != null || info.length != 8)
-			throw new Error("Error creating new request");
-		requestInfo.put(id, info);*/
+	public synchronized void newRequest(int id, Object[] info) throws IOException {
 		if(info.length != 9)
 			throw new Error("Error updating new request");
 		
 		int startRow = id + 1;
+		int startCell = (Boolean)info[0] ? 0 : 9;
 		XSSFRow row = spreadSheet.getRow(startRow);
 		if(row == null)
 			row = WorkBook.createRow(spreadSheet, startRow);
-		
-		if((Boolean)info[0])
-			newReceiveRequest(row, id, info);
-		else
-			newTakeRequest(row, id, info);
 
+		for(int i = 1; i < info.length; i++) {
+			XSSFCell cell = row.createCell(startCell + i - 1);
+			cell.setCellValue(info[i].toString());
+		}
+		
 		WorkBook.publishContents(workbook);
 	}
-	
-	private void newReceiveRequest(XSSFRow row, int id, Object[] info) {
-		if(info.length != 9 && id % 2 != 0)
-			throw new Error("Error updating new request");
 		
-		int startCell = 0;
-				
-		for(int i = 1; i < info.length; i++) {
-			XSSFCell cell = row.createCell(startCell + i - 1);
-			cell.setCellValue((String)info[i]);
-		}
-	}
-	
-	private void newTakeRequest(XSSFRow row, int id, Object[] info) {
-		if(info.length != 9 && id % 2 == 0)
-			throw new Error("Error updating new request");
-		
-		int startCell = 9;
-				
-		for(int i = 1; i < info.length; i++) {
-			XSSFCell cell = row.createCell(startCell + i - 1);
-			cell.setCellValue((String)info[i]);
-		}
-	}
-	
-	public void updateInfo(int id, Object[] info) throws IOException {
+	public synchronized void updateInfo(int id, Object[] info) throws IOException {
 		if(info.length != 9)
 			throw new Error("Error updating new request");
 		
@@ -89,17 +62,13 @@ public class Statistics {
 		
 		for(int i = 1; i < info.length; i++) {
 			XSSFCell cell = row.getCell(startCell + i - 1);
-			cell.setCellValue((String)info[i+1]);
+			cell.setCellValue(info[i].toString());
 		}
 
 		WorkBook.publishContents(workbook);
 	}
-	
-	private void updateReceiveRequest(XSSFRow row, int id, Object[] info) {
 		
-	}
-	
-	public void testRun() throws IOException {
+	private void testRun() throws IOException {
 		//This data needs to be written (Object[])
 		Map < Integer, Object[] > empinfo = new TreeMap < Integer, Object[] >();
 		empinfo.put(0, new Object[] { true, "EMP NAME", "DESIGNATION", "fjfj", "ffkkf", "fjfjfj", "fjfjfj", "fjfjfj", "ddkdkdk" });

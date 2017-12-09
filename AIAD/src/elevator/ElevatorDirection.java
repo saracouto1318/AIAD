@@ -6,7 +6,19 @@ public enum ElevatorDirection {
 	/**
 	 * Possible directions
 	 */
-	DOWN, UP, NO_DIRECTION; 
+	DOWN {
+		public String toString() {
+			return "DOWN";
+		}
+	}, UP {
+		public String toString() {
+			return "UP";
+		}
+	}, NO_DIRECTION {
+		public String toString() {
+			return "NO_DIRECTION";
+		}
+	}; 
 	
 	/**
 	 * Gets the direction when it changed
@@ -18,4 +30,7 @@ public enum ElevatorDirection {
 				ElevatorDirection.UP : 
 				ElevatorDirection.DOWN;
 	}
+	
+	@Override
+	public abstract String toString();
 }

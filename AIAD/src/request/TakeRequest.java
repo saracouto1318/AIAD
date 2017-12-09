@@ -1,6 +1,10 @@
 package request;
 
+import java.io.IOException;
+import java.util.Date;
+
 import elevator.Elevator;
+import stats.Statistics;
 
 public class TakeRequest extends Request {
 	/**
@@ -8,9 +12,24 @@ public class TakeRequest extends Request {
 	 */
 	private int weight;
 	
-	public TakeRequest(int floor, int weight) {
+	public TakeRequest(int floor, int weight, Elevator elevator) {
 		super(floor);
-		this.weight = weight;
+		
+		this.id = TAKE_ID++;
+		
+		this.weight = weight;		
+		
+		this.startTime = new Date();
+		this.startElevatorFloor = elevator.getCFloor();
+		this.startElevatorDirection = elevator.getDirection();
+		
+		try {
+			Statistics.instance.newRequest(this.id, 
+					new Object[] {false, this.id, floor, this.startElevatorFloor, this.startElevatorDirection, this.startElevatorDirection, 
+							startTime.getTime(), 0, 0});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
 	}
 	
 	public int getWeight() {
@@ -28,6 +47,15 @@ public class TakeRequest extends Request {
 		//- Remove this request from the elevator set
 		//	this also removes the weight of this passenger
 		elevator.getStopFloors().remove(this);
+		
+		try {
+			Date finish = new Date();
+			Statistics.instance.newRequest(this.id, 
+					new Object[] {false, this.id, floor, this.startElevatorFloor, this.startElevatorDirection, this.startElevatorDirection, 
+							startTime.getTime(), finish.getTime(), finish.getTime() - startTime.getTime()});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

@@ -13,16 +13,40 @@ import javax.swing.border.LineBorder;
 
 import javax.swing.border.Border;
 
+/**
+ * 
+ * This class starts the elevators behaviours
+ *
+ */
 public class StartElevators extends JFrame implements ActionListener {
+	
+	/**
+	 * Building's number of elevators
+	 */
 	private int nElevators;
+	/**
+	 * Building's floors
+	 */
 	private int nFloors;
+	/**
+	 * Array with the capacity of each elevator
+	 */
 	private Integer[] capacities;
+	/**
+	 * Array with all the floors of each elevator
+	 */
 	private volatile JLabel[] labels;
 	
+	/**
+	 * Thread that updates the GUI
+	 */
 	private Thread updateGUI;
 	
 	/**
-	 * Create the application.
+	 * Creates the application
+	 * @param nElevators Number of elevators
+	 * @param nFloors Number of floors
+	 * @param capacities Array with the capacity of each elevator
 	 */
 	public StartElevators(int nElevators, int nFloors, Integer[] capacities) {
 		super("Elevators");
@@ -35,7 +59,7 @@ public class StartElevators extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Initialize the contents of the frame
 	 */
 	private void initialize() {
 		JadeBoot boot = null;
@@ -79,6 +103,9 @@ public class StartElevators extends JFrame implements ActionListener {
         updateGUI.start();
 	}
 
+	/**
+	 * Changes the GUI when we click in the option 'Next'
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
@@ -91,10 +118,21 @@ public class StartElevators extends JFrame implements ActionListener {
         }
     }
 	
+	/**
+	 * Gets the label index by floor and elevator
+	 * @param floor Elevator's floor
+	 * @param elevator Elevator's identifier
+	 * @return The respective label index
+	 */
 	private int labelIndex(int floor, int elevator) {
 		return (nFloors - floor - 1) + (nFloors * elevator);
 	}
 	
+	/**
+	 * Changes the floor color when the elevator is moving
+	 * @param floor Elevator's floor
+	 * @param elevator Elevator's identifier
+	 */
 	public synchronized void eraseFloor(int floor, int elevator) {
 		int index;
 		if(floor > 0) {
@@ -107,6 +145,11 @@ public class StartElevators extends JFrame implements ActionListener {
 		}
 	}
 	
+	/**
+	 * This function paints the floor of an elevator
+	 * @param floor Elevator's floor
+	 * @param elevator Elevator's identifier
+	 */
 	public synchronized void paintFloor(int floor, int elevator){
 		int index = labelIndex(floor, elevator);
 		labels[index].setBackground(Color.GREEN);

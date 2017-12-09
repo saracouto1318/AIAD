@@ -18,14 +18,27 @@ import javax.swing.event.*;
 
 import java.util.*;
 
-
+/**
+ * 
+ * This class allows to configurate the different elevators
+ *
+ */
 public class ElevatorConf extends JFrame implements ActionListener {
+	/**
+	 * Building's number of elevators
+	 */
 	private int nElevators;
+	/**
+	 * Building's number of floors
+	 */
 	private int nFloors;
+	/**
+	 * Array with the capacity of each elevator
+	 */
 	private Integer[] capacities;
 	
 	/**
-	 * Create the application.
+	 * Create the GUI to configurate the elevators
 	 */
 	public ElevatorConf(int nElevators, int nFloors) {
 		super("Elevators Configuration");
@@ -37,26 +50,31 @@ public class ElevatorConf extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Initialize the contents of the frame
 	 */
 	private void initialize() {
-		setBounds(100, 100, 550, 500);
+		setBounds(100, 100, 600, 500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 		
 		JButton btnNext = new JButton("Next");
 		
-		btnNext.setBounds(238, 379, 89, 23);
+		btnNext.setBounds(240, 382, 89, 23);
 		btnNext.addActionListener(this);
 		btnNext.setActionCommand("Next");
 		getContentPane().add(btnNext);
 		
 		Border border = LineBorder.createGrayLineBorder();
 		
+		JLabel label1 = new JLabel("Capacity");
+		label1.setBounds(10, 22+((nFloors+1)*10)+20, 50, 15);
+		label1.setOpaque(true);
+		getContentPane().add(label1);	
+		
 		for(int i=0; i<nElevators; i++){
 			for(int j=0; j<nFloors; j++){
 				JLabel label = new JLabel("");
-				label.setBounds(34+(i*50), 22+(j*10), 25, 10);
+				label.setBounds(80+(i*50), 22+(j*10), 25, 10);
 				label.setForeground(Color.black);
 				label.setBorder(border);
 				label.setBackground(Color.white);
@@ -69,7 +87,7 @@ public class ElevatorConf extends JFrame implements ActionListener {
 			maxCapacity.setForeground(Color.black);
 			maxCapacity.setBorder(border);
 			maxCapacity.setBackground(Color.cyan);
-			maxCapacity.setBounds(34+(i*50), 22+((nFloors+1)*10)+20, 27, 14);
+			maxCapacity.setBounds(80+(i*50), 22+((nFloors+1)*10)+20, 27, 14);
 			getContentPane().add(maxCapacity);
 			
 			this.getCapacities(maxCapacity, i);
@@ -78,6 +96,9 @@ public class ElevatorConf extends JFrame implements ActionListener {
 		
 	}
 
+	/**
+	 * Changes the GUI when we click in the option 'Next'
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
@@ -89,7 +110,11 @@ public class ElevatorConf extends JFrame implements ActionListener {
         }
     }
 	
-	
+	/**
+	 * Gets the elevators' capacities
+	 * @param textField TextField where the capacities will be placed
+	 * @param i Elevator's identifier
+	 */
 	public void getCapacities(JTextField textField, final int i){
 		textField.getDocument().addDocumentListener(new DocumentListener() {
 

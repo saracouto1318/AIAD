@@ -395,7 +395,15 @@ public class Elevator extends Agent implements Finishable {
 				(this.direction == ElevatorDirection.DOWN && 
 					isBelow(floor));
 	}
-
+	
+	/**
+	 * 
+	 * @return elevator's capacity
+	 */
+	public int getCapacity() {
+		return elevatorCapacity;
+	}
+	
 	@Override
 	public void finish() {
 		//TODO: Escrever taxa de ocupacao e de uso

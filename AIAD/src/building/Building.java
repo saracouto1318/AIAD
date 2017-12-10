@@ -51,7 +51,7 @@ public class Building extends Agent {
 	 * List of AID of the elevators
 	 */
 	private List<AID> elevators;
-	
+
 	/**
 	 * Default frequency
 	 */
@@ -68,7 +68,7 @@ public class Building extends Agent {
 	private Map<Integer, List<Message>> requestResponses;
 
 	/**
-	 * 	List of request's messages
+	 * List of request's messages
 	 */
 	private List<Message> requests;
 
@@ -91,6 +91,7 @@ public class Building extends Agent {
 		}
 		numberOfFloors = topFloor - bottomFloor + 1;
 		requestResponses = new HashMap<Integer, List<Message>>();
+		requests = new ArrayList<Message>();
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());
 		ServiceDescription sd = new ServiceDescription();
@@ -102,14 +103,17 @@ public class Building extends Agent {
 		} catch (FIPAException e) {
 			e.printStackTrace();
 		}
-		
+
 		elevators = Elevator.getAllElevators(this);
 
 		// Create behaviour
 		GenerateRequestsBehaviour reqBehaviour = new GenerateRequestsBehaviour(this);
 		this.addBehaviour(reqBehaviour);
-		/*CommunicationBehaviour comBehaviour = new BuildingCommunicationBehaviour(this);
-		this.addBehaviour(comBehaviour);*/
+		/*
+		 * CommunicationBehaviour comBehaviour = new
+		 * BuildingCommunicationBehaviour(this);
+		 * this.addBehaviour(comBehaviour);
+		 */
 	}
 
 	/**
@@ -126,6 +130,7 @@ public class Building extends Agent {
 
 	/**
 	 * Gets the building's bottom floor
+	 * 
 	 * @return The building's bottom floor
 	 */
 	public int getBottomFloor() {
@@ -134,6 +139,7 @@ public class Building extends Agent {
 
 	/**
 	 * Gets the building's top floor
+	 * 
 	 * @return The building's top floor
 	 */
 	public int getTopFloor() {
@@ -142,6 +148,7 @@ public class Building extends Agent {
 
 	/**
 	 * Gets the number of floor of the building
+	 * 
 	 * @return The number of floor of the building
 	 */
 	public int getNumberOfFloors() {
@@ -150,7 +157,9 @@ public class Building extends Agent {
 
 	/**
 	 * Gets the frequency of a floor
-	 * @param floor The floor that will be analyzed
+	 * 
+	 * @param floor
+	 *            The floor that will be analyzed
 	 * @return The frequency of the floor
 	 */
 	public double getFreqOfFloor(int floor) {
@@ -160,6 +169,7 @@ public class Building extends Agent {
 
 	/**
 	 * Gets the request's frequency
+	 * 
 	 * @return The request's frequency
 	 */
 	public int getRequestFreq() {
@@ -168,20 +178,24 @@ public class Building extends Agent {
 
 	/**
 	 * Gets the request's frequency of a certain floor
-	 * @param floor Floor that will be analyzed
+	 * 
+	 * @param floor
+	 *            Floor that will be analyzed
 	 * @return The request's frequency of a certain floor
 	 */
 	public int getRequestFreqOfFloor(int floor) {
-		return (int)(getFreqOfFloor(floor) * getRequestFreq());
+		return (int) (getFreqOfFloor(floor) * getRequestFreq());
 	}
 
 	/**
 	 * Sends a message to the elevators
-	 * @param message Message that will be sent
+	 * 
+	 * @param message
+	 *            Message that will be sent
 	 */
 	public void sendMessage(Message message) {
 		ACLMessage msg = new ACLMessage(ACLMessage.CFP);
-		for(AID aid : elevators)
+		for (AID aid : elevators)
 			msg.addReceiver(aid);
 		msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
 		// We want to receive a reply in 100 milliseconds
@@ -197,15 +211,61 @@ public class Building extends Agent {
 
 	/**
 	 * Receives a response to a request
-	 * @param requestId Request's identifier
-	 * @param response Response message
+	 * 
+	 * @param requestId
+	 *            Request's identifier
+	 * @param response
+	 *            Response message
 	 */
-	public void receiveRequestResponse(int requestId, Message response) {
+	public void receiveRequestResponse(Message response) {
+		int requestId = response.getId();
 		List<Message> list = requestResponses.get(requestId);
 		if (list == null) {
 			list = new ArrayList<Message>();
 			requestResponses.put(requestId, list);
 		}
 		list.add(response);
+	}
+
+	public void receiveRenegotiateRequest(Message content) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/*
+	 * public void getBestForRequest(int requestId){ List<Message> list =
+	 * requestResponses.get(requestId); if (list == null) { return; }
+	 * for(Message m : list){
+	 * 
+	 * } }
+	 */
+
+	/**
+	 * Generates a new request
+	 * 
+	 * @param floor
+	 * @param direction
+	 */
+	public void newRequest(int floor, ElevatorDirection direction) {
+		NewRequest request = new NewRequest(floor, direction);
+		this.requests.add(request);
+		this.sendMessage(request);
+	}
+
+	/**
+	 * 
+	 * @return list of request messages
+	 */
+	public List<Message> getRequestMessages() {
+		return requests;
+	}
+
+	/**
+	 * 
+	 * @param requestId
+	 * @return
+	 */
+	public Message getRequest(int requestId) {
+		return requests.get(requestId);
 	}
 }

@@ -32,6 +32,10 @@ public class AnswerRequest extends Message {
 	 * Distance from the stop floor
 	 */
 	private int stopFloorsLength;
+	/**
+	 * Elevator's total capacity
+	 */
+	private int elevatorCapacity;
 	
 	/**
 	 * AnswerRequest's constructor
@@ -49,7 +53,7 @@ public class AnswerRequest extends Message {
 	 * @param passengersWeight Passenger's weight
 	 * @param stopFloorsLength Distance from the stop floor
 	 */
-	public AnswerRequest(int id, boolean alreadyExists, ElevatorDirection direction, int floor, int lastFloorInDirection, int passengersWeight, int stopFloorsLength) {
+	public AnswerRequest(int id, boolean alreadyExists, ElevatorDirection direction, int floor, int lastFloorInDirection, int passengersWeight, int stopFloorsLength,int elevatorCapacity) {
 		super(id);
 		this.alreadyExists = alreadyExists;
 		this.direction = direction;
@@ -57,6 +61,7 @@ public class AnswerRequest extends Message {
 		this.lastFloorInDirection = lastFloorInDirection;
 		this.passengersWeight = passengersWeight;
 		this.stopFloorsLength = stopFloorsLength;
+		this.elevatorCapacity = elevatorCapacity;
 	}
 
 	/**

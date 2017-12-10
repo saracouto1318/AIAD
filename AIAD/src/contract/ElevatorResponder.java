@@ -134,6 +134,6 @@ public class ElevatorResponder extends ContractNetResponder {
 		boolean alreadyExists = elevator.getStopFloors().contains(new ReceiveRequest(request.getFloor(), request.getDirection()));
 		return new AnswerRequest(request.getId(), alreadyExists, elevator.getDirection(),
 				elevator.getCFloor(), elevator.getLastFloorInDirection(), elevator.getPassengersWeight(),
-				elevator.getStopFloors().size());
+				elevator.getStopFloors().size(), elevator.getCapacity());
 	}
 }

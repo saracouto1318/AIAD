@@ -16,6 +16,11 @@ import java.awt.event.ActionEvent;
  *
  */
 public class Form extends JFrame implements ActionListener {
+	
+	/**
+	 * Choosing the heuristic to use
+	 */
+	private int typeHeuristic;
 	/**
 	 * Building's floors
 	 */
@@ -32,8 +37,9 @@ public class Form extends JFrame implements ActionListener {
 	/**
 	 * Creates the GUI that allows to choose the number of floors and elevators of a building
 	 */
-	public Form() {
+	public Form(int heuristic) {
 		super("Configuration");
+		this.typeHeuristic = heuristic;
 		initialize();
 	}
 
@@ -93,7 +99,7 @@ public class Form extends JFrame implements ActionListener {
         if(cmd.equals("Capacity"))
         {
         	dispose();
-            new ElevatorConf(nElevators, nFloors);
+            new ElevatorConf(nElevators, nFloors, typeHeuristic);
         }
 		
 		

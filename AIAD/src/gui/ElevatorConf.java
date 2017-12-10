@@ -25,6 +25,10 @@ import java.util.*;
  */
 public class ElevatorConf extends JFrame implements ActionListener {
 	/**
+	 * Heuristic ti be used
+	 */
+	private int heuristic;
+	/**
 	 * Building's number of elevators
 	 */
 	private int nElevators;
@@ -40,10 +44,11 @@ public class ElevatorConf extends JFrame implements ActionListener {
 	/**
 	 * Create the GUI to configurate the elevators
 	 */
-	public ElevatorConf(int nElevators, int nFloors) {
+	public ElevatorConf(int nElevators, int nFloors, int heuristic) {
 		super("Elevators Configuration");
 		this.nElevators = nElevators;
 		this.nFloors = nFloors;
+		this.heuristic = heuristic;
 		this.capacities = new Integer[this.nElevators];
 		getContentPane().setForeground(Color.BLACK);
 		initialize();
@@ -106,7 +111,7 @@ public class ElevatorConf extends JFrame implements ActionListener {
         if(cmd.equals("Next"))
         {
         	dispose();
-            new StartElevators(nElevators, nFloors, capacities);
+            new StartElevators(nElevators, nFloors, capacities, heuristic);
         }
     }
 	

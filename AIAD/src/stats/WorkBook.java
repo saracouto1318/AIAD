@@ -20,7 +20,7 @@ public class WorkBook {
 
 	public static void publishContents(XSSFWorkbook workbook) throws IOException {
 		//Create file system using specific name
-		File myFile = new File("src/assets/statistics.xlsx");
+		File myFile = new File("src/statistics.xlsx");
 		// if file already exists will do nothing 
 		myFile.createNewFile(); 
 		FileOutputStream out = new FileOutputStream(myFile,false);

@@ -96,7 +96,7 @@ public class JadeBoot {
 				agentsNames[i] = name;
 			}
 			name = "building"; 
-			container.createNewAgent(name, Building.class.getName(), new Object[] {0, nFloors - 1, 40});
+			container.createNewAgent(name, Building.class.getName(), new Object[] {0, nFloors - 1, 50});
 			agentsNames[nElevators] = name;
 		} catch(StaleProxyException e) {
 			e.printStackTrace();

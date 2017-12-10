@@ -27,7 +27,7 @@ public class BuildingInitiator extends ContractNetInitiator {
 	/**
 	 * Mesage's content
 	 */
-	private Message content;
+	private NewRequest content;
 
 	/**
 	 * BuildingInitiator's constructor
@@ -41,7 +41,7 @@ public class BuildingInitiator extends ContractNetInitiator {
 	 * @param nResponders
 	 *            Number of responders
 	 */
-	public BuildingInitiator(Agent a, ACLMessage cfp, Message content, int nResponders) {
+	public BuildingInitiator(Agent a, ACLMessage cfp, NewRequest content, int nResponders) {
 		super(a, cfp);
 		this.nResponders = nResponders;
 		this.content = content;
@@ -128,23 +128,24 @@ public class BuildingInitiator extends ContractNetInitiator {
 	 * @param proposal AnswerRequest given by the elevator
 	 * @return weight
 	 */
-	private int getProposalWeight(AnswerRequest proposal) {
+	private double getProposalWeight(AnswerRequest proposal) {
 		if (proposal.getAlreadyExists()) {
 			return Integer.MIN_VALUE;
 		}
-		int weight = 0;
-		int requestId = proposal.getId();
-		NewRequest ogRequest = (NewRequest) ((Building) this.getAgent()).getRequest(requestId);
-		int dist;
-		if (ogRequest.getDirection() != proposal.getDirection()) {
+		if(proposal.getId() != content.getId())
+			System.out.println("Its different " + proposal.getId() + " vs " + content.getId());
+		
+		double weight = 0;
+		double dist;
+		if (content.getDirection() != proposal.getDirection()) {
 			dist = Math.abs(proposal.getFloor() - proposal.getLastFloorInDirection())
-					+ Math.abs(proposal.getLastFloorInDirection() - ogRequest.getFloor());
+					+ Math.abs(proposal.getLastFloorInDirection() - content.getFloor());
 		} else {
-			dist = Math.abs(ogRequest.getFloor() - proposal.getFloor());
+			dist = Math.abs(content.getFloor() - proposal.getFloor());
 		}
-		int percentUsedCapcacity = (proposal.getPassengersWeight() / proposal.getElevatorCapacity()) * 100;
-		int rNum = proposal.getNumStopFloors();
-		weight += dist + percentUsedCapcacity/10 + rNum;
+		double percentUsedCapcacity = (proposal.getPassengersWeight() / proposal.getElevatorCapacity()) * 100;
+		//double rNum = proposal.getNumStopFloors();
+		weight += dist + percentUsedCapcacity/(double)10;
 		return weight;
 	}
 

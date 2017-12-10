@@ -72,8 +72,10 @@ public class ReceiveRequest extends Request {
 	@Override
 	public void onFloor(Elevator elevator) {
 		//- If if does not enter elevator -> end function
-		if(!willEnterElevator(elevator))
+		if(!willEnterElevator(elevator)) {
+			System.out.println("Can't enter elevator " + elevator.getPassengersWeight());
 			return;
+		}
 		//- Add several (random - the elevator doesn't know 
 		//	how many passengers are waiting for it) 
 		//	TakeRequests (random floor) to the elevator set
@@ -163,9 +165,9 @@ public class ReceiveRequest extends Request {
 		if(r instanceof ReceiveRequest &&
 			direction == ((ReceiveRequest)r).getDirection())
 			return 0;
-		return (floor > r.floor || 
-				(floor == r.floor && id >= r.id)) ? 
-					1 : -1;
+		return (floor < r.floor || 
+				(floor == r.floor && ((r instanceof TakeRequest) || id >= r.id))) ? 
+					-1 : 1;
 	}
 
 }

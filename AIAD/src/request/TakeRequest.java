@@ -55,7 +55,7 @@ public class TakeRequest extends Request {
 	public void onFloor(Elevator elevator) {
 		//- Remove this request from the elevator set
 		//	this also removes the weight of this passenger
-		elevator.getStopFloors().remove(this);
+		boolean removed = elevator.getStopFloors().remove(this);
 		
 		Date finish = new Date();
 
@@ -84,7 +84,7 @@ public class TakeRequest extends Request {
 		if(id == r.id && r instanceof TakeRequest)
 			return 0;
 		return (floor > r.floor || 
-				(floor == r.floor && id > r.id)) ? 
+				(floor == r.floor && ((r instanceof ReceiveRequest) || id < r.id))) ? 
 					1 : -1;
 	}
 }

@@ -7,7 +7,9 @@ import elevator.ElevatorDirection;
  * Class that allows to create a new request
  *
  */
-public class NewRequest extends Message implements Comparable{
+public class NewRequest extends Message implements Comparable {
+	private static int REQUEST_ID = 0;
+	
 	/**
 	 * Request's floor
 	 */
@@ -15,12 +17,7 @@ public class NewRequest extends Message implements Comparable{
 	/**
 	 * Elevator's direction
 	 */
-	private ElevatorDirection direction;
-	/**
-	 * Request's identifier
-	 */
-	private static int NEW_REQUEST_ID = 0;
-	
+	private ElevatorDirection direction;	
 	/**
 	 * NewRequest's constructor
 	 */
@@ -34,7 +31,7 @@ public class NewRequest extends Message implements Comparable{
 	 * @param direction Elevator's direction
 	 */
 	public NewRequest(int floor, ElevatorDirection direction) {
-		super(NEW_REQUEST_ID++);
+		super(REQUEST_ID++);
 		this.floor = floor;
 		this.direction = direction;
 	}
@@ -82,6 +79,6 @@ public class NewRequest extends Message implements Comparable{
 	
 	@Override
 	public int hashCode() {
-		return id;
+		return (this.floor + "-" + this.direction).hashCode();
 	}
 }

@@ -40,10 +40,8 @@ public class TakeActionBehaviour extends TickerBehaviour {
 	 */
 	@Override
 	protected void onTick() {
-		/*System.out.println("Agent " + elevator.getCFloor() + " dir " + elevator.getDirection() + " status " + elevator.getStatus());
-		for(Request r : elevator.getStopFloors())
-			System.out.print(r.getClass() + " - " + r.getFloor() + " -- ");
-		System.out.println();*/
+		System.out.println("Elevator " + elevator.getLocalName() + " floor " + elevator.getCFloor() + " nStopFloors " + elevator.getStopFloors().size());
+		
 		int usage = 1;
 		if(this.elevator.getStatus() == ElevatorStatus.STOPPED && this.elevator.getDirection() == ElevatorDirection.NO_DIRECTION)
 			usage = 0;
@@ -53,14 +51,19 @@ public class TakeActionBehaviour extends TickerBehaviour {
 		if(shouldStop()) {
 			this.elevator.setStatus(ElevatorStatus.STOPPED);
 			onFloor();
+			nextDirection();
 			return;
 		}
 
-		//Go from stopped to moving
+		//Go from stopped to moving if necessary
 		if(this.elevator.getStatus() == ElevatorStatus.STOPPED)
-			this.elevator.setStatus(ElevatorStatus.MOVING);
+			nextDirection();
+
+		//Go from stopped to moving
+		/*if(this.elevator.getStatus() == ElevatorStatus.STOPPED)
+			this.elevator.setStatus(ElevatorStatus.MOVING);*/
 		
-		nextDirection();
+		//nextDirection();
 		moveElevator();
 	}
 	
@@ -107,5 +110,7 @@ public class TakeActionBehaviour extends TickerBehaviour {
 		this.elevator.changeDirection();
 		if(this.elevator.getDirection() == ElevatorDirection.NO_DIRECTION)
 			this.elevator.setStatus(ElevatorStatus.STOPPED);
+		else
+			this.elevator.setStatus(ElevatorStatus.MOVING);			
 	}
 }

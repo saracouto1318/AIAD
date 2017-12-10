@@ -32,7 +32,7 @@ import model.NewRequest;
  * This class creates the agent "Building"
  *
  */
-public class Building extends Agent {
+public class Building extends Agent {	
 	/**
 	 * Building's bottom floor
 	 */
@@ -195,7 +195,7 @@ public class Building extends Agent {
 	 * @param message
 	 *            Message that will be sent
 	 */
-	public void sendMessage(Message message) {
+	public void sendMessage(NewRequest message) {
 		ACLMessage msg = new ACLMessage(ACLMessage.CFP);
 		for (AID aid : elevators)
 			msg.addReceiver(aid);
@@ -244,15 +244,11 @@ public class Building extends Agent {
 
 	/**
 	 * Generates a new request
-	 * 
 	 * @param floor
 	 * @param direction
 	 */
 	public boolean newRequest(int floor, ElevatorDirection direction) {
 		NewRequest request = new NewRequest(floor, direction);
-		if (this.requests.add(request)){
-			return false;
-		}
 		this.sendMessage(request);
 		return true;
 	}
@@ -274,6 +270,7 @@ public class Building extends Agent {
 		Iterator<Message> iterator = requests.iterator();
 		while (iterator.hasNext()) {
 			Message message = iterator.next();
+			System.out.println("COMPARING " + requestId + " vs " + (message.getId()));
 			if (message.getId() == requestId)
 				return message;
 		}

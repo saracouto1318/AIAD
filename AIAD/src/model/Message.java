@@ -11,7 +11,7 @@ public abstract class Message implements Serializable {
 	/**
 	 * Message's identifier
 	 */
-	private int id;
+	protected int id;
 	
 	/**
 	 * Message's constructor

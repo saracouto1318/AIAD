@@ -137,6 +137,6 @@ public class ElevatorResponder extends ContractNetResponder {
 		Elevator elevator = (Elevator) this.myAgent;
 		return new AnswerRequest(request.getId(), elevator.getDirection(),
 				elevator.getCFloor(), elevator.getLastFloorInDirection(), elevator.getPassengersWeight(),
-				elevator.getStopFloors().size());
+				elevator.getStopFloors().size(), elevator.getCapacity());
 	}
 }

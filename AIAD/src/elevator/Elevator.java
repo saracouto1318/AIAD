@@ -394,4 +394,8 @@ public class Elevator extends Agent {
 				(this.direction == ElevatorDirection.DOWN && 
 					isBelow(floor));
 	}
+
+	public int getCapacity() {
+		return elevatorCapacity;
+	}
 }

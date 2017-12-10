@@ -69,6 +69,7 @@ public class GenerateRequestsBehaviour extends TickerBehaviour {
 					d = randomGenerator.nextInt(1);
 					direction = ElevatorDirection.values()[d];
 				}
+
 				if (this.building.newRequest(floor, direction)){
 					n++;
 				}

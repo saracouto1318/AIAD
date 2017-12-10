@@ -1,18 +1,30 @@
 package stats;
 
 public class StatisticsElevator extends StatisticsInfo {
+	private int id;
     private String name;
-    private int taxaOcupacao;
-    private int taxaUso;
+    private double totalOccupation;
+    private double totalUsage;
+    private int updateCounter;
 
-    public StatisticsElevator(String name, int taxaOcupacao, int taxaUso) {
+    public StatisticsElevator(int id, String name) {
         super(StatisticsType.ELEVATOR);
+        this.id = id;
         this.name = name;
-        this.taxaOcupacao = taxaOcupacao;
-        this.taxaUso = taxaUso;
+        totalOccupation = 0;
+        totalUsage = 0;
+        updateCounter = 0;
     }
 
-    public String getName() {
+    public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
         return name;
     }
 
@@ -20,19 +32,17 @@ public class StatisticsElevator extends StatisticsInfo {
         this.name = name;
     }
 
-    public int getTaxaOcupacao() {
-        return taxaOcupacao;
+    public double getOccupation() {
+        return totalOccupation * 100 / (double)updateCounter;
     }
 
-    public void setTaxaOcupacao(int taxaOcupacao) {
-        this.taxaOcupacao = taxaOcupacao;
+    public double getUsage() {
+        return totalUsage * 100 / (double)updateCounter;
     }
 
-    public int getTaxaUso() {
-        return taxaUso;
-    }
-
-    public void setTaxaUso(int taxaUso) {
-        this.taxaUso = taxaUso;
+    public void updateValues(double occupation, double usage) {
+    	totalOccupation += occupation;
+    	totalUsage += usage;
+    	updateCounter++;
     }
 }

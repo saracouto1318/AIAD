@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -11,7 +12,9 @@ import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import javax.swing.border.LineBorder;
 
+import elevator.Elevator;
 import stats.Statistics;
+import stats.StatisticsElevator;
 
 import javax.swing.border.Border;
 
@@ -115,23 +118,32 @@ public class StartElevators extends JFrame implements ActionListener {
 
         if(cmd.equals("End"))
         {
-        	updateGUI.interrupt();
-        	boot.end();
-        	Statistics.instance.finish();              	
-        	try {
-				Thread.sleep(10000);
-			} catch (InterruptedException ignore) {
-			}  	
-        	try {
-        		Statistics.instance.interrupt();
-        		System.out.println("Joining");
-				Statistics.instance.join();
-			} catch (InterruptedException ignore) {
-			}
-        	dispose();
-        	System.exit(0);
+        	finishProgram();
         }
     }
+	
+	private void finishProgram() {
+		updateGUI.interrupt();
+		boot.end();
+		if(boot.hasAllInstancesOfElevator()) {
+			for(int i = 0; i < boot.getElevatorAgents().length; i++) {
+				Elevator elev = boot.getElevatorAgents()[i];
+				elev.getStatistics().setId(i);
+				try {
+					Statistics.instance.elevatorInfo(elev.getStatistics());
+				} catch (IOException e1) {}
+			}
+		}
+		Statistics.instance.finish();
+		try {
+			Statistics.instance.interrupt();
+			System.out.println("Joining");
+			Statistics.instance.join();
+		} catch (InterruptedException ignore) {
+		}
+		dispose();
+		System.exit(0);		
+	}
 	
 	/**
 	 * Gets the label index by floor and elevator

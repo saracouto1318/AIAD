@@ -78,16 +78,8 @@ public class Statistics extends Thread implements Finishable {
 	}
 	
 	private void newRequest(StatisticsInfo info) throws IOException {
-		switch(info.getType()) {
-		case REQUEST:
-			requestInfo((StatisticsRequest) info);
-			break;
-		case GENERAL:
-			break;
-		}
 		if(info.getType() == StatisticsInfo.StatisticsType.REQUEST)
 			requestInfo((StatisticsRequest) info);
-		
 	}
 	
 	private void generalInfo(StatisticsGeneral request) throws IOException {
@@ -96,12 +88,29 @@ public class Statistics extends Thread implements Finishable {
 		XSSFRow row = spreadSheet.getRow(startRow);
 		if(row == null)
 			row = spreadSheet.createRow(startRow);
-		
+
 		XSSFCell cell = row.createCell(startCell++);
 		cell.setCellValue(request.getMinWait());
 		cell = row.createCell(startCell++);
 		cell.setCellValue(request.getMaxWait());
-				
+
+		WorkBook.publishContents(workbook);
+	}
+	
+	public void elevatorInfo(StatisticsElevator request) throws IOException {
+		int startRow = request.getId() + 6;
+		int startCell = 1;
+		XSSFRow row = spreadSheet.getRow(startRow);
+		if(row == null)
+			row = spreadSheet.createRow(startRow);
+
+		XSSFCell cell = row.createCell(startCell++);
+		cell.setCellValue(request.getName());
+		cell = row.createCell(startCell++);
+		cell.setCellValue(request.getOccupation());
+		cell = row.createCell(startCell++);
+		cell.setCellValue(request.getUsage());
+
 		WorkBook.publishContents(workbook);
 	}
 
@@ -111,11 +120,13 @@ public class Statistics extends Thread implements Finishable {
 		XSSFRow row = spreadSheet.getRow(startRow);
 		if(row == null)
 			row = spreadSheet.createRow(startRow);
-		
-		if(request.getDiffTime() > general.getMaxWait())
-			general.setMaxWait(request.getDiffTime());
-		if(request.getDiffTime() < general.getMinWait())
-			general.setMinWait(request.getDiffTime());
+
+		if(request.isReceive()) {
+			if(request.getDiffTime() > general.getMaxWait())
+				general.setMaxWait(request.getDiffTime());
+			if(request.getDiffTime() < general.getMinWait())
+				general.setMinWait(request.getDiffTime());
+		}
 
 		XSSFCell cell = row.createCell(startCell++);
 		cell.setCellValue(request.getId());
@@ -144,7 +155,7 @@ public class Statistics extends Thread implements Finishable {
 			toAddInfos.put(info);
 		} catch (InterruptedException ignore) {}
 	}
-	
+		
 	@Override
 	public void run() {
 		while(!interrupted || toAddInfos.size() != 0) {
@@ -155,8 +166,6 @@ public class Statistics extends Thread implements Finishable {
 		}
 	}
 	
-	
-
 	@Override
 	public void interrupt() {
 		super.interrupt();

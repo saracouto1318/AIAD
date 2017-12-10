@@ -25,20 +25,12 @@ import request.ReceiveRequest;
 import request.Request;
 import request.TakeRequest;
 import stats.Finishable;
+import stats.StatisticsElevator;
 
 /**
  * This class creates an elevator which is a JADE agent
  */
-public class Elevator extends Agent implements Finishable {
-	/*
-	 * Questões:
-	 * 	É suposto termos uma forma automática de criar todos os elevadores e edifico dado um argumento?
-	 * 	Como é para fazer a interface? Swing?
-	 * 	Os elevadores podem e devem comunicar entre si certo?
-	 * 	O edíficio servirá apenas para decidir qual o melhor?
-	 * 	Tendo a inteface é suposto os elevadores moverem-se a um passo mais lento?
-	 */
-	
+public class Elevator extends Agent implements Finishable {	
 	/**
 	 * Maximum possible floor
 	 */
@@ -68,11 +60,14 @@ public class Elevator extends Agent implements Finishable {
 	 * Enumerates the elevator's direction
 	 */
 	protected ElevatorDirection direction;
-
 	/**
 	 * Enumerates the elevator's different status
 	 */
 	protected ElevatorStatus status;
+	/**
+	 * Statistics class used to collect information about the elevator
+	 */
+	private StatisticsElevator statistics;
 
 	/**
 	 * Gets all the AID of elevators that match with the agent passed in the function
@@ -130,6 +125,9 @@ public class Elevator extends Agent implements Finishable {
 		} catch(ArrayIndexOutOfBoundsException exc) {
 			throw(exc);
 		}
+		
+		statistics = new StatisticsElevator(0, this.getLocalName());
+		
 		String type = "No Communication";
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());
@@ -144,8 +142,6 @@ public class Elevator extends Agent implements Finishable {
 		}
 
 		// Create behaviours
-		//CommunicationBehaviour cb = new ElevatorCommunicationBehaviour(this);
-		//this.addBehaviour(cb);
 		TakeActionBehaviour nb = new TakeActionBehaviour(this);
 		this.addBehaviour(nb);
 		//Contract net behaviour
@@ -195,6 +191,14 @@ public class Elevator extends Agent implements Finishable {
 		return stopFloors;
 	}
 	
+	/**
+	 * Getter for statistics variable
+	 * @return The variable
+	 */
+	public StatisticsElevator getStatistics() {
+		return statistics;
+	}
+
 	/**
 	 * Gets the elevator's current floor
 	 * @return The elevator's current floor

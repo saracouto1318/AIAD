@@ -41,9 +41,7 @@ Subclasses of Thread should override this method
 
 				try {
 					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					System.out.println("I can't fall asleep for some strange and sexual reason");
-				}
+				} catch (InterruptedException ignore) {}
 				
 			} else if(boot.hasAllInstancesOfElevator()) {
 				hasAllElevators = true;

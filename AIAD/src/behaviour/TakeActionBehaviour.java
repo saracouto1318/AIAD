@@ -21,7 +21,7 @@ public class TakeActionBehaviour extends TickerBehaviour {
 	 */
 	private static final int ACTION_TIME = 500;
 	/**
-	 * Elevator that will be used
+	 * Elevator that will be used 
 	 */
 	private Elevator elevator;
 	
@@ -66,8 +66,9 @@ public class TakeActionBehaviour extends TickerBehaviour {
 	private void onFloor() {
 		Set<Request> requests = new TreeSet<Request>(this.elevator.getStopFloors());
 		for(Request r : requests) {
-			if(r.getFloor() == this.elevator.getCFloor())
+			if(r.getFloor() == this.elevator.getCFloor()) {
 				r.onFloor(this.elevator);
+			}
 			//Since it's ordered
 			else if(r.getFloor() > this.elevator.getCFloor())
 				return;

@@ -24,11 +24,12 @@ import jade.lang.acl.MessageTemplate;
 import request.ReceiveRequest;
 import request.Request;
 import request.TakeRequest;
+import stats.Finishable;
 
 /**
  * This class creates an elevator which is a JADE agent
  */
-public class Elevator extends Agent {
+public class Elevator extends Agent implements Finishable {
 	/*
 	 * Questões:
 	 * 	É suposto termos uma forma automática de criar todos os elevadores e edifico dado um argumento?
@@ -394,8 +395,17 @@ public class Elevator extends Agent {
 				(this.direction == ElevatorDirection.DOWN && 
 					isBelow(floor));
 	}
-
+	
+	/**
+	 * 
+	 * @return elevator's capacity
+	 */
 	public int getCapacity() {
 		return elevatorCapacity;
+	}
+	
+	@Override
+	public void finish() {
+		//TODO: Escrever taxa de ocupacao e de uso
 	}
 }

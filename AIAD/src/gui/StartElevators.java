@@ -11,6 +11,8 @@ import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import javax.swing.border.LineBorder;
 
+import stats.Statistics;
+
 import javax.swing.border.Border;
 
 /**
@@ -42,6 +44,8 @@ public class StartElevators extends JFrame implements ActionListener {
 	 */
 	private Thread updateGUI;
 	
+	private JadeBoot boot;
+	
 	/**
 	 * Creates the application
 	 * @param nElevators Number of elevators
@@ -62,7 +66,6 @@ public class StartElevators extends JFrame implements ActionListener {
 	 * Initialize the contents of the frame
 	 */
 	private void initialize() {
-		JadeBoot boot = null;
 		try {
 			boot = new JadeBoot(this.nFloors, this.nElevators, this.capacities);
 		} catch (Exception e) {
@@ -74,11 +77,11 @@ public class StartElevators extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 		
-		JButton btnNext = new JButton("Next");
+		JButton btnNext = new JButton("End");
 		
 		btnNext.setBounds(238, 379, 89, 23);
 		btnNext.addActionListener(this);
-		btnNext.setActionCommand("Next");
+		btnNext.setActionCommand("End");
 		getContentPane().add(btnNext);
 		
 		Border border = LineBorder.createGrayLineBorder();
@@ -110,11 +113,23 @@ public class StartElevators extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
 
-        if(cmd.equals("Next"))
+        if(cmd.equals("End"))
         {
         	updateGUI.interrupt();
+        	boot.end();
+        	Statistics.instance.finish();              	
+        	try {
+				Thread.sleep(10000);
+			} catch (InterruptedException ignore) {
+			}  	
+        	try {
+        		Statistics.instance.interrupt();
+        		System.out.println("Joining");
+				Statistics.instance.join();
+			} catch (InterruptedException ignore) {
+			}
         	dispose();
-            new Form();
+        	System.exit(0);
         }
     }
 	

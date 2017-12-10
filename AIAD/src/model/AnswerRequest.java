@@ -9,6 +9,10 @@ import elevator.ElevatorDirection;
  */
 public class AnswerRequest extends Message {
 	/**
+	 * The request made might already exist
+	 */
+	private boolean alreadyExists;
+	/**
 	 * Elevator's direction
 	 */
 	private ElevatorDirection direction;
@@ -49,8 +53,9 @@ public class AnswerRequest extends Message {
 	 * @param passengersWeight Passenger's weight
 	 * @param stopFloorsLength Distance from the stop floor
 	 */
-	public AnswerRequest(int id, ElevatorDirection direction, int floor, int lastFloorInDirection, int passengersWeight, int stopFloorsLength, int elevatorCapacity) {
+	public AnswerRequest(int id, boolean alreadyExists, ElevatorDirection direction, int floor, int lastFloorInDirection, int passengersWeight, int stopFloorsLength,int elevatorCapacity) {
 		super(id);
+		this.alreadyExists = alreadyExists;
 		this.direction = direction;
 		this.floor = floor;
 		this.lastFloorInDirection = lastFloorInDirection;

@@ -144,7 +144,7 @@ public class BuildingInitiator extends ContractNetInitiator {
 		}
 		int percentUsedCapcacity = (proposal.getPassengersWeight() / proposal.getElevatorCapacity()) * 100;
 		int rNum = proposal.getNumStopFloors();
-		weight += dist + ((1 + percentUsedCapcacity) * (1 + rNum)) / 10;
+		weight += dist + percentUsedCapcacity/10 + rNum;
 		return weight;
 	}
 

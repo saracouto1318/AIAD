@@ -44,6 +44,10 @@ public class TakeActionBehaviour extends TickerBehaviour {
 		for(Request r : elevator.getStopFloors())
 			System.out.print(r.getClass() + " - " + r.getFloor() + " -- ");
 		System.out.println();*/
+		int usage = 1;
+		if(this.elevator.getStatus() == ElevatorStatus.STOPPED && this.elevator.getDirection() == ElevatorDirection.NO_DIRECTION)
+			usage = 0;
+		elevator.getStatistics().updateValues(elevator.getPassengersWeight() / (double) elevator.elevatorCapacity, usage);
 		
 		//Stop if this cFloor is a stopFloor
 		if(shouldStop()) {

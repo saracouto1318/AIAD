@@ -88,12 +88,12 @@ public class Statistics extends Thread implements Finishable {
 		XSSFRow row = spreadSheet.getRow(startRow);
 		if(row == null)
 			row = spreadSheet.createRow(startRow);
-		
+
 		XSSFCell cell = row.createCell(startCell++);
 		cell.setCellValue(request.getMinWait());
 		cell = row.createCell(startCell++);
 		cell.setCellValue(request.getMaxWait());
-				
+
 		WorkBook.publishContents(workbook);
 	}
 	
@@ -103,14 +103,14 @@ public class Statistics extends Thread implements Finishable {
 		XSSFRow row = spreadSheet.getRow(startRow);
 		if(row == null)
 			row = spreadSheet.createRow(startRow);
-		
+
 		XSSFCell cell = row.createCell(startCell++);
 		cell.setCellValue(request.getName());
 		cell = row.createCell(startCell++);
-		cell.setCellValue(request.getTaxaOcupacao());
+		cell.setCellValue(request.getOccupation());
 		cell = row.createCell(startCell++);
-		cell.setCellValue(request.getTaxaUso());
-				
+		cell.setCellValue(request.getUsage());
+
 		WorkBook.publishContents(workbook);
 	}
 
@@ -120,7 +120,7 @@ public class Statistics extends Thread implements Finishable {
 		XSSFRow row = spreadSheet.getRow(startRow);
 		if(row == null)
 			row = spreadSheet.createRow(startRow);
-		
+
 		if(request.isReceive()) {
 			if(request.getDiffTime() > general.getMaxWait())
 				general.setMaxWait(request.getDiffTime());

@@ -118,29 +118,7 @@ public class StartElevators extends JFrame implements ActionListener {
 
         if(cmd.equals("End"))
         {
-        	updateGUI.interrupt();
-        	boot.end();
-        	if(boot.hasAllInstancesOfElevator()) {
-        		for(int i = 0; i < boot.getElevatorAgents().length; i++) {
-        			Elevator elev = boot.getElevatorAgents()[i];
-        			try {
-						Statistics.instance.elevatorInfo(new StatisticsElevator(i, elev.getLocalName(), 0, 0));
-					} catch (IOException e1) {}
-        		}
-        	}
-        	Statistics.instance.finish();             	
-        	try {
-				Thread.sleep(10000);
-			} catch (InterruptedException ignore) {
-			}  	
-        	try {
-        		Statistics.instance.interrupt();
-        		System.out.println("Joining");
-				Statistics.instance.join();
-			} catch (InterruptedException ignore) {
-			}
-        	dispose();
-        	System.exit(0);
+        	finishProgram();
         }
     }
 	
@@ -150,8 +128,9 @@ public class StartElevators extends JFrame implements ActionListener {
 		if(boot.hasAllInstancesOfElevator()) {
 			for(int i = 0; i < boot.getElevatorAgents().length; i++) {
 				Elevator elev = boot.getElevatorAgents()[i];
+				elev.getStatistics().setId(i);
 				try {
-					Statistics.instance.elevatorInfo(new StatisticsElevator(i, elev.getLocalName(), 0, 0));
+					Statistics.instance.elevatorInfo(elev.getStatistics());
 				} catch (IOException e1) {}
 			}
 		}

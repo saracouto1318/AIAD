@@ -17,7 +17,7 @@ public class AnswerRequest extends Message {
 	 */
 	private ElevatorDirection direction;
 	/**
-	 * Request's floor
+	 * Elevator's floor
 	 */
 	private int floor;
 	/**
@@ -47,11 +47,13 @@ public class AnswerRequest extends Message {
 	/**
 	 * AnswerRequest's constructor
 	 * @param id Message's identifier
+	 * @param alreadyExists Boolean determining if request already exists in elevator
 	 * @param direction Elevator's direction
-	 * @param floor Request's floor
+	 * @param floor Elevator's floor
 	 * @param lastFloorInDirection Last floor in the elevator's direction
 	 * @param passengersWeight Passenger's weight
 	 * @param stopFloorsLength Distance from the stop floor
+	 * @param elevatorCapacity Elevator's capacity
 	 */
 	public AnswerRequest(int id, boolean alreadyExists, ElevatorDirection direction, int floor, int lastFloorInDirection, int passengersWeight, int stopFloorsLength,int elevatorCapacity) {
 		super(id);
@@ -81,7 +83,7 @@ public class AnswerRequest extends Message {
 	}
 
 	/**
-	 * Gets the request's floor
+	 * Gets the elevator's floor
 	 * @return The request's floor
 	 */
 	public int getFloor() {
@@ -142,5 +144,17 @@ public class AnswerRequest extends Message {
 	 */
 	public void setStopFloorsLength(int stopFloorsLength) {
 		this.stopFloorsLength = stopFloorsLength;
+	}
+
+	public boolean getAlreadyExists() {
+		return alreadyExists;
+	}
+	
+	public int getElevatorCapacity(){
+		return elevatorCapacity;
+	}
+	
+	public int getNumStopFloors(){
+		return stopFloorsLength;
 	}
 }

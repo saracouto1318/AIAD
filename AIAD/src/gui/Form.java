@@ -45,7 +45,7 @@ public class Form extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 		
-		slider = new JSlider(JSlider.HORIZONTAL, 0, 10, 4);
+		slider = new JSlider(JSlider.HORIZONTAL, 2, 10, 4);
 		slider.setBounds(124, 72, 200, 50);
 		slider.setMajorTickSpacing(5);
 		slider.setMinorTickSpacing(1);
@@ -53,7 +53,7 @@ public class Form extends JFrame implements ActionListener {
 		slider.setPaintLabels(true);
 		getContentPane().add(slider);
 		
-		slider_1 = new JSlider(JSlider.HORIZONTAL, 0, 30, 5);
+		slider_1 = new JSlider(JSlider.HORIZONTAL, 4, 30, 5);
 		slider_1.setBounds(124, 155, 200, 45);
 		slider_1.setMajorTickSpacing(5);
 		slider_1.setMinorTickSpacing(1);

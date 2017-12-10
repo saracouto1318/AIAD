@@ -24,6 +24,10 @@ public class ElevatorTestPassengers extends Elevator {
 	 * This functions tests the requests of the elevator
 	 */
 	private void testFloors() {
+		cFloor = 2;
+		direction = ElevatorDirection.UP;
+		status = ElevatorStatus.MOVING;
+		
 		stopFloors.add(new TakeRequest(1,50, this));
 		stopFloors.add(new TakeRequest(14,50, this));
 		stopFloors.add(new TakeRequest(5,50, this));
@@ -36,8 +40,5 @@ public class ElevatorTestPassengers extends Elevator {
 		stopFloors.add(new ReceiveRequest(2, ElevatorDirection.DOWN, this));
 		stopFloors.add(new ReceiveRequest(6, ElevatorDirection.UP, this));
 		stopFloors.add(new ReceiveRequest(10, ElevatorDirection.DOWN, this));
-		cFloor = 2;
-		direction = ElevatorDirection.UP;
-		status = ElevatorStatus.MOVING;
 	}
 }

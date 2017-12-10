@@ -1,12 +1,12 @@
 package request;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.Random;
 
 import elevator.Elevator;
 import elevator.ElevatorDirection;
 import stats.Statistics;
+import stats.StatisticsRequest;
 
 /**
  * 
@@ -88,9 +88,10 @@ public class ReceiveRequest extends Request {
 		elevator.getStopFloors().remove(this);
 		
 		Date finish = new Date();
-		Statistics.instance.addInfo(id, 
-				new Object[] {true, id, floor, startElevatorFloor, direction, startElevatorDirection, 
-						startTime.getTime(), finish.getTime(), finish.getTime() - startTime.getTime()}, true);
+
+		Statistics.instance.addInfo(new StatisticsRequest(id, true, elevator.getLocalName(),
+				floor, startElevatorFloor, direction.toString(), startElevatorDirection.toString(),
+				startTime.getTime(), finish.getTime(), finish.getTime() - startTime.getTime()));
 	}
 	
 	/**
@@ -151,7 +152,7 @@ public class ReceiveRequest extends Request {
 
 	/**
 	 * Compares two requests
-	 * @param arg0 The request that will be used in the comparison
+	 * @param arg The request that will be used in the comparison
 	 * @return 0 if the requests are equal; -1 if the elevator floor or id is smaller
 	 */
 	@Override

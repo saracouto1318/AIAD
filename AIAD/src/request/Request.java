@@ -47,7 +47,15 @@ public abstract class Request implements Comparable {
 	public int getFloor() {
 		return floor;
 	}
-	
+		
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	/**
 	 * Function used in the requests received or taken
 	 * @param elevator Elevator that receives or takes the request

@@ -27,12 +27,10 @@ public class JadeBoot {
 	 * Array with the agents' name
 	 */
 	private String[] agentsNames;
-	
 	/**
 	 * Array with the different "Elevator" Agents
 	 */
 	private Elevator[] elevatorAgents;
-
 	/**
 	 * Initiates the profile, container and its agents
 	 * @param nFloors Building's number of floors
@@ -123,4 +121,20 @@ public class JadeBoot {
 		return true;
 	}
 
+	/**
+	 * This function kills the container stopping all agents currently running
+	 */
+	public void end() {
+		try {
+			container.kill();
+		} catch (StaleProxyException e) {
+			e.printStackTrace();
+		}
+		
+		for(Elevator e : elevatorAgents)
+			if(e != null)
+				e.finish();
+			else
+				System.out.println("NULL ELEVATOR");
+	}
 }

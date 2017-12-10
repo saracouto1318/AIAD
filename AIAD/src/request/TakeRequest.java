@@ -5,6 +5,7 @@ import java.util.Date;
 
 import elevator.Elevator;
 import stats.Statistics;
+import stats.StatisticsRequest;
 
 /**
  * 
@@ -57,9 +58,10 @@ public class TakeRequest extends Request {
 		elevator.getStopFloors().remove(this);
 		
 		Date finish = new Date();
-		Statistics.instance.addInfo(this.id, 
-				new Object[] {false, this.id, floor, this.startElevatorFloor, this.startElevatorDirection, this.startElevatorDirection, 
-						startTime.getTime(), finish.getTime(), finish.getTime() - startTime.getTime()}, true);
+
+		Statistics.instance.addInfo(new StatisticsRequest(id, false, elevator.getLocalName(),
+				floor, startElevatorFloor, startElevatorDirection.toString(), startElevatorDirection.toString(),
+				startTime.getTime(), finish.getTime(), finish.getTime() - startTime.getTime()));
 	}
 	
 	/**
@@ -73,7 +75,7 @@ public class TakeRequest extends Request {
 	
 	/**
 	 * Compares two requests
-	 * @param arg0 The request that will be used in the comparison
+	 * @param arg The request that will be used in the comparison
 	 * @return 0 if the requests are equal; -1 if the elevator floor or id is smaller
 	 */
 	@Override

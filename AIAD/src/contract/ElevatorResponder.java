@@ -7,8 +7,6 @@ import model.AnswerRequest;
 import model.Message;
 import model.MessageType;
 import model.NewRequest;
-import model.SatisfiedRequest;
-import model.StatusRequest;
 import request.ReceiveRequest;
 
 import java.io.IOException;

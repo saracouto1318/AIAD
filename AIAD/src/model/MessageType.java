@@ -38,54 +38,6 @@ public enum MessageType {
 		public boolean canCastAs(Message message) {
 			return message instanceof AnswerRequest;
 		}
-	}, SATISFIED {
-		/**
-		 * Gets the message's class
-		 * @return The message's class
-		 */
-		public Class<?> getMessageClass() {
-			return SatisfiedRequest.class;
-		}
-		/**
-		 * Verifies if a message can be casted as SatisfiedRequest
-		 * @param message Message that will be casted
-		 * @return true if the message can be a instance of SatisfiedRequest
-		 */
-		public boolean canCastAs(Message message) {
-			return message instanceof SatisfiedRequest;
-		}
-	}, RENEGOTIATE {
-		/**
-		 * Gets the message's class
-		 * @return The message's class
-		 */
-		public Class<?> getMessageClass() {
-			return RenegotiateRequest.class;
-		}
-		/**
-		 * Verifies if a message can be casted as RenegotiateRequest
-		 * @param message Message that will be casted
-		 * @return true if the message can be a instance of RenegotiateRequest
-		 */
-		public boolean canCastAs(Message message) {
-			return message instanceof RenegotiateRequest;
-		}
-	}, STATUS {
-		/**
-		 * Gets the message's class
-		 * @return The message's class
-		 */
-		public Class<?> getMessageClass() {
-			return StatusRequest.class;
-		}
-		/**
-		 * Verifies if a message can be casted as StatusRequest
-		 * @param message Message that will be casted
-		 * @return true if the message can be a instance of StatusRequest
-		 */
-		public boolean canCastAs(Message message) {
-			return message instanceof StatusRequest;
-		}
 	};
 	
 	/**
@@ -109,13 +61,7 @@ public enum MessageType {
 	public static MessageType getMessageType(Message message) {
 		if(NEW.canCastAs(message))
 			return NEW;
-		else if(ANSWER.canCastAs(message))
+		else
 			return ANSWER;
-		else if(SATISFIED.canCastAs(message))
-			return SATISFIED;
-		else if(RENEGOTIATE.canCastAs(message))
-			return RENEGOTIATE;
-		else 
-			return STATUS;
 	}
 }

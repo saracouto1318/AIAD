@@ -24,7 +24,6 @@ import javax.swing.border.Border;
  *
  */
 public class StartElevators extends JFrame implements ActionListener {
-	
 	/**
 	 * Heuristic to be used
 	 */

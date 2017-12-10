@@ -1,18 +1,28 @@
 package stats;
 
 public class StatisticsElevator extends StatisticsInfo {
+	private int id;
     private String name;
     private int taxaOcupacao;
     private int taxaUso;
 
-    public StatisticsElevator(String name, int taxaOcupacao, int taxaUso) {
+    public StatisticsElevator(int id, String name, int taxaOcupacao, int taxaUso) {
         super(StatisticsType.ELEVATOR);
+        this.id = id;
         this.name = name;
         this.taxaOcupacao = taxaOcupacao;
         this.taxaUso = taxaUso;
     }
 
-    public String getName() {
+    public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
         return name;
     }
 

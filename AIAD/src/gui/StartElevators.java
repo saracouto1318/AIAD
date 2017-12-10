@@ -28,7 +28,7 @@ public class StartElevators extends JFrame implements ActionListener {
 	/**
 	 * Heuristic to be used
 	 */
-	private int heuristic;
+	private boolean heuristic;
 	/**
 	 * Building's number of elevators
 	 */
@@ -59,7 +59,7 @@ public class StartElevators extends JFrame implements ActionListener {
 	 * @param nFloors Number of floors
 	 * @param capacities Array with the capacity of each elevator
 	 */
-	public StartElevators(int nElevators, int nFloors, Integer[] capacities, int heuristic) {
+	public StartElevators(int nElevators, int nFloors, Integer[] capacities, boolean heuristic) {
 		super("Elevators");
 		this.nElevators = nElevators;
 		this.nFloors = nFloors;
@@ -75,7 +75,7 @@ public class StartElevators extends JFrame implements ActionListener {
 	 */
 	private void initialize() {
 		try {
-			boot = new JadeBoot(this.nFloors, this.nElevators, this.capacities);
+			boot = new JadeBoot(this.nFloors, this.nElevators, this.capacities, this.heuristic);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(ABORT);

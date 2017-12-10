@@ -20,7 +20,7 @@ public class Form extends JFrame implements ActionListener {
 	/**
 	 * Choosing the heuristic to use
 	 */
-	private int typeHeuristic;
+	private boolean typeHeuristic;
 	/**
 	 * Building's floors
 	 */
@@ -37,7 +37,7 @@ public class Form extends JFrame implements ActionListener {
 	/**
 	 * Creates the GUI that allows to choose the number of floors and elevators of a building
 	 */
-	public Form(int heuristic) {
+	public Form(boolean heuristic) {
 		super("Configuration");
 		this.typeHeuristic = heuristic;
 		initialize();

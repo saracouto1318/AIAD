@@ -27,7 +27,11 @@ public class BuildingInitiator extends ContractNetInitiator {
 	/**
 	 * Mesage's content
 	 */
-	private NewRequest content;
+	private final NewRequest content;
+	/**
+	 * Defines which heuristic to use
+	 */
+	private final boolean heuristic;
 
 	/**
 	 * BuildingInitiator's constructor
@@ -41,10 +45,11 @@ public class BuildingInitiator extends ContractNetInitiator {
 	 * @param nResponders
 	 *            Number of responders
 	 */
-	public BuildingInitiator(Agent a, ACLMessage cfp, NewRequest content, int nResponders) {
+	public BuildingInitiator(Agent a, ACLMessage cfp, NewRequest content, int nResponders, boolean heuristic) {
 		super(a, cfp);
 		this.nResponders = nResponders;
 		this.content = content;
+		this.heuristic = heuristic;
 	}
 	/*
 	 * protected void handlePropose(ACLMessage propose, Vector v) {}
@@ -136,16 +141,22 @@ public class BuildingInitiator extends ContractNetInitiator {
 			System.out.println("Its different " + proposal.getId() + " vs " + content.getId());
 		
 		double weight = 0;
-		double dist;
+		double percentUsedCapcacity = (proposal.getPassengersWeight() / proposal.getElevatorCapacity()) * 100;
+		double dist;			
+		
 		if (content.getDirection() != proposal.getDirection()) {
 			dist = Math.abs(proposal.getFloor() - proposal.getLastFloorInDirection())
 					+ Math.abs(proposal.getLastFloorInDirection() - content.getFloor());
 		} else {
 			dist = Math.abs(content.getFloor() - proposal.getFloor());
 		}
-		double percentUsedCapcacity = (proposal.getPassengersWeight() / proposal.getElevatorCapacity()) * 100;
-		//double rNum = proposal.getNumStopFloors();
-		weight += dist + percentUsedCapcacity/(double)10;
+		
+		if(this.heuristic) {
+			weight += dist + percentUsedCapcacity/(double)10;
+		} else {
+			weight += dist + percentUsedCapcacity/10 + proposal.getNumStopFloors();
+		}
+		
 		return weight;
 	}
 

@@ -53,7 +53,6 @@ public class Building extends Agent {
 	 * List of AID of the elevators
 	 */
 	private List<AID> elevators;
-
 	/**
 	 * Default frequency
 	 */
@@ -73,6 +72,11 @@ public class Building extends Agent {
 	 * List of request's messages
 	 */
 	private TreeSet<Message> requests;
+	
+	/**
+	 * Used heuristic on contract net
+	 */
+	private boolean heuristic;
 
 	static {
 		FLOOR_FREQ.put(0, 0.5);
@@ -88,6 +92,7 @@ public class Building extends Agent {
 			bottomFloor = Integer.parseInt(args[0].toString());
 			topFloor = Integer.parseInt(args[1].toString());
 			requestFreq = Integer.parseInt(args[2].toString());
+			heuristic = Boolean.parseBoolean(args[3].toString());
 		} catch (ArrayIndexOutOfBoundsException exc) {
 			throw (exc);
 		}
@@ -208,7 +213,7 @@ public class Building extends Agent {
 			e.printStackTrace();
 			return;
 		}
-		this.addBehaviour(new BuildingInitiator(this, msg, message, elevators.size()));
+		this.addBehaviour(new BuildingInitiator(this, msg, message, elevators.size(), heuristic));
 	}
 
 	/**

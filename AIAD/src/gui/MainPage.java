@@ -51,13 +51,13 @@ public class MainPage extends JFrame implements ActionListener {
 		JButton btnNormal = new JButton("Good Heuristic");
 		btnNormal.setBounds(170, 122, 120, 23);
 		btnNormal.addActionListener(this);
-		btnNormal.setActionCommand("OpenNormal");
+		btnNormal.setActionCommand("Heur1");
 		getContentPane().add(btnNormal);
 		
 		JButton btnSpecial = new JButton("Bad Heuristic");
 		btnSpecial.setBounds(170, 169, 120, 23);
 		btnSpecial.addActionListener(this);
-		btnSpecial.setActionCommand("OpenSpecial");
+		btnSpecial.setActionCommand("Heur2");
 		getContentPane().add(btnSpecial);
 	}
 
@@ -68,14 +68,14 @@ public class MainPage extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
 
-        if(cmd.equals("OpenNormal"))
+        if(cmd.equals("Heur1"))
         {
         	dispose();
-            new Form(0);
+            new Form(true);
         }
-        else if(cmd.equals("OpenSpecial")){
+        else if(cmd.equals("Heur2")){
         	dispose();
-            new Form(1);
+            new Form(false);
         }
 		
 	}

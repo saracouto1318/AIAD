@@ -27,7 +27,7 @@ public class ElevatorConf extends JFrame implements ActionListener {
 	/**
 	 * Heuristic ti be used
 	 */
-	private int heuristic;
+	private boolean heuristic;
 	/**
 	 * Building's number of elevators
 	 */
@@ -44,7 +44,7 @@ public class ElevatorConf extends JFrame implements ActionListener {
 	/**
 	 * Create the GUI to configurate the elevators
 	 */
-	public ElevatorConf(int nElevators, int nFloors, int heuristic) {
+	public ElevatorConf(int nElevators, int nFloors, boolean heuristic) {
 		super("Elevators Configuration");
 		this.nElevators = nElevators;
 		this.nFloors = nFloors;

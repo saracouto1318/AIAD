@@ -38,13 +38,13 @@ public class JadeBoot {
 	 * @param elevatorCapacities Capacity of each elevator
 	 * @throws Exception The class Exception and its subclasses are a form of Throwable that indicates conditions that a reasonable application might want to catch
 	 */
-	public JadeBoot(int nFloors, int nElevators, Integer[] elevatorCapacities) throws Exception {
+	public JadeBoot(int nFloors, int nElevators, Integer[] elevatorCapacities, boolean heuristic) throws Exception {
 		agentsNames = new String[nElevators + 1];
 		elevatorAgents = new Elevator[nElevators];
 		
 		if(elevatorCapacities.length != nElevators)
 			throw new Exception("Invalid length");
-		if(!initAgents(nFloors, nElevators, elevatorCapacities))
+		if(!initAgents(nFloors, nElevators, elevatorCapacities, heuristic))
 			throw new Exception("Error initializing agents");
 		if(!startAgents())
 			throw new Exception("Error starting agents");
@@ -85,7 +85,7 @@ public class JadeBoot {
 	 * @param elevatorCapacities Capacity of each elevator
 	 * @return true if it was possible to initiate the different agents; false otherwise
 	 */
-	private boolean initAgents(int nFloors, int nElevators, Integer[] elevatorCapacities) {
+	private boolean initAgents(int nFloors, int nElevators, Integer[] elevatorCapacities, boolean heuristic) {
 		p = new ProfileImpl(true);
 		container = jade.core.Runtime.instance().createMainContainer(p);
 		try {
@@ -96,7 +96,7 @@ public class JadeBoot {
 				agentsNames[i] = name;
 			}
 			name = "building"; 
-			container.createNewAgent(name, Building.class.getName(), new Object[] {0, nFloors - 1, 50});
+			container.createNewAgent(name, Building.class.getName(), new Object[] {0, nFloors - 1, 50, heuristic});
 			agentsNames[nElevators] = name;
 		} catch(StaleProxyException e) {
 			e.printStackTrace();

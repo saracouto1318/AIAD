@@ -14,8 +14,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.Vector;
 
 import behaviour.*;
@@ -70,7 +72,7 @@ public class Building extends Agent {
 	/**
 	 * List of request's messages
 	 */
-	private List<Message> requests;
+	private TreeSet<Message> requests;
 
 	static {
 		FLOOR_FREQ.put(0, 0.5);
@@ -91,7 +93,7 @@ public class Building extends Agent {
 		}
 		numberOfFloors = topFloor - bottomFloor + 1;
 		requestResponses = new HashMap<Integer, List<Message>>();
-		requests = new ArrayList<Message>();
+		requests = new TreeSet<Message>();
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());
 		ServiceDescription sd = new ServiceDescription();
@@ -246,17 +248,20 @@ public class Building extends Agent {
 	 * @param floor
 	 * @param direction
 	 */
-	public void newRequest(int floor, ElevatorDirection direction) {
+	public boolean newRequest(int floor, ElevatorDirection direction) {
 		NewRequest request = new NewRequest(floor, direction);
-		this.requests.add(request);
+		if (this.requests.add(request)){
+			return false;
+		}
 		this.sendMessage(request);
+		return true;
 	}
 
 	/**
 	 * 
 	 * @return list of request messages
 	 */
-	public List<Message> getRequestMessages() {
+	public TreeSet<Message> getRequestMessages() {
 		return requests;
 	}
 
@@ -266,6 +271,12 @@ public class Building extends Agent {
 	 * @return
 	 */
 	public Message getRequest(int requestId) {
-		return requests.get(requestId);
+		Iterator<Message> iterator = requests.iterator();
+		while (iterator.hasNext()) {
+			Message message = iterator.next();
+			if (message.getId() == requestId)
+				return message;
+		}
+		return null;
 	}
 }

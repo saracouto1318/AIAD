@@ -7,7 +7,7 @@ import elevator.ElevatorDirection;
  * Class that allows to create a new request
  *
  */
-public class NewRequest extends Message {
+public class NewRequest extends Message implements Comparable{
 	/**
 	 * Request's floor
 	 */
@@ -69,5 +69,19 @@ public class NewRequest extends Message {
 	 */
 	public void setDirection(ElevatorDirection direction) {
 		this.direction = direction;
+	}
+	
+	@Override
+	public int compareTo(Object arg0) {
+		NewRequest a1 = ((NewRequest)arg0);
+		if (this.floor == a1.floor && this.direction == a1.direction){
+			return 0;
+		}
+		return this.floor < a1.floor ? -1 : 1;
+	}
+	
+	@Override
+	public int hashCode() {
+		return id;
 	}
 }

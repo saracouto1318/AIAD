@@ -122,7 +122,12 @@ public class BuildingInitiator extends ContractNetInitiator {
 	/*
 	 * protected void handleInform(ACLMessage inform) {}
 	 */
-
+	
+	/**
+	 * Returns the weight of the given AnswerRequest to take care of the request  
+	 * @param proposal AnswerRequest given by the elevator
+	 * @return weight
+	 */
 	private int getProposalWeight(AnswerRequest proposal) {
 		if (proposal.getAlreadyExists()) {
 			return Integer.MIN_VALUE;

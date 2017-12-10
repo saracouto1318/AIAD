@@ -48,14 +48,14 @@ public class MainPage extends JFrame implements ActionListener {
 		lblWelcomeToThe.setFont(new Font("Tahoma", Font.PLAIN, 22));
 		getContentPane().add(lblWelcomeToThe);
 		
-		JButton btnNormal = new JButton("Normal");
-		btnNormal.setBounds(183, 121, 89, 23);
+		JButton btnNormal = new JButton("Good Heuristic");
+		btnNormal.setBounds(170, 122, 120, 23);
 		btnNormal.addActionListener(this);
 		btnNormal.setActionCommand("OpenNormal");
 		getContentPane().add(btnNormal);
 		
-		JButton btnSpecial = new JButton("Special");
-		btnSpecial.setBounds(183, 170, 89, 23);
+		JButton btnSpecial = new JButton("Bad Heuristic");
+		btnSpecial.setBounds(170, 169, 120, 23);
 		btnSpecial.addActionListener(this);
 		btnSpecial.setActionCommand("OpenSpecial");
 		getContentPane().add(btnSpecial);
@@ -68,10 +68,14 @@ public class MainPage extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
 
-        if(cmd.equals("OpenNormal") || cmd.equals("OpenSpecial"))
+        if(cmd.equals("OpenNormal"))
         {
         	dispose();
-            new Form();
+            new Form(0);
+        }
+        else if(cmd.equals("OpenSpecial")){
+        	dispose();
+            new Form(1);
         }
 		
 	}

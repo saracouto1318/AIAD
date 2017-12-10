@@ -26,6 +26,10 @@ import javax.swing.border.Border;
 public class StartElevators extends JFrame implements ActionListener {
 	
 	/**
+	 * Heuristic to be used
+	 */
+	private int heuristic;
+	/**
 	 * Building's number of elevators
 	 */
 	private int nElevators;
@@ -55,10 +59,11 @@ public class StartElevators extends JFrame implements ActionListener {
 	 * @param nFloors Number of floors
 	 * @param capacities Array with the capacity of each elevator
 	 */
-	public StartElevators(int nElevators, int nFloors, Integer[] capacities) {
+	public StartElevators(int nElevators, int nFloors, Integer[] capacities, int heuristic) {
 		super("Elevators");
 		this.nElevators = nElevators;
 		this.nFloors = nFloors;
+		this.heuristic = heuristic;
 		this.capacities = capacities;
 		this.labels = new JLabel[this.nElevators * this.nFloors];
 		getContentPane().setForeground(Color.BLACK);

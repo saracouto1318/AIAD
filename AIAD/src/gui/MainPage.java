@@ -49,13 +49,13 @@ public class MainPage extends JFrame implements ActionListener {
 		getContentPane().add(lblWelcomeToThe);
 		
 		JButton btnNormal = new JButton("Good Heuristic");
-		btnNormal.setBounds(183, 121, 120, 23);
+		btnNormal.setBounds(170, 122, 120, 23);
 		btnNormal.addActionListener(this);
 		btnNormal.setActionCommand("OpenNormal");
 		getContentPane().add(btnNormal);
 		
 		JButton btnSpecial = new JButton("Bad Heuristic");
-		btnSpecial.setBounds(183, 170, 120, 23);
+		btnSpecial.setBounds(170, 169, 120, 23);
 		btnSpecial.addActionListener(this);
 		btnSpecial.setActionCommand("OpenSpecial");
 		getContentPane().add(btnSpecial);

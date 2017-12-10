@@ -26,7 +26,9 @@ public class GenerateRequestsBehaviour extends TickerBehaviour {
 
 	/**
 	 * GenerateRequestsBehaviour's constructor
-	 * @param building Building that will be used
+	 * 
+	 * @param building
+	 *            Building that will be used
 	 */
 	public GenerateRequestsBehaviour(Building building) {
 		super(building, ACTION_TIME);
@@ -34,17 +36,19 @@ public class GenerateRequestsBehaviour extends TickerBehaviour {
 	}
 
 	/**
-	 * This method is invoked periodically with the period defined in the constructor
-	 * Subclasses are expected to define this method specifying the action that must be performed at every tick
+	 * This method is invoked periodically with the period defined in the
+	 * constructor Subclasses are expected to define this method specifying the
+	 * action that must be performed at every tick
 	 */
 	@Override
 	public void onTick() {
-		//System.out.println("ACTION GENERATE");
+		// System.out.println("ACTION GENERATE");
 		generateRandomRequests();
 	}
 
 	/**
 	 * This function generates random requests
+	 * 
 	 * @return The number of random requests
 	 */
 	public int generateRandomRequests() {
@@ -55,9 +59,17 @@ public class GenerateRequestsBehaviour extends TickerBehaviour {
 		for (int i = bf; i <= tf; i++) {
 			if (randomGenerator.nextInt(building.getRequestFreqOfFloor(i)) == 0) {
 				int floor = i;
-				int d = randomGenerator.nextInt(1);
-				ElevatorDirection direction = ElevatorDirection.values()[d];
-				this.building.sendMessage(new NewRequest(floor, direction));
+				int d;
+				ElevatorDirection direction;
+				if (i == building.getBottomFloor()) {
+					direction = ElevatorDirection.UP;
+				} else if (i == building.getTopFloor()) {
+					direction = ElevatorDirection.DOWN;
+				} else {
+					d = randomGenerator.nextInt(1);
+					direction = ElevatorDirection.values()[d];
+				}
+				this.building.newRequest(floor, direction);
 				n++;
 			}
 		}

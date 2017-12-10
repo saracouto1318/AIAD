@@ -87,7 +87,10 @@ public class ElevatorResponder extends ContractNetResponder {
 			e.printStackTrace();
 			return;
 		}
-		((Elevator)this.getAgent()).getStopFloors().add(new ReceiveRequest(request.getFloor(), request.getDirection(), (Elevator)this.getAgent()));
+		
+		ReceiveRequest myRequest = new ReceiveRequest(request.getFloor(), request.getDirection());
+		if(((Elevator)this.getAgent()).getStopFloors().add(myRequest))
+			myRequest.setup((Elevator)this.getAgent());
 	}
 	
 	/**
@@ -113,16 +116,9 @@ public class ElevatorResponder extends ContractNetResponder {
 		switch (type) {
 		case NEW:
 			return replyToNew(message.createReply(), (NewRequest) request);
-		case STATUS:
-			//replyToStatus((StatusRequest) request);
-			break;
-		case SATISFIED:
-			//replyToSatisfied((SatisfiedRequest) request);
-			break;
 		default:
 			return null;
 		}
-		return null;
 	}
 	
 	/**
@@ -135,7 +131,8 @@ public class ElevatorResponder extends ContractNetResponder {
 	private Message replyToNew(ACLMessage reply, NewRequest request) throws RefuseException {
 		// Create a reply message
 		Elevator elevator = (Elevator) this.myAgent;
-		return new AnswerRequest(request.getId(), elevator.getDirection(),
+		boolean alreadyExists = elevator.getStopFloors().contains(new ReceiveRequest(request.getFloor(), request.getDirection()));
+		return new AnswerRequest(request.getId(), alreadyExists, elevator.getDirection(),
 				elevator.getCFloor(), elevator.getLastFloorInDirection(), elevator.getPassengersWeight(),
 				elevator.getStopFloors().size());
 	}

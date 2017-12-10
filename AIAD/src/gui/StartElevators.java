@@ -117,8 +117,14 @@ public class StartElevators extends JFrame implements ActionListener {
         {
         	updateGUI.interrupt();
         	boot.end();
-        	Statistics.instance.finish();        	
+        	Statistics.instance.finish();              	
         	try {
+				Thread.sleep(10000);
+			} catch (InterruptedException ignore) {
+			}  	
+        	try {
+        		Statistics.instance.interrupt();
+        		System.out.println("Joining");
 				Statistics.instance.join();
 			} catch (InterruptedException ignore) {
 			}

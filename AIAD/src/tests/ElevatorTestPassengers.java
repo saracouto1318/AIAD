@@ -36,9 +36,17 @@ public class ElevatorTestPassengers extends Elevator {
 		stopFloors.add(new TakeRequest(19,50, this));
 		stopFloors.add(new TakeRequest(1,50, this));
 		stopFloors.add(new TakeRequest(12,49, this));
-		stopFloors.add(new ReceiveRequest(4, ElevatorDirection.UP, this));
-		stopFloors.add(new ReceiveRequest(2, ElevatorDirection.DOWN, this));
-		stopFloors.add(new ReceiveRequest(6, ElevatorDirection.UP, this));
-		stopFloors.add(new ReceiveRequest(10, ElevatorDirection.DOWN, this));
+		ReceiveRequest r = new ReceiveRequest(4, ElevatorDirection.UP);
+		stopFloors.add(new ReceiveRequest(4, ElevatorDirection.UP));
+		r.setup(this);
+		r = new ReceiveRequest(2, ElevatorDirection.DOWN);
+		stopFloors.add(r);
+		r.setup(this);
+		r = new ReceiveRequest(6, ElevatorDirection.UP);
+		stopFloors.add(r);
+		r.setup(this);
+		r = new ReceiveRequest(10, ElevatorDirection.DOWN);
+		stopFloors.add(r);
+		r.setup(this);
 	}
 }

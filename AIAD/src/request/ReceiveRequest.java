@@ -38,19 +38,21 @@ public class ReceiveRequest extends Request {
 	 * @param direction Pressed direction
 	 * @param elevator Elevator responsible for satisfying this request
 	 */
-	public ReceiveRequest(int floor, ElevatorDirection direction, Elevator elevator) {
+	public ReceiveRequest(int floor, ElevatorDirection direction) {
 		super(floor);
-		
-		this.id = RECEIVE_ID++;
 		
 		this.direction = direction;
 		this.minPeople = 1;
-		
+	}
+	
+	public void setup(Elevator elevator) {
+		this.id = RECEIVE_ID++;
+				
 		this.startTime = new Date();
 		this.startElevatorFloor = elevator.getCFloor();
-		this.startElevatorDirection = elevator.getDirection();
+		this.startElevatorDirection = elevator.getDirection();		
 	}
-		
+	
 	/**
 	 * Getter for the value direction
 	 * @return direction

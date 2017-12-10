@@ -185,7 +185,7 @@ public class Building extends Agent {
 			msg.addReceiver(aid);
 		msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
 		// We want to receive a reply in 100 milliseconds
-		msg.setReplyByDate(new Date(System.currentTimeMillis() + 100));
+		msg.setReplyByDate(new Date(System.currentTimeMillis() + 250));
 		try {
 			msg.setContentObject(message);
 		} catch (IOException e) {

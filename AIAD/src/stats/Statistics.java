@@ -22,8 +22,9 @@ import com.sun.javafx.css.converters.FontConverter.FontStyleConverter;
 public class Statistics extends Thread implements Finishable {
 	private XSSFWorkbook workbook;
 	private XSSFSheet spreadSheet;
-	
+	private StatisticsGeneral general;
 	private BlockingQueue<StatisticsInfo> toAddInfos;
+	private boolean interrupted;
 	
 	public static Statistics instance;
 	
@@ -35,7 +36,9 @@ public class Statistics extends Thread implements Finishable {
 	private Statistics() {
 		workbook = WorkBook.create();
 		spreadSheet = workbook.createSheet("Sheet1");
+		general = new StatisticsGeneral(Integer.MIN_VALUE, Integer.MAX_VALUE);
 		toAddInfos = new LinkedBlockingQueue<StatisticsInfo>();
+		interrupted = false;
 		
 		initialize();
 	}
@@ -75,8 +78,31 @@ public class Statistics extends Thread implements Finishable {
 	}
 	
 	private void newRequest(StatisticsInfo info) throws IOException {
+		switch(info.getType()) {
+		case REQUEST:
+			requestInfo((StatisticsRequest) info);
+			break;
+		case GENERAL:
+			break;
+		}
 		if(info.getType() == StatisticsInfo.StatisticsType.REQUEST)
 			requestInfo((StatisticsRequest) info);
+		
+	}
+	
+	private void generalInfo(StatisticsGeneral request) throws IOException {
+		int startRow = 3;
+		int startCell = 1;
+		XSSFRow row = spreadSheet.getRow(startRow);
+		if(row == null)
+			row = spreadSheet.createRow(startRow);
+		
+		XSSFCell cell = row.createCell(startCell++);
+		cell.setCellValue(request.getMinWait());
+		cell = row.createCell(startCell++);
+		cell.setCellValue(request.getMaxWait());
+				
+		WorkBook.publishContents(workbook);
 	}
 
 	private void requestInfo(StatisticsRequest request) throws IOException {
@@ -85,6 +111,11 @@ public class Statistics extends Thread implements Finishable {
 		XSSFRow row = spreadSheet.getRow(startRow);
 		if(row == null)
 			row = spreadSheet.createRow(startRow);
+		
+		if(request.getDiffTime() > general.getMaxWait())
+			general.setMaxWait(request.getDiffTime());
+		if(request.getDiffTime() < general.getMinWait())
+			general.setMinWait(request.getDiffTime());
 
 		XSSFCell cell = row.createCell(startCell++);
 		cell.setCellValue(request.getId());
@@ -107,25 +138,8 @@ public class Statistics extends Thread implements Finishable {
 
 		WorkBook.publishContents(workbook);
 	}
-
-	private void updateInfo(int id, Object[] info) throws IOException {
-		if(info.length != 9)
-			throw new Error("Error updating new request");
-		
-		int startCell = (Boolean)info[0] ? 4 : 13, startRow = id + 5;
-		XSSFRow row = spreadSheet.getRow(startRow);
-		
-		for(int i = 1; i < info.length; i++) {
-			XSSFCell cell = row.getCell(startCell + i - 1);
-			cell.setCellValue(info[i].toString());
-		}
-
-		WorkBook.publishContents(workbook);
-	}
-
-	public synchronized void addInfo(StatisticsInfo info /*int id, Object[] info, boolean isNew*/) {
-		if(this.isInterrupted())
-			return;
+	
+	public void addInfo(StatisticsInfo info) {
 		try {
 			toAddInfos.put(info);
 		} catch (InterruptedException ignore) {}
@@ -133,18 +147,26 @@ public class Statistics extends Thread implements Finishable {
 	
 	@Override
 	public void run() {
-		try {
-			while(!isInterrupted() || toAddInfos.size() != 0) {
+		while(!interrupted || toAddInfos.size() != 0) {
+			try {
 				StatisticsInfo info = toAddInfos.take();
 				newRequest(info);
-			}
-		} catch (InterruptedException | IOException ignore) {}
+			} catch (InterruptedException | IOException ignore) {}
+		}
+	}
+	
+	
+
+	@Override
+	public void interrupt() {
+		super.interrupt();
+		interrupted = true;
 	}
 
 	@Override
 	public void finish() {
 		try {
-			WorkBook.publishContents(workbook);
+			generalInfo(general);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

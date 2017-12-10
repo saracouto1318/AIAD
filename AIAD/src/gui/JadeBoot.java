@@ -110,7 +110,6 @@ public class JadeBoot {
 	 * @return true if it was possible to initiate the agents; false otherwise
 	 */
 	private boolean startAgents() {
-		System.out.println("Start agents");
 		try {
 			for(int i = 0; i < agentsNames.length; i++) 
 				container.getAgent(agentsNames[i]).start();
@@ -134,7 +133,5 @@ public class JadeBoot {
 		for(Elevator e : elevatorAgents)
 			if(e != null)
 				e.finish();
-			else
-				System.out.println("NULL ELEVATOR");
 	}
 }
